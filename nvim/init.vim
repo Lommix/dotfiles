@@ -58,6 +58,21 @@ nmap <leader>so <Plug>VimspectorStepOver
 nmap <leader>su <Plug>VimspectorStepOut
 autocmd FileType java nmap <leader>dd :CocCommand java.debug.vimspector.start<CR>
 "------------------- Plugin Configs
+let g:coc_global_extensions = [
+  \ 'coc-tsserver',
+  \ 'coc-html',
+  \ 'coc-rust-analyzer',
+  \ 'coc-css',
+  \ 'coc-highlight',
+  \ 'coc-json',
+  \ 'coc-blade',
+  \ 'coc-sql',
+  \ 'coc-docker',
+  \ 'coc-pairs',
+  \ 'coc-emmet',
+  \ '@yaegassy/coc-tailwindcss3',
+  \ '@yaegassy/coc-intelephense',
+  \ ]
 
 let g:ale_linters = {
             \ 'cs': ['OmniSharp']
