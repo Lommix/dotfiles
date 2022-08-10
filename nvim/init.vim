@@ -11,19 +11,13 @@ set shiftwidth=4            " width for autoindents
 set autoindent              " indent a new line the same amount as the line just typed
 set number                  " add line numbers
 set relativenumber
-set wildmode=longest,list   " get bash-like tab completions
 set mouse=a                 " enable mouse click
 set clipboard=unnamedplus   " using system clipboard
-"set cursorline              " highlight current cursorline
+set cursorline              " highlight current cursorline
 set ttyfast                 " Speed up scrolling in Vim
 set wildmenu
 set wildmode=longest:full,full
-
-
-"set spell                 " enable spell check (may need to download language package)
-" set noswapfile            " disable creating swap file
-" set backupdir=~/.cache/vim " Directory to store backup files.
-
+set backupdir=~/.cache/vim " Directory to store backup files.
 
 
 call plug#begin("~/.vim/plugged")
