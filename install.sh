@@ -1,14 +1,13 @@
-echo "overwriting dotfiles"
+SCRIPT=$(readlink -f "$0")
+BASEDIR=$(dirname "$SCRIPT")
 
-#tmux
+
 rm -f "${HOME}"/.tmux.conf
-ln -sr .tmux.conf "${HOME}"/.tmux.conf
-
+ln -s "$BASEDIR"/.tmux.conf "${HOME}"/.tmux.conf
 
 #nvim
-
 rm -f "${HOME}"/.config/nvim/init.vim
 rm -f "${HOME}"/.config/nvim/plugin/coc.vim
 
-ln -sr nvim/init.vim "${HOME}"/.config/nvim/init.vim
-ln -sr nvim/plugin/coc.vim "${HOME}"/.config/nvim/plugin/coc.vim
+ln -s "$BASEDIR"/nvim/init.vim "${HOME}"/.config/nvim/init.vim
+ln -s "$BASEDIR"/nvim/plugin/coc.vim "${HOME}"/.config/nvim/plugin/coc.vim
