@@ -16,6 +16,10 @@ set mouse=a                 " enable mouse click
 set clipboard=unnamedplus   " using system clipboard
 "set cursorline              " highlight current cursorline
 set ttyfast                 " Speed up scrolling in Vim
+set wildmenu
+set wildmode=longest:full,full
+
+
 "set spell                 " enable spell check (may need to download language package)
 " set noswapfile            " disable creating swap file
 " set backupdir=~/.cache/vim " Directory to store backup files.
@@ -60,6 +64,7 @@ nmap <leader>so <Plug>VimspectorStepOver
 nmap <leader>su <Plug>VimspectorStepOut
 autocmd FileType java nmap <leader>dd :CocCommand java.debug.vimspector.start<CR>
 "------------------- Plugin Configs
+
 let g:ale_linters = {
             \ 'cs': ['OmniSharp']
             \}
