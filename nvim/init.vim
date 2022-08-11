@@ -57,6 +57,14 @@ nmap <leader>si <Plug>VimspectorStepInto
 nmap <leader>so <Plug>VimspectorStepOver
 nmap <leader>su <Plug>VimspectorStepOut
 autocmd FileType java nmap <leader>dd :CocCommand java.debug.vimspector.start<CR>
+
+
+" Resize
+nnoremap <M-j> :resize -2<CR>
+nnoremap <M-k> :resize +2<CR>
+nnoremap <M-h> :vertical resize -2<CR>
+nnoremap <M-l> :vertical resize +2<CR>
+
 "------------------- Plugin Configs
 let g:coc_global_extensions = [
   \ 'coc-tsserver',
