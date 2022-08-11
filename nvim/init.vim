@@ -30,7 +30,9 @@ Plug 'vim-autoformat/vim-autoformat'
 Plug 'gruvbox-community/gruvbox'
 Plug 'dense-analysis/ale'
 Plug 'puremourning/vimspector'
+Plug 'beyondwords/vim-twig'
 call plug#end()
+
 
 "------------------- Plugin Configs
 let g:coc_global_extensions = [
