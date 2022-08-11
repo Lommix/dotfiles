@@ -1,4 +1,4 @@
-"set nocompatible            " disable compatibility to old-time vi
+set nocompatible            " disable compatibility to old-time vi
 set showmatch               " show matching
 set ignorecase              " case insensitive
 set mouse=v                 " middle-click paste with
@@ -32,48 +32,6 @@ Plug 'dense-analysis/ale'
 Plug 'puremourning/vimspector'
 call plug#end()
 
-syntax enable
-colorscheme gruvbox
-highlight Normal guibg=none
-
-"------------------- Mappings
-let mapleader = " "
-:verbose imap <tab>
-nnoremap <leader>pv : wincmd v<bar> :Ex<CR>
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-nnoremap <leader>f <cmd>Autoformat<cr>
-nnoremap <leader>ps :lua require('telescope.builtin').grep_string({search = vim.fn.input("Grep For >")})<CR>
-
-" DEBUGGER
-let g:vimspector_enable_mappings = 'HUMAN'
-nmap <leader>dd :call vimspector#Launch()<CR>
-nmap <leader>dx :call vimspector#Reset()<CR>
-nmap <leader>dc :call vimspector#Continue()<CR>
-nmap <leader>tb <Plug>VimspectorToggleBreakpoint
-nmap <leader>si <Plug>VimspectorStepInto
-nmap <leader>so <Plug>VimspectorStepOver
-nmap <leader>su <Plug>VimspectorStepOut
-autocmd FileType java nmap <leader>dd :CocCommand java.debug.vimspector.start<CR>
-
-
-" Resize
-nnoremap <M-j> :resize -2<CR>
-nnoremap <M-k> :resize +2<CR>
-nnoremap <M-h> :vertical resize -2<CR>
-nnoremap <M-l> :vertical resize +2<CR>
-
-if has("ide")
-    :map <leader>td <Action>(ToggleLineBreakpoint)
-    :map <leader>dd <Action>(Debug)
-    :map <leader>ff <Action>(GotoFile)
-    :map <leader>dd <Action>(Debug)
-
-    :map <M-l> <Action>(StretchEditorToRight)
-    :map <M-h> <Action>(StretchEditorToLeft)
-endif
 "------------------- Plugin Configs
 let g:coc_global_extensions = [
   \ 'coc-tsserver',
@@ -91,50 +49,104 @@ let g:coc_global_extensions = [
   \ '@yaegassy/coc-intelephense',
   \ ]
 
+syntax enable
+colorscheme gruvbox
+highlight Normal guibg=none
+
+"------------------- Mappings
+let mapleader = "\<Space>"
+":verbose imap <tab>
+nnoremap <leader>e :wincmd v<bar> :Ex<CR>
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>f <cmd>Autoformat<cr>
+nnoremap <leader>ps :lua require('telescope.builtin').grep_string({search = vim.fn.input("Grep For >")})<CR>
+nnoremap <leader>d :<V-y-p><cr>
+nnoremap <silent> <Leader>s :split<CR>
+nnoremap <silent> <Leader>v :vsplit<CR>
+nnoremap <silent> <Leader>q :close<CR>
+" DEBUGGER
+"let g:vimspector_enable_mappings = 'HUMAN'
+nmap <leader>dd :call vimspector#Launch()<CR>
+nmap <leader>dx :call vimspector#Reset()<CR>
+nmap <leader>dc :call vimspector#Continue()<CR>
+nmap <leader>tb <Plug>VimspectorToggleBreakpoint
+nmap <leader>si <Plug>VimspectorStepInto
+nmap <leader>so <Plug>VimspectorStepOver
+nmap <leader>su <Plug>VimspectorStepOut
+autocmd FileType java nmap <leader>dd :CocCommand java.debug.vimspector.start<CR>
+
+" Move windows
+nnoremap <M-h> <C-w>h
+nnoremap <M-j> <C-w>j
+nnoremap <M-k> <C-w>k
+nnoremap <M-l> <C-w>l
+
+" Move windows mac
+nnoremap ª <C-w>h
+nnoremap º <C-w>j
+nnoremap ∆ <C-w>k
+nnoremap @ <C-w>l
+
+nnoremap <leader>j :resize -2<CR>
+nnoremap <leader>k :resize +2<CR>
+nnoremap <leader>h :vertical resize -2<CR>
+nnoremap <leader>l :vertical resize +2<CR>
+
+if has("ide")
+    :map <leader>td <Action>(ToggleLineBreakpoint)
+    :map <leader>dd <Action>(Debug)
+    :map <leader>ff <Action>(GotoFile)
+    :map <leader>fs <Action>(Switcher)
+    :map <leader>dd <Action>(Debug)
+endif
+
 let g:ale_linters = {
             \ 'cs': ['OmniSharp']
             \}
 
-autocmd CursorHold *.cs OmniSharpTypeLookup
-
-" Asyncomplete: {{{
-let g:asyncomplete_auto_popup = 1
-let g:asyncomplete_auto_completeopt = 1
-" }}}
-
-" OmniSharp: {{{
-let g:OmniSharp_popup_position = 'peek'
-if has('nvim')
-  let g:OmniSharp_popup_options = {
-  \ 'winhl': 'Normal:NormalFloat'
-  \}
-else
-  let g:OmniSharp_popup_options = {
-  \ 'highlight': 'Normal',
-  \ 'padding': [0, 0, 0, 0],
-  \ 'border': [1]
-  \}
-endif
-let g:OmniSharp_popup_mappings = {
-\ 'sigNext': '<C-n>',
-\ 'sigPrev': '<C-p>',
-\ 'pageDown': ['<C-f>', '<PageDown>'],
-\ 'pageUp': ['<C-b>', '<PageUp>']
-\}
-
-let g:OmniSharp_highlight_groups = {
-\ 'ExcludedCode': 'NonText'
-\}
-" }}}
-
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline#extensions#tabline#buffer_nr_show = 1
-let g:airline_right_sep = ""
-let g:airline_left_sep = ""
-
-" ALE
-let g:ale_completion_autoimport = 1
+"autocmd CursorHold *.cs OmniSharpTypeLookup
+"
+"" Asyncomplete: {{{
+"let g:asyncomplete_auto_popup = 1
+"let g:asyncomplete_auto_completeopt = 1
+"" }}}
+"
+"" OmniSharp: {{{
+"let g:OmniSharp_popup_position = 'peek'
+"if has('nvim')
+"  let g:OmniSharp_popup_options = {
+"  \ 'winhl': 'Normal:NormalFloat'
+"  \}
+"else
+"  let g:OmniSharp_popup_options = {
+"  \ 'highlight': 'Normal',
+"  \ 'padding': [0, 0, 0, 0],
+"  \ 'border': [1]
+"  \}
+"endif
+"let g:OmniSharp_popup_mappings = {
+"\ 'sigNext': '<C-n>',
+"\ 'sigPrev': '<C-p>',
+"\ 'pageDown': ['<C-f>', '<PageDown>'],
+"\ 'pageUp': ['<C-b>', '<PageUp>']
+"\}
+"
+"let g:OmniSharp_highlight_groups = {
+"\ 'ExcludedCode': 'NonText'
+"\}
+"" }}}
+"
+"let g:airline#extensions#tabline#enabled = 1
+"let g:airline_powerline_fonts = 1
+"let g:airline#extensions#tabline#enabled = 1
+"let g:airline#extensions#tabline#left_sep = ' '
+"let g:airline#extensions#tabline#left_alt_sep = '|'
+"let g:airline#extensions#tabline#buffer_nr_show = 1
+"let g:airline_right_sep = ""
+"let g:airline_left_sep = ""
+"
+"" ALE
+"let g:ale_completion_autoimport = 1
