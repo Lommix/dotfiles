@@ -31,6 +31,7 @@ Plug 'gruvbox-community/gruvbox'
 Plug 'dense-analysis/ale'
 Plug 'puremourning/vimspector'
 Plug 'beyondwords/vim-twig'
+Plug 'arcticicestudio/nord-vim'
 call plug#end()
 
 
@@ -52,7 +53,7 @@ let g:coc_global_extensions = [
             \ ]
 
 syntax enable
-colorscheme gruvbox
+colorscheme nord
 highlight Normal guibg=none
 
 "------------------- Mappings
@@ -102,7 +103,6 @@ if has("ide")
     :map <leader>dd <Action>(Debug)
     :map <leader>ff <Action>(GotoFile)
     :map <leader>fs <Action>(Switcher)
-    :map <leader>dd <Action>(Debug)
 endif
 
 let g:ale_linters = {
