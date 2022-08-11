@@ -34,20 +34,20 @@ call plug#end()
 
 "------------------- Plugin Configs
 let g:coc_global_extensions = [
-  \ 'coc-tsserver',
-  \ 'coc-html',
-  \ 'coc-rust-analyzer',
-  \ 'coc-css',
-  \ 'coc-highlight',
-  \ 'coc-json',
-  \ 'coc-blade',
-  \ 'coc-sql',
-  \ 'coc-docker',
-  \ 'coc-pairs',
-  \ 'coc-emmet',
-  \ '@yaegassy/coc-tailwindcss3',
-  \ '@yaegassy/coc-intelephense',
-  \ ]
+            \ 'coc-tsserver',
+            \ 'coc-html',
+            \ 'coc-rust-analyzer',
+            \ 'coc-css',
+            \ 'coc-highlight',
+            \ 'coc-json',
+            \ 'coc-blade',
+            \ 'coc-sql',
+            \ 'coc-docker',
+            \ 'coc-pairs',
+            \ 'coc-emmet',
+            \ '@yaegassy/coc-tailwindcss3',
+            \ '@yaegassy/coc-intelephense',
+            \ ]
 
 syntax enable
 colorscheme gruvbox
@@ -63,7 +63,7 @@ nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>f <cmd>Autoformat<cr>
 nnoremap <leader>ps :lua require('telescope.builtin').grep_string({search = vim.fn.input("Grep For >")})<CR>
-nnoremap <leader>d :<V-y-p><cr>
+
 nnoremap <silent> <Leader>s :split<CR>
 nnoremap <silent> <Leader>v :vsplit<CR>
 nnoremap <silent> <Leader>q :close<CR>
@@ -128,14 +128,14 @@ let g:ale_linters = {
 "  \}
 "endif
 "let g:OmniSharp_popup_mappings = {
-"\ 'sigNext': '<C-n>',
-"\ 'sigPrev': '<C-p>',
-"\ 'pageDown': ['<C-f>', '<PageDown>'],
-"\ 'pageUp': ['<C-b>', '<PageUp>']
+            "\ 'sigNext': '<C-n>',
+            "\ 'sigPrev': '<C-p>',
+            "\ 'pageDown': ['<C-f>', '<PageDown>'],
+            "\ 'pageUp': ['<C-b>', '<PageUp>']
 "\}
 "
 "let g:OmniSharp_highlight_groups = {
-"\ 'ExcludedCode': 'NonText'
+            "\ 'ExcludedCode': 'NonText'
 "\}
 "" }}}
 "
