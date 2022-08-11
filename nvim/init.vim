@@ -1,4 +1,4 @@
-set nocompatible            " disable compatibility to old-time vi
+"set nocompatible            " disable compatibility to old-time vi
 set showmatch               " show matching
 set ignorecase              " case insensitive
 set mouse=v                 " middle-click paste with
@@ -65,6 +65,15 @@ nnoremap <M-k> :resize +2<CR>
 nnoremap <M-h> :vertical resize -2<CR>
 nnoremap <M-l> :vertical resize +2<CR>
 
+if has("ide")
+    :map <leader>td <Action>(ToggleLineBreakpoint)
+    :map <leader>dd <Action>(Debug)
+    :map <leader>ff <Action>(GotoFile)
+    :map <leader>dd <Action>(Debug)
+
+    :map <M-l> <Action>(StretchEditorToRight)
+    :map <M-h> <Action>(StretchEditorToLeft)
+endif
 "------------------- Plugin Configs
 let g:coc_global_extensions = [
   \ 'coc-tsserver',
