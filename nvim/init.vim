@@ -1,4 +1,3 @@
-set nocompatible            " disable compatibility to old-time vi
 set showmatch               " show matching
 set ignorecase              " case insensitive
 set mouse=v                 " middle-click paste with
@@ -32,6 +31,7 @@ Plug 'dense-analysis/ale'
 Plug 'puremourning/vimspector'
 Plug 'beyondwords/vim-twig'
 Plug 'arcticicestudio/nord-vim'
+Plug 'liuchengxu/vim-which-key'
 call plug#end()
 
 
@@ -53,12 +53,13 @@ let g:coc_global_extensions = [
             \ ]
 
 syntax enable
-colorscheme nord
-highlight Normal guibg=none
+colorscheme gruvbox
+highlight Normal ctermbg=none
 
 "------------------- Mappings
 let mapleader = "\<Space>"
 ":verbose imap <tab>
+nnoremap <silent> <leader> :silent WhichKey ''<CR>
 nnoremap <leader>e :wincmd v<bar> :Ex<CR>
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
@@ -71,7 +72,9 @@ nnoremap <silent> <Leader>s :split<CR>
 nnoremap <silent> <Leader>v :vsplit<CR>
 nnoremap <silent> <Leader>q :close<CR>
 " DEBUGGER
-"let g:vimspector_enable_mappings = 'HUMAN'
+"
+if !has("ide")
+let g:vimspector_enable_mappings = 'HUMAN'
 nmap <leader>dd :call vimspector#Launch()<CR>
 nmap <leader>dx :call vimspector#Reset()<CR>
 nmap <leader>dc :call vimspector#Continue()<CR>
@@ -80,12 +83,13 @@ nmap <leader>si <Plug>VimspectorStepInto
 nmap <leader>so <Plug>VimspectorStepOver
 nmap <leader>su <Plug>VimspectorStepOut
 autocmd FileType java nmap <leader>dd :CocCommand java.debug.vimspector.start<CR>
+endif
 
 " Move windows
-nnoremap <M-h> <C-w>h
-nnoremap <M-j> <C-w>j
-nnoremap <M-k> <C-w>k
-nnoremap <M-l> <C-w>l
+nnoremap <A-h> <C-w>h
+nnoremap <A-j> <C-w>j
+nnoremap <A-k> <C-w>k
+nnoremap <A-l> <C-w>l
 
 " Move windows mac
 nnoremap ª <C-w>h
@@ -99,7 +103,7 @@ nnoremap <leader>h :vertical resize -2<CR>
 nnoremap <leader>l :vertical resize +2<CR>
 
 if has("ide")
-    :map <leader>td <Action>(ToggleLineBreakpoint)
+    :map <leader>tb <Action>(ToggleLineBreakpoint)
     :map <leader>dd <Action>(Debug)
     :map <leader>ff <Action>(GotoFile)
     :map <leader>fs <Action>(Switcher)
