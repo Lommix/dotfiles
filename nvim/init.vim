@@ -55,6 +55,12 @@ if !exists('g:vscode')
 lua <<EOF
 
     require'lspconfig'.gdscript.setup{}
+    require'lspconfig'.tsserver.setup{}
+    require'lspconfig'.omnisharp.setup{}
+    require'lspconfig'.bashls.setup{}
+    require'lspconfig'.rust_analyzer.setup{}
+    require'lspconfig'.dockerls.setup{}
+    require'lspconfig'.phpactor.setup{}
 
     local has_words_before = function()
       local line, col = unpack(vim.api.nvim_win_get_cursor(0))
