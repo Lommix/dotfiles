@@ -35,11 +35,11 @@ map('n','<leader>f','<CMD>Autoformat<CR>')
 map('n','<leader>b','<CMD>Ex<CR>')
 
 -- lsp
-map('n','<silent>K',':lua vim.lsp.buf.hover()<CR>')
-map('n','<silent>gd',':lua vim.lsp.buf.definition()<CR>')
-map('n','<silent>gD',':lua vim.lsp.buf.declaration()<CR>')
-map('n','<silent>gr',':lua vim.lsp.buf.references()<CR>')
-map('n','<silent>gi',':lua vim.lsp.buf.implementation()<CR>')
+map('n','K',':lua vim.lsp.buf.hover()<CR>')
+map('n','gd',':lua vim.lsp.buf.definition()<CR>')
+map('n','gD',':lua vim.lsp.buf.declaration()<CR>')
+map('n','gr',':lua vim.lsp.buf.references()<CR>')
+map('n','gi',':lua vim.lsp.buf.implementation()<CR>')
 
 --debug
 local godot = require('plugins.godot')

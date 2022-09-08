@@ -34,4 +34,6 @@ require('keybinds')
 require('auto')
 
 vim.cmd("colorscheme gruvbox")
-
+vim.cmd("hi normal ctermbg=none")
+vim.cmd("syntax on")
+vim.cmd("nohlsearch")
