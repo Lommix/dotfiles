@@ -1,14 +1,15 @@
 -- auto commands here
-local cmd = vim.api.nvim_command
+local group = vim.api.nvim_create_augroup("autocmd",{clear = true })
 
-local function autocmd(this, event, spec)
-    local is_table = type(spec) == 'table'
-    local pattern = is_table and spec[1] or '*'
-    local action = is_table and spec[2] or spec
-    if type(action) == 'function' then
-        action = this.set(action)
-    end
-    local e = type(event) == 'table' and table.concat(event, ',') or event
-    cmd('autocmd ' .. e .. ' ' .. pattern .. ' ' .. action)
-end
+-- auto center cursor
+vim.api.nvim_create_autocmd("CursorMoved",{
+    command = "normal! zz",
+    group = group
+})
+
+-- auto format
+vim.api.nvim_create_autocmd("BufWritePre", {
+    command = "Autoformat",
+    group = group
+})
 
