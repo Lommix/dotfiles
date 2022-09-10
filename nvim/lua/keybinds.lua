@@ -31,15 +31,18 @@ map('n','<leader>h',':vertical resize +2<CR>')
 -- telescope
 map('n','<leader>ff','<CMD>Telescope find_files<CR>')
 map('n','<leader>fb','<CMD>Telescope buffers<CR>')
-map('n','<leader>f','<CMD>Autoformat<CR>')
+map('n','<leader>fh','<CMD>Telescope help_tags<CR>')
+map('n','<leader>fg','<CMD>Telescope live_grep<CR>')
 map('n','<leader>b','<CMD>Ex<CR>')
 
 -- lsp
-map('n','K',':lua vim.lsp.buf.hover()<CR>')
-map('n','gd',':lua vim.lsp.buf.definition()<CR>')
-map('n','gD',':lua vim.lsp.buf.declaration()<CR>')
-map('n','gr',':lua vim.lsp.buf.references()<CR>')
-map('n','gi',':lua vim.lsp.buf.implementation()<CR>')
+--map('n','<leader>f','<CMD>Autoformat<CR>')
+map('n','<leader>f', vim.lsp.buf.formatting)
+map('n','K', vim.lsp.buf.hover)
+map('n','gd', vim.lsp.buf.definition)
+map('n','gD', vim.lsp.buf.declaration)
+map('n','gr', vim.lsp.buf.references)
+map('n','gi', vim.lsp.buf.implementation)
 
 --debug
 local godot = require('plugins.godot')
