@@ -8,8 +8,8 @@ vim.api.nvim_create_autocmd("CursorMoved",{
 })
 
 -- auto format
-vim.api.nvim_create_autocmd("BufWritePre", {
-    command = "Autoformat",
-    group = group
-})
+--vim.api.nvim_create_autocmd("BufWritePre", {
+    -- command = vim.lsp.buf.formatting,
+    -- group = group
+--})
 
