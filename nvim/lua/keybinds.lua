@@ -38,7 +38,6 @@ map('n','<leader>fg', ":lua require'telescope.builtin'.live_grep{}<CR>")
 map('n','<leader>fs', ":lua require'telescope.builtin'.grep_string()<CR>")
 map('n','<leader>fb','<CMD>Telescope buffers<CR>')
 map('n','<leader>fh','<CMD>Telescope help_tags<CR>')
-map('n','<leader>b','<CMD>Ex<CR>')
 
 -- lsp
 map('n','<leader>f', ':Autoformat<CR>')
@@ -51,8 +50,13 @@ map('n','gi', vim.lsp.buf.implementation)
 -- clear highlight search
 map('n','<CR>','<CR> :noh<CR><CR>')
 
---debug
-map('n', '<leader>r',':luafile %<CR>')
+local reloader = require('nvim-reload')
+map('n', '<leader>r',reloader.Reload)
+
+local shopware = require('plugins.shopware')
+map('n','<leader>sc', shopware.get_services)
+
+-- godot
 local godot = require('plugins.godot')
 map('n','<leader>b',godot.debug)
 map('n','<leader>d',godot.debug_at_cursor)

@@ -14,17 +14,20 @@ return require('packer').startup(function(use)
             { 'hrsh7th/cmp-nvim-lsp' },
             { 'hrsh7th/cmp-buffer' },
             { 'hrsh7th/cmp-path' },
-            { 'hrsh7th/cmp-cmdline' }
+            { 'hrsh7th/cmp-cmdline' },
+            { "williamboman/nvim-lsp-installer"},
+            { "jose-elias-alvarez/null-ls.nvim"},
         },
         config   = function()
             require('plugins.cmp')
+            require('lsp.lsp-installer')
         end,
     }
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.0',
         requires = { { 'nvim-lua/plenary.nvim' } },
         config = function()
-            require('plugins.telescope')
+            require('plugins.telescope-config')
         end,
     }
     use {
@@ -64,16 +67,10 @@ return require('packer').startup(function(use)
         config = function()
             vim.g.loaded = 1
             vim.g.loaded_netrwPlugin = 1
-
             require("nvim-tree").setup({
                 sort_by = "case_sensitive",
                 view = {
                     adaptive_size = true,
-                    mappings = {
-                        list = {
-                            { key = "u", action = "dir_up" },
-                        },
-                    },
                 },
                 renderer = {
                     group_empty = true,
@@ -81,7 +78,13 @@ return require('packer').startup(function(use)
                 filters = {
                     dotfiles = true,
                 },
+                actions = {
+                    open_file = {
+                        quit_on_open = true
+                    }
+                },
             })
         end
     }
+    use 'famiu/nvim-reload'
 end)
