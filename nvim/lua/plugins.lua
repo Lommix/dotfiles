@@ -55,4 +55,33 @@ return require('packer').startup(function(use)
             }
         end
     }
+    use {
+        'kyazdani42/nvim-tree.lua',
+        requires = {
+            'kyazdani42/nvim-web-devicons', -- optional, for file icons
+        },
+        tag = 'nightly', -- optional, updated every week. (see issue #1193)
+        config = function()
+            vim.g.loaded = 1
+            vim.g.loaded_netrwPlugin = 1
+
+            require("nvim-tree").setup({
+                sort_by = "case_sensitive",
+                view = {
+                    adaptive_size = true,
+                    mappings = {
+                        list = {
+                            { key = "u", action = "dir_up" },
+                        },
+                    },
+                },
+                renderer = {
+                    group_empty = true,
+                },
+                filters = {
+                    dotfiles = true,
+                },
+            })
+        end
+    }
 end)

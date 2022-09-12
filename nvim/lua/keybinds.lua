@@ -21,23 +21,26 @@ map('n','@','<C-w>l')
 map('n','<leader>s','<CMD>split<CR>')
 map('n','<leader>v','<CMD>vsplit<CR>')
 map('n','<leader>q','<CMD>close<CR>')
-map('n','<leader>e','<CMD>vsplit<BAR>:Ex<CR>')
+--map('n','<leader>e','<CMD>vsplit<BAR>:Ex<CR>')
+map('n','<leader>e',':NvimTreeOpen<CR>:NvimTreeFocus<CR>')
 
 map('n','<leader>j',':resize -2<CR>')
 map('n','<leader>k',':resize +2<CR>')
 map('n','<leader>l',':vertical resize -2<CR>')
 map('n','<leader>h',':vertical resize +2<CR>')
 
+-- git
+
 -- telescope
 map('n','<leader>ff', ":lua require'telescope.builtin'.find_files{}<CR>")
 map('n','<leader>fr', ":lua require'telescope.builtin'.find_files{no_ignore = true}<CR>")
+map('n','<leader>fg', ":lua require'telescope.builtin'.live_grep{}<CR>")
+map('n','<leader>fs', ":lua require'telescope.builtin'.grep_string()<CR>")
 map('n','<leader>fb','<CMD>Telescope buffers<CR>')
 map('n','<leader>fh','<CMD>Telescope help_tags<CR>')
-map('n','<leader>fg','<CMD>Telescope live_grep<CR>')
 map('n','<leader>b','<CMD>Ex<CR>')
 
 -- lsp
---map('n','<leader>f','<CMD>Autoformat<CR>')
 map('n','<leader>f', ':Autoformat<CR>')
 map('n','K', vim.lsp.buf.hover)
 map('n','gd', vim.lsp.buf.definition)
