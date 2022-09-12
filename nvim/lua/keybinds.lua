@@ -41,7 +41,11 @@ map('n','gD',':lua vim.lsp.buf.declaration()<CR>')
 map('n','gr',':lua vim.lsp.buf.references()<CR>')
 map('n','gi',':lua vim.lsp.buf.implementation()<CR>')
 
+-- clear highlight search
+map('n','<CR>','<CR> :noh<CR><CR>')
+
 --debug
+map('n', '<leader>r',':luafile %<CR>')
 local godot = require('plugins.godot')
 map('n','<leader>b',godot.debug)
 map('n','<leader>d',godot.debug_at_cursor)

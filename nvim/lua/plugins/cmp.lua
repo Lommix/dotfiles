@@ -55,14 +55,17 @@ cmp.setup({
 
     }),
     sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-        { name = 'nvim-lua' },
-        { name = 'nvim-cmp' },
+        { name = 'nvim-cmp', keyword_length = 2 },
+        { name = 'buffer' , keyword_length = 2},
+        { name = 'nvim_lsp' , keyword_length = 2},
+        { name = 'nvim-lua' , keyword_length = 2},
         { name = 'nvim-telescope' },
         { name = 'luasnip' },
-    }, {
-        { name = 'buffer' , keyword_length = 3},
-    })
+    }),
+    sorting = {
+        comperators = {
+        },
+    },
 })
 
 -- Set configuration for specific filetype.
@@ -91,10 +94,3 @@ cmp.setup.cmdline(':', {
         { name = 'cmdline' }
     })
 })
-
--- Set up lspconfig.
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
--- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
-    capabilities = capabilities
-}
