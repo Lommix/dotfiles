@@ -38,4 +38,21 @@ return require('packer').startup(function(use)
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate'
     }
+    use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+    use {
+        'kyazdani42/nvim-web-devicons',
+        config = function()
+            require'nvim-web-devicons'.setup {
+                override = {
+                    zsh = {
+                        icon = "",
+                        color = "#428850",
+                        cterm_color = "65",
+                        name = "Zsh"
+                    }
+                };
+                default = true;
+            }
+        end
+    }
 end)

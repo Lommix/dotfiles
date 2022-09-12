@@ -29,7 +29,8 @@ map('n','<leader>l',':vertical resize -2<CR>')
 map('n','<leader>h',':vertical resize +2<CR>')
 
 -- telescope
-map('n','<leader>ff','<CMD>Telescope find_files<CR>')
+map('n','<leader>ff', ":lua require'telescope.builtin'.find_files{}<CR>")
+map('n','<leader>fr', ":lua require'telescope.builtin'.find_files{no_ignore = true}<CR>")
 map('n','<leader>fb','<CMD>Telescope buffers<CR>')
 map('n','<leader>fh','<CMD>Telescope help_tags<CR>')
 map('n','<leader>fg','<CMD>Telescope live_grep<CR>')
@@ -37,7 +38,7 @@ map('n','<leader>b','<CMD>Ex<CR>')
 
 -- lsp
 --map('n','<leader>f','<CMD>Autoformat<CR>')
-map('n','<leader>f', vim.lsp.buf.formatting)
+map('n','<leader>f', ':Autoformat<CR>')
 map('n','K', vim.lsp.buf.hover)
 map('n','gd', vim.lsp.buf.definition)
 map('n','gD', vim.lsp.buf.declaration)
