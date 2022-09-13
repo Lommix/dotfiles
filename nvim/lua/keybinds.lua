@@ -56,7 +56,7 @@ map('n', '<leader>i',':LspInfo<CR>')
 
 local shopware = require('plugins.shopware')
 map('n','<leader>sc', shopware.get_services)
-map('n','<leader>ss', shopware.get_and_copy_services)
+map('n','<leader>ss', ":lua require'plugins.shopware'.get_and_copy_services()<CR>")
 
 -- godot
 local godot = require('plugins.godot')
