@@ -87,4 +87,8 @@ return require('packer').startup(function(use)
         end
     }
     use 'famiu/nvim-reload'
+    use {
+        "windwp/nvim-autopairs",
+        config = function() require("nvim-autopairs").setup {} end
+    }
 end)
