@@ -20,11 +20,9 @@ local function read_services_from_file(filename)
     local services = {}
     local content = vim.fn.readfile(filename)
     for index, line in ipairs(content) do
-        if not string.find(line, "argument") then
-            for id, class in string.gmatch(line,"id=\"(.-)\" class=\"(.-)\"") do
-                table.insert(services, {id = id, class=class, xml=filename})
+            for id in string.gmatch(line,"id=\"(.-)\"") do
+                table.insert(services, {id = id, xml=filename})
             end
-        end
     end
     return services
 end
@@ -33,8 +31,9 @@ end
 local function find_all_services()
     local services = {}
     for id, path in ipairs(vim.fn.globpath('.','**/services.xml',true,true)) do
-        for _, service in ipairs(read_services_from_file(path)) do
-            table.insert(services, service)
+        for id,pair in ipairs(read_services_from_file(path)) do
+            services[id] = pair
+            --table.insert(services,pair)
         end
     end
     return services
@@ -42,40 +41,38 @@ end
 
 
 local function get_file_path_from_namespace(namespace)
-    return "123"
+    return "lol"
 end
 
 local function get_and_copy_services()
     local opts = {}
     local services = find_all_services()
 
-    local test = get_file_path_from_namespace("")
-    --pickers
-    --.new(opts, {
-    --    prompt_title = "symfony services",
-    --    finder = finders.new_table {
-    --        results = services,
-    --        entry_maker = function(service)
-    --            return make_entry.set_default_entry_mt({
-    --                ordinal = service.id,
-    --                display = service.id,
-    --                path = service.xml,
-    --                class = service.class,
-    --                filename = get_file_path_from_namespace(service.class)
-    --            }, opts)
-    --        end,
-    --    },
-    --    previewer = previewers.new_buffer_previewer({
-    --        define_preview = function(self, entry, status)
-    --            vim.api.nvim_buf_set_lines(self.state.bufnr, 0, 1, true, {entry.path, entry.display, entry.class, entry.filename})
-    --        end,
-    --    }),
-    --    sorter = conf.generic_sorter(opts),
-    --    attach_mappings = function(prompt_bufnr)
-    --        return true
-    --    end,
-    --})
-    --:find()
+    print(vim.inspect(services))
+    pickers
+    .new(opts, {
+        prompt_title = "symfony services",
+        finder = finders.new_table {
+            results = services,
+            entry_maker = function(service)
+                return make_entry.set_default_entry_mt({
+                    ordinal = service.id,
+                    display = service.id,
+                    path = service.xml,
+                }, opts)
+            end,
+        },
+        previewer = previewers.new_buffer_previewer({
+            define_preview = function(self, entry, status)
+                vim.api.nvim_buf_set_lines(self.state.bufnr, 0, 1, true, {entry.path, entry.display})
+            end,
+        }),
+        sorter = conf.generic_sorter(opts),
+        attach_mappings = function(prompt_bufnr)
+            return true
+        end,
+    })
+    :find()
 end
 
 

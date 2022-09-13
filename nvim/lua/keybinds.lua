@@ -51,7 +51,8 @@ map('n','gi', vim.lsp.buf.implementation)
 map('n','<CR>','<CR> :noh<CR><CR>')
 
 local reloader = require('nvim-reload')
-map('n', '<leader>r',reloader.Reload)
+map('n', '<leader>r',':Reload<CR>:syntax on<CR>:LspStop<CR>:LspStart<CR>')
+map('n', '<leader>i',':LspInfo<CR>')
 
 local shopware = require('plugins.shopware')
 map('n','<leader>sc', shopware.get_services)
