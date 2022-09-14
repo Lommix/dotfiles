@@ -6,6 +6,27 @@ local previewers = require "telescope.previewers"
 local conf = require("telescope.config").values
 local actions = require'telescope.actions'
 
+
+local terminal = require'toggleterm.terminal'.Terminal:new({
+    dir = vim.fn.getcwd()
+})
+
+local function sw_kl_tmp()
+    if not terminal:is_open() then
+        terminal:toggle()
+    end
+    terminal:clear()
+    terminal:send('ddev . bin/console netzd:import:tracking')
+end
+
+local function sw_cache_clear()
+    if not terminal:is_open() then
+        terminal:toggle()
+    end
+    terminal:clear()
+    terminal:send('ddev . bin/console sw:cache:clear')
+end
+
 local function get_services()
     local opts = {}
     opts.prompt_title = "Search Service Files"
@@ -92,5 +113,7 @@ vim.api.nvim_create_user_command('SwEvents', get_and_copy_services, {})
 
 return {
     get_services = get_services,
-    get_and_copy_services = get_and_copy_services
+    get_and_copy_services = get_and_copy_services,
+    sw_cache_clear = sw_cache_clear,
+    sw_kl_tmp = sw_kl_tmp,
 }
