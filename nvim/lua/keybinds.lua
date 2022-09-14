@@ -29,7 +29,7 @@ map("n", "<leader>k", ":resize +2<CR>")
 map("n", "<leader>l", ":vertical resize -2<CR>")
 map("n", "<leader>h", ":vertical resize +2<CR>")
 -- git
-
+map("n", "<leader>GG", ":lua _LAZYGIT_TOGGLE()<CR>")
 -- telescope
 map("n", "<leader>ff", ":lua require'telescope.builtin'.find_files{}<CR>")
 map("n", "<leader>fr", ":lua require'telescope.builtin'.find_files{no_ignore = true}<CR>")
@@ -37,6 +37,7 @@ map("n", "<leader>fg", ":lua require'telescope.builtin'.live_grep{additionals_ar
 map("n", "<leader>fs", ":lua require'telescope.builtin'.grep_string()<CR>")
 map("n", "<leader>fb", "<CMD>Telescope buffers<CR>")
 map("n", "<leader>fh", "<CMD>Telescope help_tags<CR>")
+
 
 -- lsp
 map("n", "<leader>f", vim.lsp.buf.formatting_sync)
@@ -46,17 +47,16 @@ map("n", "gi", "<cmd>Telescope lsp_implementations<CR>")
 map("n", "gr", "<cmd>Telescope lsp_references<CR>")
 map("n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>")
 map("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<CR>")
+map("n", "gn", "<cmd>Telescope diagnostics<CR>")
 -- clear highlight search
-map("i", "<CR>", "<CR> :noh<CR><CR>")
+map("n", "<CR>", "<CR> :noh<CR><CR>")
 
---map('n', '<leader>r', ":lua require('nvim-reload').Reload()<CR>:syntax on<CR>")
+map("n", "<leader>r", ":lua require('nvim-reload').Reload()<CR>:syntax on<CR>")
 map("n", "<leader>i", ":LspInfo<CR>")
 
 local shopware = require("plugins.shopware")
 map("n", "<leader>sc", shopware.get_services)
-map("n", "<leader>sr", shopware.sw_cache_clear)
 map("n", "<leader>ss", ":lua require'plugins.shopware'.get_and_copy_services()<CR>")
-map("n", "<leader>si", shopware.sw_kl_tmp)
 
 -- godot
 local godot = require("plugins.godot")

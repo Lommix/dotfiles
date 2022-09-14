@@ -6,6 +6,7 @@ require'lsp'
 require'cmp'
 require'reloader'
 require'lsp-inlayhints'
+require'toggleterm-setup'
 --require'telescope-config'
 vim.cmd("colorscheme tokyonight")
 --vim.cmd("hi normal ctermbg=none")
