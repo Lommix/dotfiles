@@ -22,7 +22,10 @@ null_ls.setup {
     formatting.shfmt,
     formatting.google_java_format,
     -- diagnostics.flake8,
+    formatting.phpcsfixer,
+    formatting.phpc,
     diagnostics.shellcheck,
+    diagnostics.phpcs,
   },
 }
 

@@ -18,7 +18,7 @@ return require("packer").startup(function(use)
 	use("SmiteshP/nvim-navic")
 	use("simrat39/symbols-outline.nvim")
 	use("b0o/SchemaStore.nvim")
-
+    use { "jayp0521/mason-null-ls.nvim", after = { "null-ls.nvim", "mason.nvim", }, }
 	-- cmp
 	use({
 		"hrsh7th/nvim-cmp",
