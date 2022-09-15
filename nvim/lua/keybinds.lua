@@ -50,6 +50,7 @@ map("n", "gi", "<cmd>Telescope lsp_implementations<CR>")
 map("n", "gp", "<Cmd>Lspsaga preview_definition<CR>")
 map("n", "gr", "<Cmd>Lspsaga rename<CR>")
 map("n", "gn", "<cmd>Telescope diagnostics<CR>")
+map("n", "gt", ":lua vim.lsp.buf.code_action()<CR>")
 -- clear highlight search
 map("n", "<CR>", "<CR> :noh<CR><CR>")
 

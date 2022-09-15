@@ -29,3 +29,4 @@ o.clipboard = "unnamedplus"
 o.swapfile = false
 o.undofile = true
 g.nohlsearch = true
+opt.mouse = "a"

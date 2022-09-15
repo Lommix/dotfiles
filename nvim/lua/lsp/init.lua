@@ -20,9 +20,12 @@ M.server_capabilities = function()
   end)
 end
 
-require 'lsp.handlers'.setup()
+--require 'lsp.handlers'.setup()
 require 'lsp.mason'
 require 'lsp.null-ls'
 require 'lspconfig'
 require 'lsp.mason-null-ls'
+require 'lsp.lsp_signature'
+require 'lsp.handlers'.setup()
+
 return M

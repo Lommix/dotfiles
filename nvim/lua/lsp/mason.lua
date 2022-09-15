@@ -44,6 +44,7 @@ local settings = {
 	log_level = vim.log.levels.INFO,
 	max_concurrent_installers = 4,
 }
+
 mason.setup(settings)
 mason_lspconfig.setup({
 	ensure_installed = servers,
