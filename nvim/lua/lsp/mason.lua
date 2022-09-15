@@ -13,6 +13,7 @@ if not status_ok_2 then
 end
 -- custom
 lsp_config.gdscript.setup({})
+--lsp_config.intelephense.setup{}
 
 local servers = {
 	"cssls",

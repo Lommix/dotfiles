@@ -8,6 +8,7 @@ return require("packer").startup(function(use)
 	-- colorschemes
 	use("gruvbox-community/gruvbox")
 	use("folke/tokyonight.nvim")
+	use("catppuccin/vim")
 	-- lsp
 	use("mfussenegger/nvim-dap")
 	use("neovim/nvim-lspconfig")
@@ -18,7 +19,8 @@ return require("packer").startup(function(use)
 	use("SmiteshP/nvim-navic")
 	use("simrat39/symbols-outline.nvim")
 	use("b0o/SchemaStore.nvim")
-    use { "jayp0521/mason-null-ls.nvim", after = { "null-ls.nvim", "mason.nvim", }, }
+	use({ "jayp0521/mason-null-ls.nvim", after = { "null-ls.nvim", "mason.nvim" } })
+	use("glepnir/lspsaga.nvim")
 	-- cmp
 	use({
 		"hrsh7th/nvim-cmp",
@@ -34,15 +36,18 @@ return require("packer").startup(function(use)
 	use("vim-autoformat/vim-autoformat")
 	use("L3MON4D3/LuaSnip")
 	use("habamax/vim-godot")
+	use("nvim-lualine/lualine.nvim")
+
+	use("windwp/nvim-ts-autotag")
+	use("windwp/nvim-autopairs")
 	use({
-		"windwp/nvim-autopairs",
+		"lewis6991/gitsigns.nvim",
 		config = function()
-			require("nvim-autopairs").setup({})
+			require("gitsigns").setup()
 		end,
 	})
 	use("famiu/nvim-reload")
 	use("christianchiarulli/lua-dev.nvim")
-
 	use({
 		"nvim-telescope/telescope.nvim",
 		config = function()
@@ -50,12 +55,7 @@ return require("packer").startup(function(use)
 		end,
 	})
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
-	use({
-		"akinsho/toggleterm.nvim",
-		config = function()
-			require("toggleterm").setup()
-		end,
-	})
+	use("akinsho/toggleterm.nvim")
 	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
 	use({
 		"kyazdani42/nvim-web-devicons",
@@ -89,14 +89,23 @@ return require("packer").startup(function(use)
 				},
 				renderer = {
 					group_empty = true,
+					icons = {
+						show = {
+							git = true,
+						},
+					},
 				},
 				filters = {
-					dotfiles = true,
+					dotfiles = false,
 				},
 				actions = {
 					open_file = {
 						quit_on_open = true,
 					},
+				},
+				git = {
+					enable = true,
+					ignore = false,
 				},
 			})
 		end,

@@ -18,10 +18,9 @@ map("n", "∆", "<C-w>k")
 map("n", "@", "<C-w>l")
 
 -- split
-map("n", "<leader>s", "<CMD>split<CR>")
+map("n", "<leader>V", "<CMD>split<CR>")
 map("n", "<leader>v", "<CMD>vsplit<CR>")
 map("n", "<leader>q", ":q<CR>")
---map('n','<leader>e','<CMD>vsplit<BAR>:Ex<CR>')
 map("n", "<leader>e", ":NvimTreeFindFileToggle<CR>:NvimTreeFocus<CR>")
 
 map("n", "<leader>j", ":resize -2<CR>")
@@ -38,15 +37,18 @@ map("n", "<leader>fs", ":lua require'telescope.builtin'.grep_string()<CR>")
 map("n", "<leader>fb", "<CMD>Telescope buffers<CR>")
 map("n", "<leader>fh", "<CMD>Telescope help_tags<CR>")
 
-
 -- lsp
-map("n", "<leader>f", vim.lsp.buf.formatting_sync)
-map("n", "K", vim.lsp.buf.hover)
-map("n", "gd", "<cmd>Telescope lsp_definitions<CR>")
+map("n", "<A-f>", vim.lsp.buf.formatting_sync)
+map("n", "ƒ", vim.lsp.buf.formatting_sync)
+--map("n", "K", vim.lsp.buf.hover)
+map("n", "K", '<Cmd>Lspsaga hover_doc<CR>')
+
+map("n", "gd", "<cmd>Lspsaga peek_definition<CR>")
+map("n", "gD", "<cmd>Lspsaga lsp_finder<CR>")
 map("n", "gi", "<cmd>Telescope lsp_implementations<CR>")
-map("n", "gr", "<cmd>Telescope lsp_references<CR>")
-map("n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>")
-map("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<CR>")
+--map("n", "gr", "<cmd>Telescope lsp_references<CR>")
+map("n", "gp", "<Cmd>Lspsaga preview_definition<CR>")
+map("n", "gr", "<Cmd>Lspsaga rename<CR>")
 map("n", "gn", "<cmd>Telescope diagnostics<CR>")
 -- clear highlight search
 map("n", "<CR>", "<CR> :noh<CR><CR>")

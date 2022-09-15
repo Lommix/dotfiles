@@ -7,8 +7,12 @@ require'cmp'
 require'reloader'
 require'lsp-inlayhints'
 require'toggleterm-setup'
+require'lualine-setup'
+require'autotag'
+require'autopair'
+require'treesitter-setup'
 --require'telescope-config'
-vim.cmd("colorscheme tokyonight")
+vim.cmd("colorscheme tokyonight-night")
 --vim.cmd("hi normal ctermbg=none")
 vim.cmd("syntax on")
 vim.cmd("nohlsearch")
