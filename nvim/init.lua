@@ -5,14 +5,17 @@ require'auto'
 require'lsp'
 require'cmp'
 require'reloader'
-require'lsp-inlayhints'
+--require'lsp-inlayhints'
 require'toggleterm-setup'
 require'lualine-setup'
 require'autotag'
 require'autopair'
 require'treesitter-setup'
---require'telescope-config'
+require'globals'
+require'telescope-config'
+require'cmp-setup'
+
 vim.cmd("colorscheme tokyonight-night")
---vim.cmd("hi normal ctermbg=none")
+vim.cmd("hi normal ctermbg=none")
 vim.cmd("syntax on")
 vim.cmd("nohlsearch")

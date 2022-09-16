@@ -26,9 +26,10 @@ M.setup = function()
 
 	local config = {
 		virtual_lines = false,
-		virtual_text = {
-            prefix = icons.ui.Gear,
-        },
+		virtual_text = false,
+		--virtual_text = {
+        --    prefix = icons.ui.Gear,
+        --},
 		signs = {
 			active = signs,
 		},

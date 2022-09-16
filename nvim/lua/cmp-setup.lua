@@ -27,8 +27,7 @@ end
 local compare = require("cmp.config.compare")
 require("luasnip/loaders/from_vscode").lazy_load()
 
-
-local check_backspace = function()
+local has_words_before = function()
 	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
 	return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
@@ -39,7 +38,7 @@ local kind_icons = icons.kind
 vim.g.cmp_active = true
 
 cmp.setup({
-    enable = true,
+	enable = true,
 	preselect = cmp.PreselectMode.None,
 	snippet = {
 		expand = function(args)
@@ -57,15 +56,10 @@ cmp.setup({
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item()
-			elseif luasnip.jumpable(1) then
-				luasnip.jump(1)
 			elseif luasnip.expand_or_jumpable() then
 				luasnip.expand_or_jump()
-			elseif luasnip.expandable() then
-				luasnip.expand()
-			elseif check_backspace() then
-				-- cmp.complete()
-				fallback()
+			elseif has_words_before() then
+				cmp.complete()
 			else
 				fallback()
 			end

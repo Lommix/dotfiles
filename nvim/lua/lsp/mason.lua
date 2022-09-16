@@ -44,19 +44,29 @@ local settings = {
 	log_level = vim.log.levels.INFO,
 	max_concurrent_installers = 4,
 }
-
 mason.setup(settings)
 mason_lspconfig.setup({
 	ensure_installed = servers,
 	automatic_installation = true,
 })
 
+local opts = {
+	on_attach = function(client, bufnr)
+        -- only use null-ls formatting
+		client.resolved_capabilities.document_formatting = false
+	end,
+}
+
 mason_lspconfig.setup_handlers({
 	function(server_name)
-		lsp_config[server_name].setup({})
+		lsp_config[server_name].setup(opts)
 	end,
 	["sumneko_lua"] = function()
-		local luadev = require("lua-dev").setup()
+		local luadev = require("lua-dev").setup({
+			lspconfig = {
+				on_attach = opts.on_attach,
+			},
+		})
 		lsp_config.sumneko_lua.setup(luadev)
 	end,
 })

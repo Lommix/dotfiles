@@ -1,6 +1,10 @@
 vim.cmd([[packadd packer.nvim]])
 
 return require("packer").startup(function(use)
+    --dev
+    --
+    use '/home/lommix/Projects/godot.nvim'
+    --
 	-- packer
 	use("wbthomason/packer.nvim")
 	-- libs
@@ -20,14 +24,10 @@ return require("packer").startup(function(use)
 	use("simrat39/symbols-outline.nvim")
 	use("b0o/SchemaStore.nvim")
 	use({ "jayp0521/mason-null-ls.nvim", after = { "null-ls.nvim", "mason.nvim" } })
+    use("WhoIsSethDaniel/mason-tool-installer.nvim")
 	use("glepnir/lspsaga.nvim")
 	-- cmp
-	use({
-		"hrsh7th/nvim-cmp",
-		config = function()
-			require("plugins.cmp")
-		end,
-	})
+	use( "hrsh7th/nvim-cmp")
 	use("hrsh7th/cmp-nvim-lsp")
 	use("hrsh7th/cmp-buffer")
 	use("hrsh7th/cmp-path")
@@ -35,7 +35,6 @@ return require("packer").startup(function(use)
 	use("saadparwaiz1/cmp_luasnip")
 	use("vim-autoformat/vim-autoformat")
 	use("L3MON4D3/LuaSnip")
-	use("habamax/vim-godot")
 	use("nvim-lualine/lualine.nvim")
 
 	use("windwp/nvim-ts-autotag")
@@ -48,12 +47,7 @@ return require("packer").startup(function(use)
 	})
 	use("famiu/nvim-reload")
 	use("christianchiarulli/lua-dev.nvim")
-	use({
-		"nvim-telescope/telescope.nvim",
-		config = function()
-			require("plugins.telescope-config")
-		end,
-	})
+	use( "nvim-telescope/telescope.nvim")
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
 	use("akinsho/toggleterm.nvim")
 	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })

@@ -41,7 +41,7 @@ map("n", "<leader>fh", "<CMD>Telescope help_tags<CR>")
 map("n", "<A-f>", vim.lsp.buf.formatting_sync)
 map("n", "ƒ", vim.lsp.buf.formatting_sync)
 --map("n", "K", vim.lsp.buf.hover)
-map("n", "K", '<Cmd>Lspsaga hover_doc<CR>')
+map("n", "K", "<Cmd>Lspsaga hover_doc<CR>")
 
 map("n", "gd", "<cmd>Lspsaga peek_definition<CR>")
 map("n", "gD", "<cmd>Lspsaga lsp_finder<CR>")
@@ -62,6 +62,10 @@ map("n", "<leader>sc", shopware.get_services)
 map("n", "<leader>ss", ":lua require'plugins.shopware'.get_and_copy_services()<CR>")
 
 -- godot
-local godot = require("plugins.godot")
-map("n", "<leader>b", godot.debug)
-map("n", "<leader>d", godot.debug_at_cursor)
+local godot = require("godot")
+map("n", "<leader>b", function()
+	package.loaded["godot"] = nil
+	godot = require("godot")
+	godot.debug_at_cursor()
+end)
+--map("n", "<leader>d", godot.debug_at_cursor)
