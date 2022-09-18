@@ -21,11 +21,11 @@ M.server_capabilities = function()
 end
 
 --require 'lsp.handlers'.setup()
-require 'lsp.mason'
-require 'lsp.null-ls'
+require 'lommix.lsp.mason'
+require 'lommix.lsp.null-ls'
 require 'lspconfig'
-require 'lsp.mason-null-ls'
-require 'lsp.lsp_signature'
-require 'lsp.handlers'.setup()
+require 'lommix.lsp.mason-null-ls'
+require 'lommix.lsp.lsp_signature'
+require 'lommix.lsp.handlers'.setup()
 
 return M

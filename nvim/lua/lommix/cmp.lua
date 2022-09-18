@@ -32,7 +32,7 @@ local has_words_before = function()
 	return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
-local icons = require("icons")
+local icons = require("lommix.icons")
 local kind_icons = icons.kind
 
 vim.g.cmp_active = true
@@ -52,12 +52,19 @@ cmp.setup({
 			i = cmp.mapping.abort(),
 			c = cmp.mapping.close(),
 		}),
-		["<CR>"] = cmp.mapping.confirm({ select = true }),
-		["<Tab>"] = cmp.mapping(function(fallback)
+		--["<CR>"] = cmp.mapping.confirm({ select = true }),
+		["<CR>"] = cmp.mapping(function(fallback)
+			if cmp.get_active_entry() then
+				cmp.confirm()
+			else
+                fallback()
+			end
+		end),
+		["<TAB>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item()
-			elseif luasnip.expand_or_jumpable() then
-				luasnip.expand_or_jump()
+			--elseif luasnip.expand_or_jumpable() then
+			--	luasnip.expand_or_jump()
 			elseif has_words_before() then
 				cmp.complete()
 			else

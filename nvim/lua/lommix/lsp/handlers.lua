@@ -11,7 +11,7 @@ M.capabilities.textDocument.completion.completionItem.snippetSupport = true
 M.capabilities = cmp_nvim_lsp.update_capabilities(M.capabilities)
 local test
 M.setup = function()
-	local icons = require("icons")
+	local icons = require("lommix.icons")
 	local signs = {
 		{ name = "DiagnosticSignError", text = icons.diagnostics.Error },
 		{ name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
@@ -26,10 +26,11 @@ M.setup = function()
 
 	local config = {
 		virtual_lines = false,
-		virtual_text = false,
-		--virtual_text = {
-        --    prefix = icons.ui.Gear,
-        --},
+		--virtual_text = false,
+		virtual_text = {
+			prefix = icons.ui.Gear,
+			severity = vim.diagnostic.severity.ERROR,
+		},
 		signs = {
 			active = signs,
 		},
