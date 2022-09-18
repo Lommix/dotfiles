@@ -11,4 +11,4 @@ local function debug()
 end
 
 -- shopware scripties binds
-vim.keymap.set("n", "<leader>ss", shopware.service_finder, { silent = true })
+vim.keymap.set("n", "<leader>ss",debug, { silent = true })

@@ -1,3 +1,4 @@
+require'lommix.plugins'
 require'lommix.options'
 require'lommix.keybinds'
 require'lommix.auto'

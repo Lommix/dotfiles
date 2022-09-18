@@ -20,7 +20,6 @@ o.number = true
 o.relativenumber = true
 o.mouse = a
 o.cursorline = true
-o.ttyfast = true
 o.wildmenu = true
 o.wildmode = "longest:full,full"
 o.backupdir = "~/.cache/vim"

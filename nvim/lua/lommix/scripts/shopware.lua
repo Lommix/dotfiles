@@ -12,7 +12,8 @@ local actions = require("telescope.actions")
 local xml = require("lommix.scripts.xmlparser")
 local cached_servies = {}
 local current_selection = nil
-local preview_window = nil
+local files = {}
+local file_count = 0
 -----------------------------------------------------------------------------------
 M.get_services = function()
 	local opts = {}
@@ -30,50 +31,48 @@ end
 -----------------------------------------------------------------------------------
 -- recursive build services table
 local function filter_services(services, container, file, parent)
-	local current = parent or nil
+	local last_parent = parent or nil
 
 	if container.attrs and container.attrs.id and container.tag == "service" then
-		current = string.gsub(container.attrs.id, "\n", "")
-		if not services[current] then
-			services[container.attrs.id] = {
-				id = container.attrs.id,
-				container.attrs.id,
-				class = string.gsub(container.attrs.class or "", "\n", ""),
-				file = file,
-				tags = {},
-				arguments = {},
-			}
-		end
+		local new_entry = {
+			id = container.attrs.id,
+			container.attrs.id,
+			class = container.attrs.class,
+			file = file,
+			tags = {},
+			arguments = {},
+		}
+	    table.insert(services, new_entry)
+        last_parent = new_entry
 	end
 
 	-- is tag?
 	if parent and container.tag == "tag" and container.attrs then
-		table.insert(services[parent].tags, container.attrs.name)
+		table.insert(parent.tags, container.attrs.name)
 	end
 
 	-- is argument?
 	if parent and container.tag == "argument" and container.attrs.id then
-		table.insert(services[parent].arguments, (container.attrs.type or "") .. " -- " .. (container.attrs.id or ""))
+		table.insert(parent.arguments, (container.attrs.type or "") .. " -- " .. (container.attrs.id or ""))
 	end
 	if container.children then
 		for _, child in ipairs(container.children) do
 			filter_services(services, child, file, current)
 		end
 	end
-	local current = nil
+	current = nil
 end
 -----------------------------------------------------------------------------------
 -- read file into local cache
 local function read_file_into_cache(filename)
 	local doc, _ = xml.parseFile(filename, true)
-	cached_servies = {}
-	filter_services(cached_servies, doc, file)
+	filter_services(cached_servies, doc, filename)
 end
 
 -----------------------------------------------------------------------------------
 -- find all services.xml files
 local function build_cache()
-	local services = {}
+	cached_servies = {}
 	local files = vim.fn.globpath(".", "**/services.xml", true, true)
 	for _, path in pairs(files) do
 		local data = read_file_into_cache(path)
@@ -85,41 +84,42 @@ end
 local function yank_id(bufnr)
 	actions.close(bufnr)
 	if current_selection then
-		vim.cmd(':let @+="' .. cached_servies[current_selection].id .. '"')
+		vim.cmd(':let @+="' .. current_selection.id .. '"')
 	end
 end
 
 local function yank_class(bufnr)
 	actions.close(bufnr)
-	if not cached_servies[current_selection].class then
+	if not current_selection.class then
 		do
 			return
 		end
 	end
 	if current_selection then
-		vim.cmd(':let @+="' .. cached_servies[current_selection].class .. '"')
+		vim.cmd(':let @+="' .. current_selection.class .. '"')
 	end
 end
 -----------------------------------------------------------------------------------
 -- format preview
-function format_preview(id)
+function format_preview(entry)
 	local content = {}
 
-	table.insert(content, "-- service id --")
+	table.insert(content, entry.file)
+	table.insert(content, "-- service id -- :"..file_count)
 	if cached_servies[id] then
-		table.insert(content, cached_servies[id].id)
+		table.insert(content, entry.id)
 	end
 	table.insert(content, "")
 	table.insert(content, "-- class --")
-	if cached_servies[id].class then
-		if string.len(cached_servies[id].class) > 1 then
-			table.insert(content, cached_servies[id].class)
+	if entry.class then
+		if string.len(entry.class) > 1 then
+			table.insert(content, entry.class)
 		end
 	end
 	table.insert(content, "")
 	table.insert(content, "-- tags --")
-	if cached_servies[id].tags then
-		for _, tag in pairs(cached_servies[id].tags) do
+	if entry.tags then
+		for _, tag in pairs(entry.tags) do
 			if string.len(tag) > 1 then
 				table.insert(content, tag)
 			end
@@ -127,8 +127,8 @@ function format_preview(id)
 	end
 	table.insert(content, "")
 	table.insert(content, "-- arguments --")
-	if cached_servies[id].arguments then
-		for _, argument in pairs(cached_servies[id].arguments) do
+	if entry.arguments then
+		for _, argument in pairs(entry.arguments) do
 			table.insert(content, argument)
 		end
 	end
@@ -142,12 +142,12 @@ M.service_finder = function()
 		.new(opts, {
 			prompt_title = "shopware service selector",
 			finder = finders.new_table({
-				results = vim.tbl_keys(cached_servies),
-				entry_maker = function(id)
+				results = cached_servies,
+				entry_maker = function(entry)
 					return {
-						ordinal = id,
-						display = id,
-						value = id,
+						ordinal = entry.id,
+						display = entry.id,
+						value = entry,
 					}
 				end,
 			}),
@@ -155,7 +155,6 @@ M.service_finder = function()
 			previewer = previewers.new_buffer_previewer({
 				define_preview = function(self, entry, _)
 					current_selection = entry.value
-					preview_window = a.nvim_get_current_buf()
 					a.nvim_buf_set_lines(self.state.bufnr, 0, 1, true, format_preview(entry.value))
 				end,
 			}),
