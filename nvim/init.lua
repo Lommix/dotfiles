@@ -15,6 +15,7 @@ require'lommix.globals'
 require'lommix.telescope'
 require'lommix.cmp'
 require'lommix.scripts'
+require'lommix.godot'
 
 --vim.cmd("colorscheme catppuccin_frappe")
 vim.cmd("colorscheme gruvbox")

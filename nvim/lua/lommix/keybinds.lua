@@ -59,11 +59,3 @@ map("n", "<CR>", "<CR> :noh<CR><CR>")
 map("n", "<leader>r", ":lua require('nvim-reload').Reload()<CR>:syntax on<CR>")
 map("n", "<leader>i", ":LspInfo<CR>")
 
--- godot
-local godot = require("godot.debugger")
-godot.setup({})
-map("n", "<leader>dr", godot.debug)
-map("n", "<leader>dd", godot.debug_at_cursor)
-map('n', '<leader>dq', godot.quit)
-map('n', '<leader>dc', godot.continue)
-map('n', '<leader>ds', godot.step)
