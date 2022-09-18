@@ -59,10 +59,6 @@ map("n", "<CR>", "<CR> :noh<CR><CR>")
 map("n", "<leader>r", ":lua require('nvim-reload').Reload()<CR>:syntax on<CR>")
 map("n", "<leader>i", ":LspInfo<CR>")
 
-local shopware = require("lommix.scripts.shopware")
-map("n", "<leader>sc", shopware.get_services)
-map("n", "<leader>ss", ":lua require'plugins.shopware'.get_and_copy_services()<CR>")
-
 -- godot
 local godot = require("godot.debugger")
 godot.setup({})

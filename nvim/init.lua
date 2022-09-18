@@ -13,8 +13,10 @@ require'lommix.treesitter'
 require'lommix.globals'
 require'lommix.telescope'
 require'lommix.cmp'
+require'lommix.scripts'
 
 --vim.cmd("colorscheme catppuccin_frappe")
 vim.cmd("colorscheme gruvbox")
 vim.cmd("hi normal ctermbg=none guibg=none")
 vim.cmd("syntax on")
+
