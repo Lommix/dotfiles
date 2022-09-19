@@ -7,10 +7,14 @@ local formatting = null_ls.builtins.formatting
 local diagnostics = null_ls.builtins.diagnostics
 
 local sources = {
-	formatting.eslint,
+	--formatting.eslint,
+	formatting.prettier,
 	formatting.stylua,
 	formatting.phpcsfixer,
-	diagnostics.phpcs,
+	--diagnostics.phpcs,
+	--diagnostics.phpstan,
+	--formatting.phpcbf,
+	--diagnostics.psalm,
 }
 
 null_ls.setup({

@@ -53,7 +53,8 @@ mason_lspconfig.setup({
 local opts = {
 	on_attach = function(client, bufnr)
         -- only use null-ls formatting
-		client.resolved_capabilities.document_formatting = false
+        require("lsp-inlayhints").on_attach(client, bufnr)
+		--client.resolved_capabilities.document_formatting = false
 	end,
 }
 

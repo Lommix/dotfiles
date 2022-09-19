@@ -53,6 +53,8 @@ map("n", "gn", "<cmd>Telescope diagnostics<CR>")
 map("n", "gt", ":lua vim.lsp.buf.code_action()<CR>")
 map("n", "<A-j>",":lua vim.lsp.diagnostic.goto_next()<CR>")
 map("n", "<A-k>",":lua vim.lsp.diagnostic.goto_prev()<CR>")
+map("n", "º",":lua vim.lsp.diagnostic.goto_next()<CR>")
+map("n", "∆",":lua vim.lsp.diagnostic.goto_prev()<CR>")
 -- clear highlight search
 map("n", "<CR>", "<CR> :noh<CR><CR>")
 

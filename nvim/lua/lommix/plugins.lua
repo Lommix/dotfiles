@@ -3,7 +3,7 @@ vim.cmd([[packadd packer.nvim]])
 return require("packer").startup(function(use)
     --dev
     --
-    use '/home/lommix/Projects/godot.nvim'
+    --use '/home/lommix/Projects/godot.nvim'
     --
 	-- packer
 	use("wbthomason/packer.nvim")
@@ -26,6 +26,7 @@ return require("packer").startup(function(use)
 	use({ "jayp0521/mason-null-ls.nvim", after = { "null-ls.nvim", "mason.nvim" } })
     use("WhoIsSethDaniel/mason-tool-installer.nvim")
 	use("glepnir/lspsaga.nvim")
+    use("lvimuser/lsp-inlayhints.nvim")
 	-- cmp
 	use( "hrsh7th/nvim-cmp")
 	use("hrsh7th/cmp-nvim-lsp")
