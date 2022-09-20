@@ -25,7 +25,6 @@ o.mouse = a
 o.cursorline = true
 o.wildmenu = true
 o.wildmode = "longest:full,full"
-o.backupdir = "~/.cache/vim"
 o.listchars = "trail:·,nbsp:◇,tab:→ ,extends:▸,precedes:◂"
 o.clipboard = "unnamedplus"
 o.swapfile = false

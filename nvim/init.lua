@@ -17,10 +17,5 @@ require'lommix.cmp'
 require'lommix.scripts'
 require'lommix.godot'
 
-
-
-vim.cmd("colorscheme catppuccin_mocha")
-vim.cmd("colorscheme tokyonight-moon")
---vim.cmd("hi normal ctermbg=none guibg=none")
---vim.cmd("syntax on")
-
+vim.cmd("syntax on")
+vim.cmd("colorscheme gruvbox")
