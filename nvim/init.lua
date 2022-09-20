@@ -20,7 +20,7 @@ require'lommix.godot'
 
 
 vim.cmd("colorscheme catppuccin_mocha")
---vim.cmd("colorscheme tokyonight-moon")
-vim.cmd("hi normal ctermbg=none guibg=none")
+vim.cmd("colorscheme tokyonight-moon")
+--vim.cmd("hi normal ctermbg=none guibg=none")
 --vim.cmd("syntax on")
 

@@ -3,8 +3,8 @@ vim.cmd([[packadd packer.nvim]])
 return require("packer").startup(function(use)
     --dev
     --
-    use('/home/lommix/Projects/godot.nvim')
-    --
+    --use('/home/lommix/Projects/godot.nvim')
+    use('lommix/godot.nvim')
 	-- packer
 	use("wbthomason/packer.nvim")
 	-- libs
