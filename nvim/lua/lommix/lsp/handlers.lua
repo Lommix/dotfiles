@@ -17,7 +17,6 @@ M.setup = function()
 		{ name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
 		{ name = "DiagnosticSignHint", text = icons.diagnostics.Hint },
 		{ name = "DiagnosticSignInfo", text = icons.diagnostics.Information },
-		{ name = "DiagnosticSignInfo", text = icons.diagnostics.Information },
 	}
 
 	for _, sign in ipairs(signs) do
@@ -31,14 +30,14 @@ M.setup = function()
 			prefix = icons.ui.Gear,
 			severity = vim.diagnostic.severity.ERROR,
 		},
-		signs = {
+        signs = {
 			active = signs,
 		},
 		update_in_insert = true,
-		underline = true,
+		underline = false,
 		severity_sort = true,
 		float = {
-			focusable = true,
+			focusable = false,
 			style = "minimal",
 			border = "rounded",
 			source = "always",

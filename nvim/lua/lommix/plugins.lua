@@ -1,18 +1,19 @@
 vim.cmd([[packadd packer.nvim]])
 
 return require("packer").startup(function(use)
-    --dev
-    --
-    --use('/home/lommix/Projects/godot.nvim')
-    use('lommix/godot.nvim')
+	--dev
+	--
+	--use('/home/lommix/Projects/godot.nvim')
+	use("lommix/godot.nvim")
 	-- packer
 	use("wbthomason/packer.nvim")
-	-- libs
+	-- best lib in town
 	use("nvim-lua/plenary.nvim")
 	-- colorschemes
 	use("gruvbox-community/gruvbox")
 	use("folke/tokyonight.nvim")
 	use("catppuccin/vim")
+	--ui
 	-- lsp
 	use("mfussenegger/nvim-dap")
 	use("neovim/nvim-lspconfig")
@@ -23,12 +24,12 @@ return require("packer").startup(function(use)
 	use("SmiteshP/nvim-navic")
 	use("simrat39/symbols-outline.nvim")
 	use("b0o/SchemaStore.nvim")
-	use({ "jayp0521/mason-null-ls.nvim", after = { "null-ls.nvim", "mason.nvim" } })
-    use("WhoIsSethDaniel/mason-tool-installer.nvim")
+	use("WhoIsSethDaniel/mason-tool-installer.nvim")
+	use({ "jayp0521/mason-null-ls.nvim", after = { "null-ls.nvim", "mason.nvim", "mason-tool-installer.nvim" } })
 	use("glepnir/lspsaga.nvim")
-    use("lvimuser/lsp-inlayhints.nvim")
+	use("lvimuser/lsp-inlayhints.nvim")
 	-- cmp
-	use( "hrsh7th/nvim-cmp")
+	use("hrsh7th/nvim-cmp")
 	use("hrsh7th/cmp-nvim-lsp")
 	use("hrsh7th/cmp-buffer")
 	use("hrsh7th/cmp-path")
@@ -48,7 +49,7 @@ return require("packer").startup(function(use)
 	})
 	use("famiu/nvim-reload")
 	use("christianchiarulli/lua-dev.nvim")
-	use( "nvim-telescope/telescope.nvim")
+	use("nvim-telescope/telescope.nvim")
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
 	use("akinsho/toggleterm.nvim")
 	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })

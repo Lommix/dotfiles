@@ -29,4 +29,6 @@ o.listchars = "trail:·,nbsp:◇,tab:→ ,extends:▸,precedes:◂"
 o.clipboard = "unnamedplus"
 o.swapfile = false
 o.undofile = true
+o.nuw = 6
+
 opt.mouse = "a"

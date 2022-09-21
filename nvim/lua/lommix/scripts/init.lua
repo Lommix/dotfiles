@@ -1,14 +1,13 @@
-local ok, shopware = pcall(require, "lommix.scripts.shopware")
-if not ok then
-	return
-end
+local shopware = require("lommix.scripts.shopware")
+local cheatsheet = require("lommix.scripts.cheatsheet")
 
 -- reload on run for debug stuff
 local function debug()
-	package.loaded["lommix.scripts.shopware"] = nil
-	shopware = require("lommix.scripts.shopware")
-	shopware.service_finder()
+	package.loaded["lommix.scripts.cheatsheet"] = nil
+	cheatsheet = require("lommix.scripts.cheatsheet")
+    cheatsheet.search()
 end
 
 -- shopware scripties binds
-vim.keymap.set("n", "<leader>ss",debug, { silent = true })
+vim.keymap.set("n", "<leader>ss",shopware.service_finder, { silent = true })
+vim.keymap.set("n", "<leader>cc",debug, { silent = true })

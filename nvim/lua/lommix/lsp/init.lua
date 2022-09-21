@@ -20,7 +20,6 @@ M.server_capabilities = function()
   end)
 end
 
---require 'lsp.handlers'.setup()
 require 'lommix.lsp.mason'
 require 'lommix.lsp.null-ls'
 require 'lspconfig'
