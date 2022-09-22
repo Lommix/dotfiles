@@ -10,7 +10,6 @@ local last_querytype = nil
 
 ---------------------------------------------------------------------------------
 M.search = function()
-
 	local question = vim.fn.input("Ask me anything: ")
 	local firstWhiteSpace = string.find(question, "%s")
 	local language, query, args
@@ -25,23 +24,13 @@ M.search = function()
 		args = string.format("cht.sh/%s?T", language)
 	end
 
-
 	local editorWidth = a.nvim_get_option("columns")
 	local editorHeight = a.nvim_get_option("lines")
-
-	response_window = a.nvim_open_win(response_buffer, true, {
-		height = editorHeight - 20,
-		width = editorWidth - 20,
-		border = "double",
-		relative = "editor",
-		col = 10,
-		row = 10,
-	})
 
 	local response = {}
 	local job = Job:new({
 		command = "curl",
-        args = {args},
+		args = { args },
 		on_stdout = function(_, line)
 			local s = line:gsub("\x1b%[%d+;%d+;%d+;%d+;%d+m", "")
 				:gsub("\x1b%[%d+;%d+;%d+;%d+m", "")
@@ -50,14 +39,23 @@ M.search = function()
 				:gsub("\x1b%[%d+m", "")
 			table.insert(response, s)
 		end,
-	})
-
-	job:sync()
-	a.nvim_buf_set_lines(response_buffer, 0, -1, true, response)
-
-	a.nvim_buf_call(response_buffer, function()
-		vim.cmd("setfiletype " .. language)
-	end)
+		on_exit = function()
+			vim.schedule(function()
+				response_window = a.nvim_open_win(response_buffer, true, {
+					height = editorHeight - 20,
+					width = editorWidth - 20,
+					border = "double",
+					relative = "editor",
+					col = 10,
+					row = 10,
+				})
+				a.nvim_buf_set_lines(response_buffer, 0, -1, true, response)
+				a.nvim_buf_call(response_buffer, function()
+					vim.cmd("setfiletype " .. language)
+				end)
+			end)
+		end,
+	}):start()
 end
 
 return M
