@@ -13,7 +13,9 @@ return require("packer").startup(function(use)
 	use("gruvbox-community/gruvbox")
 	use("folke/tokyonight.nvim")
 	use("catppuccin/vim")
-	--ui
+	-- tools
+	use("NTBBloodbath/rest.nvim")
+	-- ui
 	-- lsp
 	use("mfussenegger/nvim-dap")
 	use("neovim/nvim-lspconfig")
@@ -53,6 +55,7 @@ return require("packer").startup(function(use)
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
 	use("akinsho/toggleterm.nvim")
 	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
+	use("nvim-treesitter/playground")
 	use({
 		"kyazdani42/nvim-web-devicons",
 		config = function()

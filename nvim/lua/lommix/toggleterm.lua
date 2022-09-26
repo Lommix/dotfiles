@@ -56,42 +56,29 @@ local lazygit = Terminal:new {
   count = 99,
 }
 
+local lazydocker = Terminal:new {
+  cmd = "lazydocker",
+  hidden = true,
+  direction = "float",
+  float_opts = {
+    border = "none",
+    width = 100000,
+    height = 100000,
+  },
+  on_open = function(_)
+    vim.cmd "startinsert!"
+    -- vim.cmd "set laststatus=0"
+  end,
+  on_close = function(_)
+    -- vim.cmd "set laststatus=3"
+  end,
+  count = 99,
+}
+
+function _LAZYDOCKER_TOGGLE()
+  lazydocker:toggle()
+end
+
 function _LAZYGIT_TOGGLE()
   lazygit:toggle()
-end
-
-local node = Terminal:new { cmd = "node", hidden = true }
-
-function _NODE_TOGGLE()
-  node:toggle()
-end
-
-local ncdu = Terminal:new { cmd = "ncdu", hidden = true }
-
-function _NCDU_TOGGLE()
-  ncdu:toggle()
-end
-
-local htop = Terminal:new { cmd = "htop", hidden = true }
-
-function _HTOP_TOGGLE()
-  htop:toggle()
-end
-
-local python = Terminal:new { cmd = "python", hidden = true }
-
-function _PYTHON_TOGGLE()
-  python:toggle()
-end
-
-local cargo_run = Terminal:new { cmd = "cargo run", hidden = true }
-
-function _CARGO_RUN()
-  cargo_run:toggle()
-end
-
-local cargo_test = Terminal:new { cmd = "cargo test", hidden = true }
-
-function _CARGO_TEST()
-  cargo_test:toggle()
 end

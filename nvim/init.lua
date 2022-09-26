@@ -16,10 +16,11 @@ require("lommix.telescope")
 require("lommix.cmp")
 require("lommix.scripts")
 require("lommix.godot")
+require("lommix.rest")
 
 -- after plugins
 require("lommix.luasnip")
 
 vim.cmd("syntax on")
 vim.cmd("colorscheme gruvbox")
-vim.cmd(":hi normal ctermbg=none guibg=none<CR>")
+vim.cmd("hi normal ctermbg=none guibg=none")

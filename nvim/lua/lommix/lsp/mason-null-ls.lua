@@ -9,4 +9,4 @@ mason_null_ls.setup({
     automatic_installation = true,
 })
 
-mason_null_ls.check_install(true)
+--mason_null_ls.check_install(true)

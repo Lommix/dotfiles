@@ -29,6 +29,7 @@ map("n", "<leader>l", ":vertical resize -2<CR>")
 map("n", "<leader>h", ":vertical resize +2<CR>")
 -- git
 map("n", "<leader>gg", ":lua _LAZYGIT_TOGGLE()<CR>")
+map("n", "<leader>hh", ":lua _LAZYDOCKER_TOGGLE()<CR>")
 -- telescope
 map("n", "<leader>ff", ":lua require'telescope.builtin'.find_files{}<CR>")
 map("n", "<leader>fr", ":lua require'telescope.builtin'.find_files{no_ignore = true}<CR>")
