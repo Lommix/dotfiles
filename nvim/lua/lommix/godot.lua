@@ -11,6 +11,6 @@ end
 
 map("n", "<leader>dr", godot.debugger.debug)
 map("n", "<leader>dd", godot.debugger.debug_at_cursor)
-map("n", "<leader>dq", godot.debugger.quit)
 map("n", "<leader>dc", godot.debugger.continue)
 map("n", "<leader>ds", godot.debugger.step)
+map("n", "<leader>dq", godot.debugger.quit)

@@ -42,8 +42,8 @@ M.search = function()
 		on_exit = function()
 			vim.schedule(function()
 				response_window = a.nvim_open_win(response_buffer, true, {
-					height = editorHeight - 20,
-					width = editorWidth - 20,
+					height = a.nvim_get_option("lines") - 20,
+					width = a.nvim_get_option("columns") - 20,
 					border = "double",
 					relative = "editor",
 					col = 10,

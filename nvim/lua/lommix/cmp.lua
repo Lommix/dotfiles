@@ -25,7 +25,6 @@ local function contains(t, value)
 end
 
 local compare = require("cmp.config.compare")
-require("luasnip/loaders/from_vscode").lazy_load()
 
 local has_words_before = function()
 	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -57,14 +56,14 @@ cmp.setup({
 			if cmp.get_active_entry() then
 				cmp.confirm()
 			else
-                fallback()
+				fallback()
 			end
 		end),
 		["<TAB>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item()
-			--elseif luasnip.expand_or_jumpable() then
-			--	luasnip.expand_or_jump()
+			elseif luasnip.expand_or_jumpable() then
+				luasnip.expand_or_jump()
 			elseif has_words_before() then
 				cmp.complete()
 			else
@@ -77,8 +76,8 @@ cmp.setup({
 		["<S-Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_prev_item()
-			elseif luasnip.jumpable(-1) then
-				luasnip.jump(-1)
+			--elseif luasnip.jumpable(-1) then
+			--	luasnip.jump(-1)
 			else
 				fallback()
 			end
@@ -116,23 +115,10 @@ cmp.setup({
 		end,
 	},
 	sources = {
-		{ name = "crates", group_index = 1 },
-		{
-			name = "nvim_lsp",
-			filter = function(entry, ctx)
-				local kind = require("cmp.types.lsp").CompletionItemKind[entry:get_kind()]
-				if kind == "Snippet" and ctx.prev_context.filetype == "java" then
-					return true
-				end
-
-				if kind == "Text" then
-					return true
-				end
-			end,
-			group_index = 2,
-		},
+		--	{ name = "crates", group_index = 1 },
+		{ name = "nvim_lsp" },
 		{ name = "nvim_lua", group_index = 2 },
-		{ name = "luasnip", group_index = 2 },
+		{ name = "luasnip" },
 		{
 			name = "buffer",
 			group_index = 2,
@@ -143,26 +129,18 @@ cmp.setup({
 			end,
 		},
 		{ name = "path", group_index = 2 },
-		{ name = "emoji", group_index = 2 },
-		{ name = "lab.quick_data", keyword_length = 4, group_index = 2 },
 	},
 	sorting = {
 		priority_weight = 2,
 		comparators = {
-			-- require("copilot_cmp.comparators").prioritize,
-			-- require("copilot_cmp.comparators").score,
 			compare.offset,
 			compare.exact,
-			-- compare.scopes,
 			compare.score,
 			compare.recently_used,
 			compare.locality,
-			-- compare.kind,
 			compare.sort_text,
 			compare.length,
 			compare.order,
-			-- require("copilot_cmp.comparators").prioritize,
-			-- require("copilot_cmp.comparators").score,
 		},
 	},
 	confirm_opts = {

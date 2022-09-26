@@ -44,7 +44,7 @@ map("n", "ƒ", vim.lsp.buf.formatting_sync)
 map("n", "K", "<Cmd>Lspsaga hover_doc<CR>")
 
 map("n", "gd", "<cmd>Telescope lsp_definitions<CR>")
-map("n", "gD", "<cmd>Lspsaga lsp_finder<CR>")
+map("n", "gD", "<cmd>Telescope lsp_references<CR>")
 map("n", "gi", "<cmd>Telescope lsp_implementations<CR>")
 --map("n", "gr", "<cmd>Telescope lsp_references<CR>")
 map("n", "gp", "<Cmd>Lspsaga preview_definition<CR>")

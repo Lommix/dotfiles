@@ -30,5 +30,5 @@ o.clipboard = "unnamedplus"
 o.swapfile = false
 o.undofile = true
 o.nuw = 6
-
+opt.fillchars = { eob = ' ' }
 opt.mouse = "a"
