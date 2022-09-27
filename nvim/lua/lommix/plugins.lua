@@ -15,7 +15,11 @@ return require("packer").startup(function(use)
 	use("catppuccin/vim")
 	-- tools
 	use("NTBBloodbath/rest.nvim")
+	use("ThePrimeagen/harpoon")
+	use("numToStr/Comment.nvim")
+	use("rafamadriz/friendly-snippets")
 	-- ui
+	use("brenoprata10/nvim-highlight-colors")
 	-- lsp
 	use("mfussenegger/nvim-dap")
 	use("neovim/nvim-lspconfig")
@@ -27,7 +31,7 @@ return require("packer").startup(function(use)
 	use("simrat39/symbols-outline.nvim")
 	use("b0o/SchemaStore.nvim")
 	use("WhoIsSethDaniel/mason-tool-installer.nvim")
-	use({ "jayp0521/mason-null-ls.nvim", after = { "null-ls.nvim", "mason.nvim", "mason-tool-installer.nvim" } })
+	use("jayp0521/mason-null-ls.nvim")
 	use("glepnir/lspsaga.nvim")
 	use("lvimuser/lsp-inlayhints.nvim")
 	-- cmp

@@ -23,13 +23,13 @@ map("n", "<leader>v", "<CMD>vsplit<CR>")
 map("n", "<leader>q", ":q<CR>")
 map("n", "<leader>e", ":NvimTreeFindFileToggle<CR>:NvimTreeFocus<CR>")
 
-map("n", "<leader>j", ":resize -2<CR>")
-map("n", "<leader>k", ":resize +2<CR>")
-map("n", "<leader>l", ":vertical resize -2<CR>")
-map("n", "<leader>h", ":vertical resize +2<CR>")
+--map("n", "<leader>j", ":resize -2<CR>")
+--map("n", "<leader>k", ":resize +2<CR>")
+--map("n", "<leader>l", ":vertical resize -2<CR>")
+--map("n", "<leader>h", ":vertical resize +2<CR>")
 -- git
-map("n", "<leader>gg", ":lua _LAZYGIT_TOGGLE()<CR>")
-map("n", "<leader>hh", ":lua _LAZYDOCKER_TOGGLE()<CR>")
+map("n", "<leader>lg", ":lua _LAZYGIT_TOGGLE()<CR>")
+map("n", "<leader>ld", ":lua _LAZYDOCKER_TOGGLE()<CR>")
 -- telescope
 map("n", "<leader>ff", ":lua require'telescope.builtin'.find_files{}<CR>")
 map("n", "<leader>fr", ":lua require'telescope.builtin'.find_files{no_ignore = true}<CR>")
@@ -37,6 +37,9 @@ map("n", "<leader>fg", ":lua require'telescope.builtin'.live_grep{additionals_ar
 map("n", "<leader>fs", ":lua require'telescope.builtin'.grep_string()<CR>")
 map("n", "<leader>fb", "<CMD>Telescope buffers<CR>")
 map("n", "<leader>fh", "<CMD>Telescope help_tags<CR>")
+
+--harpoon
+
 
 -- lsp
 map("n", "<A-f>", vim.lsp.buf.formatting_sync)

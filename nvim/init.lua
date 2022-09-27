@@ -17,7 +17,9 @@ require("lommix.cmp")
 require("lommix.scripts")
 require("lommix.godot")
 require("lommix.rest")
-
+require("lommix.harpoon")
+require("lommix.comment")
+require("lommix.highlight-colors")
 -- after plugins
 require("lommix.luasnip")
 

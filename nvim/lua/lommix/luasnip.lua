@@ -3,7 +3,17 @@ if not ok then
 	return
 end
 
-require("luasnip.loaders.from_lua").load({paths ="~/.config/nvim/snippets/"})
+-- any vscode like plugin
+require("luasnip.loaders.from_vscode").lazy_load()
+
+-- custom plugins
+if vim.fn.isdirectory("~/.snippets/solid") then
+	require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.snippets/solid/" } })
+end
+
+-- lua snippets
+require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/snippets/" })
+
 local types = require("luasnip.util.types")
 
 ls.config.set_config({

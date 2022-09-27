@@ -1,6 +1,6 @@
 local status_ok, mason = pcall(require, "mason")
 if not status_ok then
-	return
+   return
 end
 
 local status_ok_1, mason_lspconfig = pcall(require, "mason-lspconfig")
@@ -11,8 +11,6 @@ local status_ok_2, lsp_config = pcall(require, "lspconfig")
 if not status_ok_2 then
 	return
 end
--- custom
-lsp_config.gdscript.setup({})
 
 local servers = {
 	"cssls",
@@ -28,6 +26,7 @@ local servers = {
 	"pyright",
 	"yamlls",
 	"bashls",
+    "tailwindcss",
 	"clangd",
 }
 
@@ -43,6 +42,7 @@ local settings = {
 	log_level = vim.log.levels.INFO,
 	max_concurrent_installers = 4,
 }
+
 mason.setup(settings)
 mason_lspconfig.setup({
 	ensure_installed = servers,
@@ -51,8 +51,7 @@ mason_lspconfig.setup({
 
 local opts = {
 	on_attach = function(client, bufnr)
-        -- only use null-ls formatting
-        require("lsp-inlayhints").on_attach(client, bufnr)
+		require("lsp-inlayhints").on_attach(client, bufnr)
 		--client.resolved_capabilities.document_formatting = false
 	end,
 }
@@ -60,6 +59,11 @@ local opts = {
 mason_lspconfig.setup_handlers({
 	function(server_name)
 		lsp_config[server_name].setup(opts)
+	end,
+	["html"] = function()
+		lsp_config.html.setup(vim.tbl_extend("force", opts, {
+			filetypes = { "html", "typescriptreact", "javascript", "twig", "php" },
+		}))
 	end,
 	["sumneko_lua"] = function()
 		local luadev = require("lua-dev").setup({

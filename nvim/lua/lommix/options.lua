@@ -32,3 +32,4 @@ o.undofile = true
 o.nuw = 6
 opt.fillchars = { eob = ' ' }
 opt.mouse = "a"
+o.termguicolors = true
