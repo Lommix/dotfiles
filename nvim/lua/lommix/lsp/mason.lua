@@ -1,6 +1,6 @@
 local status_ok, mason = pcall(require, "mason")
 if not status_ok then
-   return
+	return
 end
 
 local status_ok_1, mason_lspconfig = pcall(require, "mason-lspconfig")
@@ -26,7 +26,7 @@ local servers = {
 	"pyright",
 	"yamlls",
 	"bashls",
-    "tailwindcss",
+	"tailwindcss",
 	"clangd",
 }
 
@@ -60,17 +60,24 @@ mason_lspconfig.setup_handlers({
 	function(server_name)
 		lsp_config[server_name].setup(opts)
 	end,
-	["html"] = function()
-		lsp_config.html.setup(vim.tbl_extend("force", opts, {
-			filetypes = { "html", "typescriptreact", "javascript", "twig", "php" },
-		}))
-	end,
+	-- ["html"] = function()
+	-- 	lsp_config.html.setup(vim.tbl_extend("force", opts, {
+	-- 		filetypes = { "html", "typescriptreact", "javascript", "twig", "php" },
+	-- 		on_attach = function(client, bufnr)
+	-- 			client.resolved_capabilities.document_formatting = false
+	-- 		end,
+	-- 	}))
+	-- end,
 	["sumneko_lua"] = function()
 		local luadev = require("lua-dev").setup({
 			lspconfig = {
 				on_attach = opts.on_attach,
 			},
 		})
-		lsp_config.sumneko_lua.setup(luadev)
+		lsp_config.sumneko_lua.setup(vim.tbl_deep_extend("force", luadev, {
+			on_attach = function(client, bufnr)
+				client.resolved_capabilities.document_formatting = false
+			end,
+		}))
 	end,
 })

@@ -13,6 +13,8 @@ return require("packer").startup(function(use)
 	use("gruvbox-community/gruvbox")
 	use("folke/tokyonight.nvim")
 	use("catppuccin/vim")
+	use({ "shaunsingh/oxocarbon.nvim", run = "./install.sh" })
+	use("marko-cerovac/material.nvim")
 	-- tools
 	use("NTBBloodbath/rest.nvim")
 	use("ThePrimeagen/harpoon")

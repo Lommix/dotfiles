@@ -30,6 +30,7 @@ map("n", "<leader>e", ":NvimTreeFindFileToggle<CR>:NvimTreeFocus<CR>")
 -- git
 map("n", "<leader>lg", ":lua _LAZYGIT_TOGGLE()<CR>")
 map("n", "<leader>ld", ":lua _LAZYDOCKER_TOGGLE()<CR>")
+map("n", "<leader>go",":lua _GOQUICKRUN_TOGGLE()<CR>")
 -- telescope
 map("n", "<leader>ff", ":lua require'telescope.builtin'.find_files{}<CR>")
 map("n", "<leader>fr", ":lua require'telescope.builtin'.find_files{no_ignore = true}<CR>")
@@ -69,4 +70,5 @@ map("n", "<leader>i", ":LspInfo<CR>")
 map("n","<leader><leader>1", ":colorscheme catppuccin_mocha<CR>")
 map("n","<leader><leader>2", ":colorscheme tokyonight-moon<CR>")
 map("n","<leader><leader>3", ":colorscheme gruvbox<CR>")
+map("n","<leader><leader>5", ":colorscheme oxocarbon<CR>")
 map("n","<leader><leader>4", ":hi normal ctermbg=none guibg=none<CR>")
