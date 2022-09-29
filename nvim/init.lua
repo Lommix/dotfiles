@@ -22,6 +22,7 @@ require("lommix.comment")
 require("lommix.highlight-colors")
 -- after plugins
 require("lommix.luasnip")
+require("lommix.dap")
 
 vim.cmd("syntax on")
 vim.cmd("colorscheme gruvbox")

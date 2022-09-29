@@ -23,6 +23,13 @@ map("n", "<leader>v", "<CMD>vsplit<CR>")
 map("n", "<leader>q", ":q<CR>")
 map("n", "<leader>e", ":NvimTreeFindFileToggle<CR>:NvimTreeFocus<CR>")
 
+
+
+map("n", "<C-Right>", "<C-w><")
+map("n", "<C-Left>", "<C-w>>")
+map("n", "<C-Up>", "<C-w>+")
+map("n", "<C-Down>", "<C-w>-")
+
 --map("n", "<leader>j", ":resize -2<CR>")
 --map("n", "<leader>k", ":resize +2<CR>")
 --map("n", "<leader>l", ":vertical resize -2<CR>")
@@ -56,8 +63,8 @@ map("n", "gp", "<Cmd>Lspsaga preview_definition<CR>")
 map("n", "gr", "<Cmd>Lspsaga rename<CR>")
 map("n", "gn", "<cmd>Telescope diagnostics<CR>")
 map("n", "gt", ":lua vim.lsp.buf.code_action()<CR>")
-map("n", "<A-j>",":lua vim.lsp.diagnostic.goto_next()<CR>")
-map("n", "<A-k>",":lua vim.lsp.diagnostic.goto_prev()<CR>")
+-- map("n", "<A-j>",":lua vim.lsp.diagnostic.goto_next()<CR>")
+-- map("n", "<A-k>",":lua vim.lsp.diagnostic.goto_prev()<CR>")
 map("n", "º",":lua vim.lsp.diagnostic.goto_next()<CR>")
 map("n", "∆",":lua vim.lsp.diagnostic.goto_prev()<CR>")
 -- clear highlight search
