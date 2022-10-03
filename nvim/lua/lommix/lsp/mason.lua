@@ -76,7 +76,7 @@ mason_lspconfig.setup_handlers({
 		})
 		lsp_config.sumneko_lua.setup(vim.tbl_deep_extend("force", luadev, {
 			on_attach = function(client, bufnr)
-				client.resolved_capabilities.document_formatting = false
+				-- client.resolved_capabilities.document_formatting = false
 			end,
 		}))
 	end,

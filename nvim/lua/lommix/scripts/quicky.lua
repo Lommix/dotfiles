@@ -21,11 +21,17 @@ local config = {
 local project_cache_path = config.cache_dir .. "/" .. string.gsub(vim.fn.getcwd(), "/", "") .. ".txt"
 
 M.open = function()
-	if vim.fn.filereadable(project_cache_path) == true then
+	if not vim.fn.filereadable(project_cache_path) == true then
+        do
+            return
+        end
 	end
 
 	local win = a.nvim_open_win(buffer, true, wincfg)
-	--	a.nvim_buf_call(buffer, function() end)
-	a.nvim_buf_set_keymap(buffer, "n", "q", ":q<CR>", { silent = true })
+    a.nvim_buf_call(buffer, function ()
+        vim.cmd("e ".. project_cache_path)
+    end)
+
+	a.nvim_buf_set_keymap(buffer, "n", "q", ":wq<CR>", { silent = true })
 end
 return M
