@@ -50,8 +50,8 @@ map("n", "<leader>fh", "<CMD>Telescope help_tags<CR>")
 
 
 -- lsp
-map("n", "<A-f>", vim.lsp.buf.formatting_sync)
-map("n", "ƒ", vim.lsp.buf.formatting_sync)
+map("n", "<A-f>", vim.lsp.buf.format)
+map("n", "ƒ", vim.lsp.buf.format)
 --map("n", "K", vim.lsp.buf.hover)
 map("n", "K", "<Cmd>Lspsaga hover_doc<CR>")
 
@@ -63,7 +63,7 @@ map("n", "gp", "<Cmd>Lspsaga preview_definition<CR>")
 map("n", "gr", "<Cmd>Lspsaga rename<CR>")
 map("n", "gn", "<cmd>Telescope diagnostics<CR>")
 map("n", "gt", ":lua vim.lsp.buf.code_action()<CR>")
--- map("n", "<A-j>",":lua vim.lsp.diagnostic.goto_next()<CR>")
+map("n", "<C-k>",":lua vim.diagnostic.open_float()<CR>")
 -- map("n", "<A-k>",":lua vim.lsp.diagnostic.goto_prev()<CR>")
 map("n", "º",":lua vim.lsp.diagnostic.goto_next()<CR>")
 map("n", "∆",":lua vim.lsp.diagnostic.goto_prev()<CR>")

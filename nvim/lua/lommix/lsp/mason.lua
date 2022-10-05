@@ -12,6 +12,10 @@ if not status_ok_2 then
 	return
 end
 
+lsp_config.gdscript.setup({
+	cmd = { "nc", "127.0.0.1", "6008" },
+})
+
 local servers = {
 	"cssls",
 	"cssmodules_ls",

@@ -15,10 +15,11 @@ local actions = null_ls.builtins.code_actions
 local sources = {
 	--formatting.eslint_d,
 	formatting.stylua,
-
 	--diagnostics.eslint_d,
 	--diagnostics.phpcs, -- not hard enough
 	--diagnostics.psalm,
+    diagnostics.gdlint,
+    formatting.gdformat,
 	actions.xo, -- js/ts
 }
 
