@@ -9,7 +9,7 @@ require("telescope").setup({
 		},
 	},
 	defaults = {
-		path_display = { "absolute" },
-		file_ignore_patterns = { "*.png", "*.jpg", "*.jepg" },
+		path_display = { "smart" },
+		file_ignore_patterns = { ".png", ".jpg", ".svg", ".import", ".jepg" },
 	},
 })
