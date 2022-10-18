@@ -20,6 +20,7 @@ require("lommix.rest")
 require("lommix.harpoon")
 require("lommix.comment")
 require("lommix.highlight-colors")
+require("lommix.rust-tools")
 -- after plugins
 require("lommix.luasnip")
 require("lommix.dap")

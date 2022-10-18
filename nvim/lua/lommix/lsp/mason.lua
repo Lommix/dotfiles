@@ -13,7 +13,7 @@ if not status_ok_2 then
 end
 
 lsp_config.gdscript.setup({
-	cmd = { "nc", "127.0.0.1", "6008" },
+	cmd = { "nc", "127.0.0.1", "6005" },
 })
 
 local servers = {

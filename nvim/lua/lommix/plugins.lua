@@ -1,10 +1,6 @@
 vim.cmd([[packadd packer.nvim]])
 
 return require("packer").startup(function(use)
-	--dev
-	--
-	--use("/home/lommix/Projects/godot.nvim")
-	use("lommix/godot.nvim")
 	-- packer
 	use("wbthomason/packer.nvim")
 	-- best lib in town
@@ -19,6 +15,7 @@ return require("packer").startup(function(use)
 	use("ThePrimeagen/harpoon")
 	use("numToStr/Comment.nvim")
 	use("rafamadriz/friendly-snippets")
+	use 'simrat39/rust-tools.nvim'
 	-- ui
 	use("brenoprata10/nvim-highlight-colors")
 	-- lsp
