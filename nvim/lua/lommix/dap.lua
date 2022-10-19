@@ -33,16 +33,20 @@ dap.adapters.godot = {
 
 dap.adapters.lldb = {
   type = 'executable',
-  command = '/usr/bin/lldb',
+  command = '/home/linuxbrew/.linuxbrew/bin/lldb-vscode',
   name = 'lldb'
 }
+
 
 dap.configurations.cpp = {
   {
     name = 'Launch',
     type = 'lldb',
     request = 'launch',
-    program = '${workspaceFolder}/target/debug/fun', --todo fix
+	program = function()
+		local path = vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+		return path
+    end,
     cwd = '${workspaceFolder}',
     stopOnEntry = false,
     args = {},
