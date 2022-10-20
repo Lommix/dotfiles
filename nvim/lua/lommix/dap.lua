@@ -22,6 +22,10 @@ vim.keymap.set("n", "<F9>", ":DapTerminate<CR>", {})
 vim.fn.sign_define("DapBreakpoint", { text = "🟥", texthl = "", linehl = "", numhl = "" })
 vim.fn.sign_define("DapStopped", { text = "⭐️", texthl = "", linehl = "", numhl = "" })
 
+dap.defaults.fallback.external_terminal = {
+    command = '/usr/local/bin/kitty';
+    args = {'--hold'};
+}
 ------------------------------------------------------
 -- GO
 require("dap-go").setup()
@@ -47,7 +51,7 @@ dap.configurations.gdscript = {
 -- RUST / C / C++
 dap.adapters.lldb = {
   type = 'executable',
-  command = '/home/linuxbrew/.linuxbrew/bin/lldb-vscode',
+  command = 'lldb-vscode-14',
   name = 'lldb'
 }
 
@@ -63,7 +67,7 @@ dap.configurations.cpp = {
     cwd = '${workspaceFolder}',
     stopOnEntry = false,
     args = {},
-
+	runInTerminal = false,
   },
 }
 

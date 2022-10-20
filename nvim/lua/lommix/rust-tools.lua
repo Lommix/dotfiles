@@ -16,8 +16,8 @@ local opts = {
 	dap = {
 		adapter = {
 			type = "executable",
-			command = "/home/linuxbrew/.linuxbrew/bin/lldb-vscode",
-			name = "lldb",
+			command = "lldb-vscode-14",
+			name = "lldb-vscode-14",
 		},
 	},
 }
