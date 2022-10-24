@@ -16,6 +16,7 @@ order += "disk /home"
 #order += "ethernet enp1s0"
 #order += "wireless wlp2s0"
 order += "volume master"
+order += "path_exists VPN"
 #order += "battery 1"
 order += "tztime local"
 
@@ -26,6 +27,12 @@ load {
 cpu_temperature 0 {
         format = "<span background='#bf616a'>  CPU %degrees °C </span>"
         path = "/sys/class/thermal/thermal_zone0/temp"
+}
+
+path_exists VPN {
+        format = "<span background='#00ff22'> VPN ON </span>"
+        format_down = "<span background='#ff0000'> VPN OFF </span>"
+ 		path = "/proc/sys/net/ipv4/conf/tun0"
 }
 
 disk "/" {
