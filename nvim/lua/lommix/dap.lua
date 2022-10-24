@@ -74,6 +74,25 @@ dap.configurations.cpp = {
 dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp
 
+------------------------------------------------------
+-- C#
+dap.adapters.coreclr = {
+  type = 'executable',
+  command = 'netcoredbg',
+  args = {}
+}
+
+dap.configurations.cs = {
+  {
+    type = "coreclr",
+    name = "launch - netcoredbg",
+    request = "launch",
+    program = function()
+        return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/.godot/mono/temp/bin/Debug/', 'file')
+    end,
+  },
+}
+
 -- TODO: finish when bored
 -- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation
 ------------------------------------------------------

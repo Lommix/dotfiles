@@ -5,6 +5,12 @@ BASEDIR=$(dirname "$SCRIPT")
 rm -f "${HOME}"/.tmux.conf
 ln -s "$BASEDIR"/.tmux.conf "${HOME}"/.tmux.conf
 
+#i3
+rm -rf "${HOME}"/.config/i3
+ln -s "$BASEDIR"/i3 "${HOME}"/.config/i3
+rm -rf "${HOME}"/.config/i3status
+ln -s "$BASEDIR"/i3status "${HOME}"/.config/i3status
+
 #nvim
 rm -rf "${HOME}"/.config/nvim
 ln -s "$BASEDIR"/nvim "${HOME}"/.config/nvim
