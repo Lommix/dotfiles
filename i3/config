@@ -9,7 +9,7 @@
 
 exec_always xset s off
 exec_always feh --bg-fill ~/.config/i3/bg/540988.jpg
-
+exec --no-startup-id "compton -b"
 
 # i3 config file (v4)
 #
