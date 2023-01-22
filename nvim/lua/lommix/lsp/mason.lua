@@ -64,14 +64,14 @@ mason_lspconfig.setup_handlers({
 	function(server_name)
 		lsp_config[server_name].setup(opts)
 	end,
-	-- ["html"] = function()
-	-- 	lsp_config.html.setup(vim.tbl_extend("force", opts, {
-	-- 		filetypes = { "html", "typescriptreact", "javascript", "twig", "php" },
-	-- 		on_attach = function(client, bufnr)
-	-- 			client.resolved_capabilities.document_formatting = false
-	-- 		end,
-	-- 	}))
-	-- end,
+	 -- ["html"] = function()
+	 -- 	lsp_config.html.setup(vim.tbl_extend("force", opts, {
+	 -- 		filetypes = { "html", "typescriptreact", "javascript", "twig", "php" },
+	 -- 		on_attach = function(client, bufnr)
+	 -- 			client.resolved_capabilities.document_formatting = false
+	 -- 		end,
+	 -- 	}))
+	 -- end,
 	["sumneko_lua"] = function()
 		local luadev = require("lua-dev").setup({
 			lspconfig = {
