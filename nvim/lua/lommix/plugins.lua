@@ -15,7 +15,16 @@ return require("packer").startup(function(use)
 	use("ThePrimeagen/harpoon")
 	use("numToStr/Comment.nvim")
 	use("rafamadriz/friendly-snippets")
-	use 'simrat39/rust-tools.nvim'
+	use("simrat39/rust-tools.nvim")
+
+	use({
+		"Exafunction/codeium.vim",
+		config = function()
+			vim.keymap.set("i", "<C-a>", function()
+				return vim.fn["codeium#Accept"]()
+			end, { expr = true })
+		end,
+	})
 	-- ui
 	use("brenoprata10/nvim-highlight-colors")
 	-- lsp

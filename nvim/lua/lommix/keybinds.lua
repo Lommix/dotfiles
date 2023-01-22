@@ -24,7 +24,8 @@ map("n", "<leader>q", ":q<CR>")
 map("n", "<leader>e", ":NvimTreeFindFileToggle<CR>:NvimTreeFocus<CR>")
 
 
-
+map("n", "<C-l>", "<C-w><")
+map("n", "<C-h>", "<C-w>>")
 map("n", "<C-Right>", "<C-w><")
 map("n", "<C-Left>", "<C-w>>")
 map("n", "<C-Up>", "<C-w>+")
