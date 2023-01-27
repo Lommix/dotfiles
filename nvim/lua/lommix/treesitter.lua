@@ -26,6 +26,7 @@ ts.setup({
         "dockerfile",
         "javascript",
         "godot_resource",
+		"markdown"
 	},
 	autotag = {
 		enable = true,
