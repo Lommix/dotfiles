@@ -21,6 +21,7 @@ return require("packer").startup(function(use)
 		"Exafunction/codeium.vim",
 		config = function()
 			vim.g.codeium_disable_bindings = true
+			vim.g.codeium_enabled = false
 			vim.keymap.set("i", "<C-a>", function()
 				return vim.fn["codeium#Accept"]()
 			end, { expr = true })
