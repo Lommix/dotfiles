@@ -42,7 +42,7 @@ map("n", "<leader>go",":lua _GOQUICKRUN_TOGGLE()<CR>")
 -- telescope
 map("n", "<leader>ff", ":lua require'telescope.builtin'.find_files{}<CR>")
 map("n", "<leader>fr", ":lua require'telescope.builtin'.find_files{no_ignore = true}<CR>")
-map("n", "<leader>fg", ":lua require'telescope.builtin'.live_grep{additionals_args={'--no-ignore'}}<CR>")
+map("n", "<leader>fg", ":lua require'telescope.builtin'.live_grep{additional_args={'--no-ignore'}}<CR>")
 map("n", "<leader>fs", ":lua require'telescope.builtin'.grep_string()<CR>")
 map("n", "<leader>fb", "<CMD>Telescope buffers<CR>")
 map("n", "<leader>fh", "<CMD>Telescope help_tags<CR>")
