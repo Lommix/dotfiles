@@ -18,12 +18,24 @@ map("n", "∆", "<C-w>k")
 map("n", "@", "<C-w>l")
 
 -- split
-map("n", "<leader>V", "<CMD>split<CR>")
-map("n", "<leader>v", "<CMD>vsplit<CR>")
-map("n", "<leader>q", ":q<CR>")
+map("n", "<leader>sh", "<C-w>s")
+map("n", "<leader>sv", "<C-w>v")
+map("n", "<leader>se", "<C-w>=")
+map("n", "<leader>q", ":close<CR>")
+
+-- tabs
+map("n", "<leader>to", ":tabnew<CR>")
+map("n", "<leader>tx", ":tabclose<CR>")
+map("n", "<leader>tn", ":tabn<CR>")
+map("n", "<leader>tp", ":tabp<CR>")
+
+-- util
+map("n", "<leader>+", "<C-a>")
+map("n", "<leader>-", "<C-x>")
+map("n", "x", '"_x')
 map("n", "<leader>e", ":NvimTreeFindFileToggle<CR>:NvimTreeFocus<CR>")
 
-
+-- resize
 map("n", "<C-l>", "<C-w><")
 map("n", "<C-h>", "<C-w>>")
 map("n", "<C-Right>", "<C-w><")
@@ -31,14 +43,11 @@ map("n", "<C-Left>", "<C-w>>")
 map("n", "<C-Up>", "<C-w>+")
 map("n", "<C-Down>", "<C-w>-")
 
---map("n", "<leader>j", ":resize -2<CR>")
---map("n", "<leader>k", ":resize +2<CR>")
---map("n", "<leader>l", ":vertical resize -2<CR>")
---map("n", "<leader>h", ":vertical resize +2<CR>")
 -- git
 map("n", "<leader>lg", ":lua _LAZYGIT_TOGGLE()<CR>")
 map("n", "<leader>ld", ":lua _LAZYDOCKER_TOGGLE()<CR>")
 map("n", "<leader>go",":lua _GOQUICKRUN_TOGGLE()<CR>")
+
 -- telescope
 map("n", "<leader>ff", ":lua require'telescope.builtin'.find_files{}<CR>")
 map("n", "<leader>fr", ":lua require'telescope.builtin'.find_files{no_ignore = true}<CR>")
