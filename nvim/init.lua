@@ -26,5 +26,6 @@ require("lommix.luasnip")
 require("lommix.dap")
 
 vim.cmd("syntax on")
-vim.cmd("colorscheme slate")
-vim.cmd("hi normal ctermbg=none guibg=none")
+-- vim.cmd("colorscheme kanagawa")
+vim.cmd("colorscheme nightfly")
+-- vim.cmd("hi normal ctermbg=none guibg=none")

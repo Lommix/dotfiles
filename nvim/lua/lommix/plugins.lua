@@ -11,6 +11,7 @@ return require("packer").startup(function(use)
 	use("catppuccin/vim")
 	use("marko-cerovac/material.nvim")
 	use("rebelot/kanagawa.nvim")
+	use("bluz71/vim-nightfly-guicolors")
 	-- tools
 	use("NTBBloodbath/rest.nvim")
 	use("ThePrimeagen/harpoon")
