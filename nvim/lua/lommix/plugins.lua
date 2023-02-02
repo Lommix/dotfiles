@@ -10,6 +10,7 @@ return require("packer").startup(function(use)
 	use("folke/tokyonight.nvim")
 	use("catppuccin/vim")
 	use("marko-cerovac/material.nvim")
+	use("rebelot/kanagawa.nvim")
 	-- tools
 	use("NTBBloodbath/rest.nvim")
 	use("ThePrimeagen/harpoon")
