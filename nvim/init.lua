@@ -23,9 +23,9 @@ require("lommix.highlight-colors")
 require("lommix.rust-tools")
 -- after plugins
 require("lommix.luasnip")
-require("lommix.dap")
 
+vim.cmd("colorscheme sobrio_ghost")
 vim.cmd("syntax on")
--- vim.cmd("colorscheme kanagawa")
-vim.cmd("colorscheme nightfly")
--- vim.cmd("hi normal ctermbg=none guibg=none")
+--
+-- after after
+require("lommix.dap")

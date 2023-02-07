@@ -1,6 +1,6 @@
 local ok, dap = pcall(require, "dap")
 
-if not ok or not ok2 then
+if not ok then
 	return
 end
 
