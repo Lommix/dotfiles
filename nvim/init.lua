@@ -24,8 +24,9 @@ require("lommix.rust-tools")
 -- after plugins
 require("lommix.luasnip")
 
-vim.cmd("colorscheme sobrio_ghost")
-vim.cmd("syntax on")
+vim.cmd[[colorscheme tokyonight-storm]]
+-- vim.cmd("colorscheme sobrio_ghost")
+-- vim.cmd("syntax on")
 --
 -- after after
 require("lommix.dap")
