@@ -21,7 +21,7 @@ return require("packer").startup(function(use)
 	use("numToStr/Comment.nvim")
 	use("rafamadriz/friendly-snippets")
 	use("simrat39/rust-tools.nvim")
-
+	use({ "michaelb/sniprun", run = "bash ./install.sh" })
 	use({
 		"Exafunction/codeium.vim",
 		config = function()

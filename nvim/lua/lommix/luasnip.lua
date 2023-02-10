@@ -12,7 +12,7 @@ if vim.fn.isdirectory("~/.snippets/solid") then
 end
 
 -- lua snippets
-require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/snippets/" })
+require("luasnip.loaders.from_lua").load({ paths = {"~/.config/nvim/snippets/"} })
 
 local types = require("luasnip.util.types")
 

@@ -20,6 +20,8 @@ ts.setup({
 		"json",
 		"yaml",
 		"css",
+		"go",
+		"rust",
 		"html",
 		"lua",
 		"gdscript",

@@ -36,8 +36,6 @@ map("n", "x", '"_x')
 map("n", "<leader>e", ":NvimTreeFindFileToggle<CR>:NvimTreeFocus<CR>")
 
 -- resize
-map("n", "<C-l>", "<C-w><")
-map("n", "<C-h>", "<C-w>>")
 map("n", "<C-Right>", "<C-w><")
 map("n", "<C-Left>", "<C-w>>")
 map("n", "<C-Up>", "<C-w>+")
