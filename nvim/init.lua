@@ -23,7 +23,6 @@ require("lommix.comment")
 require("lommix.highlight-colors")
 require("lommix.rust-tools")
 -- after plugins
-require("lommix.luasnip")
 
 vim.cmd[[colorscheme tokyonight-storm]]
 -- vim.cmd("colorscheme sobrio_ghost")
@@ -31,3 +30,6 @@ vim.cmd[[colorscheme tokyonight-storm]]
 --
 -- after after
 require("lommix.dap")
+
+
+require("lommix.luasnip")

@@ -21,7 +21,7 @@ return require("packer").startup(function(use)
 	use("numToStr/Comment.nvim")
 	use("rafamadriz/friendly-snippets")
 	use("simrat39/rust-tools.nvim")
-	use({ "michaelb/sniprun", run = "bash ./install.sh" })
+	use { 'michaelb/sniprun', run = 'bash ./install.sh'}
 	use({
 		"Exafunction/codeium.vim",
 		config = function()
@@ -30,14 +30,7 @@ return require("packer").startup(function(use)
 			vim.keymap.set("i", "<C-a>", function()
 				return vim.fn["codeium#Accept"]()
 			end, { expr = true })
-			vim.keymap.set("i", "<C-j>", function()
-				return vim.fn["codeium#CycleCompletions"](1)
-			end, { expr = true })
-			vim.keymap.set("i", "<C-k>", function()
-				return vim.fn["codeium#CycleCompletions"](-1)
-			end, { expr = true })
 			vim.g.codeium_filetypes = {
-				gdscript = false,
 				sh = false,
 			}
 		end,

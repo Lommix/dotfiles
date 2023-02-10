@@ -92,22 +92,29 @@ local get_params = function()
 	return f(function(arg1, snip, arg3)
 		local cursor = vim.api.nvim_win_get_cursor(0)
 		local buffer = vim.api.nvim_get_current_buf()
-	
+
 		for i = 0, 10, 1 do
 			local fn_node = vim.treesitter.get_node_at_pos(buffer, cursor[1] + i, cursor[2])
 			if fn_node:type() == "function_definition" then
 				local rt = {}
-				local fn_table = ts_utils.get_named_children(fn_node)		
+				local fn_table = ts_utils.get_named_children(fn_node)
 				local name = ts_utils.get_node_text(fn_table[1])[1]
 				local params = ts_utils.get_node_text(fn_table[2])[1]
 				local ret = ts_utils.get_node_text(fn_table[3])[1]
+
 
 				params = string.gsub(params, "[()]", "")
 				for match in (params..","):gmatch("(.-)".. ",") do
 					table.insert(rt, "## @arg ".. vim.fn.trim(match))
 				end
-				ret = string.gsub(ret, "->", "")
-				table.insert(rt, "## @return " ..  vim.fn.trim(ret))
+
+				if fn_table[3]:type() == "return_type" then
+					ret = string.gsub(ret, "->", "")
+					table.insert(rt, "## @return " ..  vim.fn.trim(ret))
+				else
+
+					table.insert(rt, "## @return void")
+				end
 
 				do
 					return rt

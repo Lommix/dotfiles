@@ -37,7 +37,16 @@ local kind_icons = icons.kind
 vim.g.cmp_active = true
 
 cmp.setup({
-	enable = true,
+	enable = function()
+		if
+			require("cmp.config.context").in_treesitter_capture("comment") == true
+			or require("cmp.config.context").in_syntax_group("Comment")
+		then
+			return false
+		else
+			return true
+		end
+	end,
 	preselect = cmp.PreselectMode.None,
 	snippet = {
 		expand = function(args)
@@ -47,25 +56,19 @@ cmp.setup({
 	mapping = cmp.mapping.preset.insert({
 		["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
 		["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
-		["<C-c>"] = cmp.mapping({
+		["<C-q>"] = cmp.mapping({
 			i = cmp.mapping.abort(),
 			c = cmp.mapping.close(),
 		}),
-		--["<CR>"] = cmp.mapping.confirm({ select = true }),
-		["<CR>"] = cmp.mapping(function(fallback)
-			if cmp.get_active_entry() then
-				cmp.confirm()
-			else
-				fallback()
-			end
-		end),
+		["<CR>"] = cmp.mapping.confirm({
+			behavior = cmp.ConfirmBehavior.Replace,
+			select = false,
+		}),
 		["<TAB>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item()
-			-- elseif luasnip.expand_or_jumpable() then
-				-- luasnip.expand_or_jump()
-			elseif has_words_before() then
-				cmp.complete()
+			elseif require("luasnip").expand_or_jumpable() then
+				vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
 			else
 				fallback()
 			end
@@ -76,8 +79,8 @@ cmp.setup({
 		["<S-Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_prev_item()
-			--elseif luasnip.jumpable(-1) then
-			--	luasnip.jump(-1)
+			elseif require("luasnip").jumpable(-1) then
+				vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
 			else
 				fallback()
 			end
