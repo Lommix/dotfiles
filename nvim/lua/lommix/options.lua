@@ -24,6 +24,7 @@ o.relativenumber = true
 o.mouse = a
 o.cursorline = true
 o.wildmenu = true
+opt.foldmethod = "marker"
 o.wildmode = "longest:full,full"
 o.listchars = "trail:·,nbsp:◇,tab:→ ,extends:▸,precedes:◂"
 o.clipboard = "unnamedplus"
