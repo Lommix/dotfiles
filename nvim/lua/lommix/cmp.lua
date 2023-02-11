@@ -37,7 +37,7 @@ local kind_icons = icons.kind
 vim.g.cmp_active = true
 
 cmp.setup({
-	enable = function()
+	enabled = function()
 		if
 			require("cmp.config.context").in_treesitter_capture("comment") == true
 			or require("cmp.config.context").in_syntax_group("Comment")
