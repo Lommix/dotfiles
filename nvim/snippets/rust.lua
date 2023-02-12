@@ -22,30 +22,17 @@ local same = function(index)
 	end, { index })
 end
 
--- Main {{{
 local comp = s(
-	"compd",
+	"comp",
 	fmt(
-[[
-#[derive(Component)]
+		[[
+#[derive(Component, Reflect, Default)]
+#[reflect(Component)]
 pub struct {}
 ]],
 		{ i() }
 	)
 )
 table.insert(snippets, comp)
--- }}}
-
-local compe = s(
-	"compd",
-	fmt(
-[[
-#[derive(Component, Clone, Copy, Reflect, FromReflect, Debug)]
-pub struct {}
-]],
-		{ i() }
-	)
-)
-table.insert(snippets, compe)
 
 return snippets

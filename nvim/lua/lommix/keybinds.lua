@@ -60,8 +60,8 @@ map("n", "<leader>fh", "<CMD>Telescope help_tags<CR>")
 -- lsp
 map("n", "<A-f>", ":lua vim.lsp.buf.format()<CR>")
 map("n", "ƒ", ":lua vim.lsp.buf.format()<CR>")
---map("n", "K", vim.lsp.buf.hover)
-map("n", "K", "<Cmd>Lspsaga hover_doc<CR>")
+map("n", "K", vim.lsp.buf.hover)
+-- map("n", "K", "<Cmd>Lspsaga hover_doc<CR>")
 
 map("n", "gd", "<cmd>Telescope lsp_definitions<CR>")
 map("n", "gD", "<cmd>Telescope lsp_references<CR>")

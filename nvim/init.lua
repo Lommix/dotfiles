@@ -24,7 +24,7 @@ require("lommix.highlight-colors")
 require("lommix.rust-tools")
 -- after plugins
 
-vim.cmd[[colorscheme tokyonight-storm]]
+vim.cmd[[colorscheme terafox]]
 -- vim.cmd("colorscheme sobrio_ghost")
 -- vim.cmd("syntax on")
 --

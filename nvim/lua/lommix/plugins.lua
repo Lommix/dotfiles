@@ -15,13 +15,14 @@ return require("packer").startup(function(use)
 	use("liuchengxu/space-vim-dark")
 	use("ray-x/aurora")
 	use("elvessousa/sobrio")
+	use("EdenEast/nightfox.nvim")
 	-- tools
 	use("NTBBloodbath/rest.nvim")
 	use("ThePrimeagen/harpoon")
 	use("numToStr/Comment.nvim")
 	use("rafamadriz/friendly-snippets")
 	use("simrat39/rust-tools.nvim")
-	use { 'michaelb/sniprun', run = 'bash ./install.sh'}
+	use({ "michaelb/sniprun", run = "bash ./install.sh" })
 	use({
 		"Exafunction/codeium.vim",
 		config = function()
