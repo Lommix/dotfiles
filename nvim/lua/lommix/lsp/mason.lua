@@ -23,7 +23,7 @@ local servers = {
 	"html",
 	"jdtls",
 	"jsonls",
-	"sumneko_lua",
+	"lua_ls",
 	"tflint",
 	"terraformls",
 	"tsserver",
@@ -72,13 +72,13 @@ mason_lspconfig.setup_handlers({
 	-- 		end,
 	-- 	}))
 	-- end,
-	["sumneko_lua"] = function()
+	["lua_ls"] = function()
 		local luadev = require("lua-dev").setup({
 			lspconfig = {
 				on_attach = opts.on_attach,
 			},
 		})
-		lsp_config.sumneko_lua.setup(vim.tbl_deep_extend("force", luadev, {
+		lsp_config.lua_ls.setup(vim.tbl_deep_extend("force", luadev, {
 			on_attach = function(client, bufnr)
 				-- client.resolved_capabilities.document_formatting = false
 			end,
