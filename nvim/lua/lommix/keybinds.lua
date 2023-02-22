@@ -90,3 +90,8 @@ map("n","<leader><leader>3", ":colorscheme gruvbox<CR>")
 map("n","<leader><leader>5", ":colorscheme nightfly<CR>")
 map("n","<leader><leader>6", ":colorscheme kanagawa<CR>")
 map("n","<leader><leader>b", ":hi normal ctermbg=none guibg=none<CR>")
+
+
+
+-- rust
+map("n", "<leader>ta", ":!cargo test -- --nocapture<CR>")

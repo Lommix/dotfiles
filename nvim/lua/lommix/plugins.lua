@@ -17,6 +17,15 @@ return require("packer").startup(function(use)
 	use("elvessousa/sobrio")
 	use("EdenEast/nightfox.nvim")
 	-- tools
+	use({
+		"lukas-reineke/indent-blankline.nvim",
+		config = function()
+			require("indent_blankline").setup({
+				show_end_of_line = true,
+				space_char_blankline = " ",
+			})
+		end,
+	})
 	use("NTBBloodbath/rest.nvim")
 	use("ThePrimeagen/harpoon")
 	use("numToStr/Comment.nvim")
