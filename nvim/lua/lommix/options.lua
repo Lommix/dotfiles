@@ -37,5 +37,5 @@ opt.equalalways = true
 o.termguicolors = true
 
 opt.list = true
-opt.listchars:append "space:⋅"
+-- opt.listchars:append "space:⋅"
 opt.listchars:append "eol:↴"
