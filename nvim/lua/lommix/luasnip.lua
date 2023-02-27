@@ -11,6 +11,10 @@ if vim.fn.isdirectory("~/.snippets/solid") then
 	require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.snippets/solid/" } })
 end
 
+if vim.fn.isdirectory("~/.snippets/svelete") then
+	require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.snippets/svelete/" } })
+end
+
 -- lua snippets
 require("luasnip.loaders.from_lua").load({ paths = {"~/.config/nvim/snippets/"} })
 

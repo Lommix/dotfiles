@@ -72,6 +72,11 @@ mason_lspconfig.setup_handlers({
 	-- 		end,
 	-- 	}))
 	-- end,
+	-- ["tsserver"] = function()
+	-- 	lsp_config.tsserver.setup(vim.tbl_extend("force", opts, {
+	-- 		filetypes = { "svelte" },
+	-- 	}))
+	-- end,
 	["lua_ls"] = function()
 		local luadev = require("lua-dev").setup({
 			lspconfig = {
