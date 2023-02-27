@@ -17,7 +17,6 @@ return require("packer").startup(function(use)
 	use("elvessousa/sobrio")
 	use("EdenEast/nightfox.nvim")
 	-- tools
-	use("evanleck/vim-svelte")
 	use("lukas-reineke/indent-blankline.nvim")
 	use("NTBBloodbath/rest.nvim")
 	use("ThePrimeagen/harpoon")
