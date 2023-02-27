@@ -17,6 +17,7 @@ return require("packer").startup(function(use)
 	use("elvessousa/sobrio")
 	use("EdenEast/nightfox.nvim")
 	-- tools
+	use("evanleck/vim-svelte")
 	use("lukas-reineke/indent-blankline.nvim")
 	use("NTBBloodbath/rest.nvim")
 	use("ThePrimeagen/harpoon")
@@ -37,15 +38,6 @@ return require("packer").startup(function(use)
 			}
 		end,
 	})
-
-	-- install without yarn or npm
-	use({
-		"iamcco/markdown-preview.nvim",
-		run = function()
-			vim.fn["mkdp#util#install"]()
-		end,
-	})
-
 	use({
 		"iamcco/markdown-preview.nvim",
 		run = "cd app && npm install",
