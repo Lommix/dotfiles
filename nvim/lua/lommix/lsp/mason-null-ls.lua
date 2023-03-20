@@ -18,6 +18,7 @@ local sources = {
 	--diagnostics.eslint_d,
 	--diagnostics.phpcs, -- not hard enough
 	--diagnostics.psalm,
+	formatting.xmlFormat,
     diagnostics.gdlint,
     formatting.gdformat,
 	actions.xo, -- js/ts
