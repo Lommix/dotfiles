@@ -41,6 +41,7 @@ cmp.setup({
 		if
 			require("cmp.config.context").in_treesitter_capture("comment") == true
 			or require("cmp.config.context").in_syntax_group("Comment")
+			or vim.api.nvim_buf_get_option(0, "buftype") == "prompt"
 		then
 			return false
 		else
