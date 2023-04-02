@@ -97,6 +97,7 @@ return require("packer").startup(function(use)
 	use("L3MON4D3/LuaSnip")
 	use("nvim-lualine/lualine.nvim")
 
+	use("tpope/vim-fugitive")
 	use("windwp/nvim-ts-autotag")
 	use("windwp/nvim-autopairs")
 	use({
