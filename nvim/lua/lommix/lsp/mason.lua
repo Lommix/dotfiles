@@ -65,18 +65,31 @@ mason_lspconfig.setup_handlers({
 		lsp_config[server_name].setup(opts)
 	end,
 	-- ["html"] = function()
-	-- 	lsp_config.html.setup(vim.tbl_extend("force", opts, {
-	-- 		filetypes = { "html", "typescriptreact", "javascript", "twig", "php" },
-	-- 		on_attach = function(client, bufnr)
-	-- 			client.resolved_capabilities.document_formatting = false
-	-- 		end,
-	-- 	}))
+	-- lsp_config.html.setup(vim.tbl_extend("force", opts, {
+	-- 	filetypes = { "html", "typescriptreact", "javascript", "twig", "php" },
+	-- 	on_attach = function(client, bufnr)
+	-- 		client.resolved_capabilities.document_formatting = false
+	-- 	end,
+	-- }))
 	-- end,
 	-- ["tsserver"] = function()
 	-- 	lsp_config.tsserver.setup(vim.tbl_extend("force", opts, {
 	-- 		filetypes = { "svelte" },
 	-- 	}))
 	-- end,
+	--
+	["volar"] = function()
+		lsp_config.volar.setup({
+			filetypes = { "twig", "vue" },
+			init_options = {
+				typescript = {
+					tsdk = "",
+					-- -- Alternative location if installed as root:
+					-- tsdk = "/usr/local/lib/node_modules/typescript/lib",
+				},
+			},
+		})
+	end,
 	["lua_ls"] = function()
 		local luadev = require("lua-dev").setup({
 			lspconfig = {
