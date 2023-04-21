@@ -17,6 +17,16 @@ return require("packer").startup(function(use)
 	use("elvessousa/sobrio")
 	use("EdenEast/nightfox.nvim")
 	-- tools
+	use({
+		"nvim-telescope/telescope.nvim",
+		requires = {
+			{ "nvim-telescope/telescope-live-grep-args.nvim" },
+		},
+		config = function()
+			require("telescope").load_extension("live_grep_args")
+		end,
+	})
+	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
 	use("lukas-reineke/indent-blankline.nvim")
 	use("NTBBloodbath/rest.nvim")
 	use("ThePrimeagen/harpoon")
@@ -87,8 +97,6 @@ return require("packer").startup(function(use)
 	})
 	use("famiu/nvim-reload")
 	use("christianchiarulli/lua-dev.nvim")
-	use("nvim-telescope/telescope.nvim")
-	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
 	use("akinsho/toggleterm.nvim")
 	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
 	use("nvim-treesitter/playground")
