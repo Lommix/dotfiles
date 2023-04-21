@@ -32,6 +32,4 @@ vim.cmd[[colorscheme terafox]]
 --
 -- after after
 require("lommix.dap")
-
-
 require("lommix.luasnip")

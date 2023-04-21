@@ -7,7 +7,6 @@ vim.api.nvim_create_autocmd("CursorMoved",{
     group = group
 })
 
-
 -- auto trim whitespace
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*" },
