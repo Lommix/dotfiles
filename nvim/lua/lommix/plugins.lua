@@ -17,27 +17,6 @@ return require("packer").startup(function(use)
 	use("elvessousa/sobrio")
 	use("EdenEast/nightfox.nvim")
 	-- tools
-	use({
-		"nvim-neorg/neorg",
-		run = ":Neorg sync-parsers", -- This is the important bit!
-		config = function()
-			require("neorg").setup({
-				load = {
-					["core.defaults"] = {}, -- Loads default behaviour
-					["core.norg.concealer"] = {}, -- Adds pretty icons to your documents
-					["core.norg.dirman"] = { -- Manages Neorg workspaces
-						config = {
-							workspaces = {
-								notes = "~/notes",
-							},
-						},
-					},
-				},
-			})
-		end,
-		run = ":Neorg sync-parsers",
-		requires = "nvim-lua/plenary.nvim",
-	})
 	use("lukas-reineke/indent-blankline.nvim")
 	use("NTBBloodbath/rest.nvim")
 	use("ThePrimeagen/harpoon")
