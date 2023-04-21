@@ -26,19 +26,20 @@ return require("packer").startup(function(use)
 	use("rafamadriz/friendly-snippets")
 	use("simrat39/rust-tools.nvim")
 	use({ "michaelb/sniprun", run = "bash ./install.sh" })
-	use({
-		"Exafunction/codeium.vim",
-		config = function()
-			vim.g.codeium_disable_bindings = true
-			vim.g.codeium_enabled = false
-			vim.keymap.set("i", "<C-a>", function()
-				return vim.fn["codeium#Accept"]()
-			end, { expr = true })
-			vim.g.codeium_filetypes = {
-				sh = false,
-			}
-		end,
-	})
+	use("Exafunction/codeium.vim")
+	-- use({
+	-- 	"Exafunction/codeium.vim",
+	-- 	config = function()
+	-- 		vim.g.codeium_disable_bindings = true
+	-- 		vim.g.codeium_enabled = false
+	-- 		vim.keymap.set("i", "<C-a>", function()
+	-- 			return vim.fn["codeium#Accept"]()
+	-- 		end, { expr = true })
+	-- 		vim.g.codeium_filetypes = {
+	-- 			sh = false,
+	-- 		}
+	-- 	end,
+	-- })
 	use({
 		"iamcco/markdown-preview.nvim",
 		run = "cd app && npm install",
