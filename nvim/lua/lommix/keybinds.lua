@@ -49,44 +49,33 @@ map("n", "<leader>go", ":lua _GOQUICKRUN_TOGGLE()<CR>")
 -- telescope
 map("n", "<leader>ff", ":lua require'telescope.builtin'.find_files{}<CR>")
 map("n", "<leader>fF", ":lua require'telescope.builtin'.find_files{no_ignore = true}<CR>")
-
 vim.keymap.set("n", "<leader>fg", function()
 	require("telescope").extensions.live_grep_args.live_grep_args()
 end, { noremap = true })
-
 vim.keymap.set("n", "<leader>fG", function()
 	require("telescope").extensions.live_grep_args.live_grep_args({ additional_args = { "--no-ignore" } })
 end, { noremap = true })
-
 map("n", "<leader>fs", ":lua require'telescope.builtin'.grep_string()<CR>")
 map("n", "<leader>fb", "<CMD>Telescope buffers<CR>")
 map("n", "<leader>fh", "<CMD>Telescope help_tags<CR>")
 
 --harpoon
 
--- lsp
+-- lspsaga
+map("n", "<leader>i", ":LspInfo<CR>")
 map("n", "<leader>fa", ":lua vim.lsp.buf.format()<CR>")
-map("n", "ƒ", ":lua vim.lsp.buf.format()<CR>")
-map("n", "K", vim.lsp.buf.hover)
--- map("n", "K", "<Cmd>Lspsaga hover_doc<CR>")
-
-map("n", "gd", "<cmd>Telescope lsp_definitions<CR>")
-map("n", "gD", "<cmd>Telescope lsp_references<CR>")
-map("n", "gi", "<cmd>Telescope lsp_implementations<CR>")
---map("n", "gr", "<cmd>Telescope lsp_references<CR>")
+map("n", "K", "<Cmd>Lspsaga hover_doc <CR>")
+map("n", "gd", "<cmd>Lspsaga goto_definition<CR>")
+map("n", "gD", "<cmd>Lspsaga lsp_finder<CR>")
 map("n", "gp", "<Cmd>Lspsaga peek_definition<CR>")
-map("n", "gr", "<Cmd>Lspsaga rename<CR>")
-map("n", "gn", "<cmd>Telescope diagnostics<CR>")
-map("n", "gt", ":lua vim.lsp.buf.code_action()<CR>")
-map("n", "<C-k>", ":lua vim.diagnostic.open_float()<CR>")
--- map("n", "<A-k>",":lua vim.lsp.diagnostic.goto_prev()<CR>")
-map("n", "º", ":lua vim.lsp.diagnostic.goto_next()<CR>")
-map("n", "∆", ":lua vim.lsp.diagnostic.goto_prev()<CR>")
+map("n", "gr", "<Cmd>Lspsaga rename ++project<CR>")
+map("n", "gt", "<Cmd>Lspsaga code_action<CR>")
+map("n", "gn", "<cmd>Lspsaga show_workspace_diagnostics<CR>")
+map("n", "gi", "<cmd>Lspsaga goto_type_definition<CR>")
+
 -- clear highlight search
 map("n", "<CR>", "<CR> :noh<CR><CR>")
-
 map("n", "<leader>r", ":lua require('nvim-reload').Reload()<CR>:syntax on<CR>")
-map("n", "<leader>i", ":LspInfo<CR>")
 
 -- flowers
 map("n", "<leader><leader>1", ":colorscheme catppuccin_mocha<CR>")

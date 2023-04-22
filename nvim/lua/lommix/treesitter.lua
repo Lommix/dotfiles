@@ -16,6 +16,7 @@ ts.setup({
 		"tsx",
 		"toml",
 		"fish",
+		"twig",
 		"php",
 		"json",
 		"yaml",
@@ -28,7 +29,8 @@ ts.setup({
         "dockerfile",
         "javascript",
         "godot_resource",
-		"markdown"
+		"markdown",
+		"markdown_inline"
 	},
 	autotag = {
 		enable = true,
