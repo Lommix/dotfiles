@@ -24,6 +24,7 @@ require("lommix.highlight-colors")
 require("lommix.rust-tools")
 require("lommix.indent-line")
 require("lommix.codeium")
+require("lommix.scripts.sftp")
 -- after plugins
 
 vim.cmd[[colorscheme terafox]]
