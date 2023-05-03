@@ -28,7 +28,6 @@ local buffer = a.nvim_create_buf(true, true)
 
 local wincfg = {
 	height = 5,
-	title = "SFTP-UPLOAD :: Connections",
 	width = 50,
 	border = "double",
 	relative = "editor",

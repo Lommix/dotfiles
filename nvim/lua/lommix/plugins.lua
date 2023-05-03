@@ -18,6 +18,14 @@ return require("packer").startup(function(use)
 	use("nvim-telescope/telescope.nvim")
 	use("nvim-telescope/telescope-live-grep-args.nvim")
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" }) -- }}}
+	use({
+		"kylechui/nvim-surround",
+		tag = "*",
+		config = function()
+			require("nvim-surround").setup()
+		end,
+	})
+	use("f-person/git-blame.nvim")
 	use("lukas-reineke/indent-blankline.nvim")
 	use("NTBBloodbath/rest.nvim")
 	use("ThePrimeagen/harpoon")
