@@ -39,3 +39,4 @@ o.termguicolors = true
 opt.list = true
 -- opt.listchars:append "space:⋅"
 opt.listchars:append "eol:↴"
+vim.g.gitblame_enabled = 0
