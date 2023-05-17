@@ -64,6 +64,7 @@ map("n", "<leader>fh", "<CMD>Telescope help_tags<CR>")
 -- lspsaga
 map("n", "<leader>i", ":LspInfo<CR>")
 map("n", "<leader>fa", ":lua vim.lsp.buf.format()<CR>")
+map("n", "<C-k>", "<Cmd>Lspsaga show_line_diagnostics <CR>")
 map("n", "K", "<Cmd>Lspsaga hover_doc <CR>")
 map("n", "gd", "<cmd>Lspsaga goto_definition<CR>")
 map("n", "gD", "<cmd>Lspsaga lsp_finder<CR>")
