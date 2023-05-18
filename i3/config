@@ -238,4 +238,8 @@ bar {
 		status_command i3status
 }
 
-
+# ---------------------------------------------------
+# custom application configuration
+# ---------------------------------------------------
+no_focus [all]
+focus_on_window_activation none
