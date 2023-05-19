@@ -11,7 +11,7 @@ exec_always xset s off
 exec_always xset s noblank
 exec_always xset -dpms
 
-exec_always feh --bg-fill ~/.config/i3/bg/540988.jpg
+exec_always feh --bg-fill ~/.config/i3/bg/uwp3725474.jpeg
 exec --no-startup-id "compton -b"
 
 # i3 config file (v4)
