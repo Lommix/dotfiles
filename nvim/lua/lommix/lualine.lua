@@ -3,6 +3,8 @@ if not status then
 	return
 end
 
+local lsp_status = require("lsp-status")
+
 lualine.setup({
 	options = {
 		icons_enabled = true,
@@ -20,7 +22,11 @@ lualine.setup({
 				file_status = true, -- displays file status (readonly status, modified status)
 				path = 0, -- 0 = just filename, 1 = relative path, 2 = absolute path
 			},
+			function()
+				return lsp_status.status()
+			end,
 		},
+
 		lualine_x = {
 			{
 				"diagnostics",

@@ -33,6 +33,7 @@ return require("packer").startup(function(use)
 	use("rafamadriz/friendly-snippets")
 	use("simrat39/rust-tools.nvim")
 	use("Exafunction/codeium.vim")
+	use("nvim-lua/lsp-status.nvim")
 	use({
 		"iamcco/markdown-preview.nvim",
 		run = "cd app && npm install",

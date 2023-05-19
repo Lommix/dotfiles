@@ -12,6 +12,9 @@ if not status_ok_2 then
 	return
 end
 
+local lsp_status = require("lsp-status")
+lsp_status.register_progress()
+
 lsp_config.gdscript.setup({
 	cmd = { "nc", "127.0.0.1", "6005" },
 })
@@ -54,8 +57,10 @@ mason_lspconfig.setup({
 })
 
 local opts = {
+	capabilities = lsp_status.capabilities,
 	on_attach = function(client, bufnr)
 		require("lsp-inlayhints").on_attach(client, bufnr)
+		lsp_status.on_attach(client)
 		--client.resolved_capabilities.document_formatting = false
 	end,
 }
