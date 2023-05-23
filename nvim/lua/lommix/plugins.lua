@@ -22,7 +22,17 @@ return require("packer").startup(function(use)
 		"kylechui/nvim-surround",
 		tag = "*",
 		config = function()
-			require("nvim-surround").setup()
+			require("nvim-surround").setup({
+				keymaps = {
+					["C-q"] = "actions.close"
+				}
+			})
+		end,
+	})
+	use({
+		"stevearc/oil.nvim",
+		config = function()
+			require("oil").setup()
 		end,
 	})
 	use("f-person/git-blame.nvim")
