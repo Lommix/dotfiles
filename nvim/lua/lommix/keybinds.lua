@@ -49,13 +49,22 @@ map("n", "<leader>go", ":lua _GOQUICKRUN_TOGGLE()<CR>")
 
 -- telescope
 map("n", "<leader>ff", ":Telescope find_files find_command=rg,--ignore,--files prompt_prefix=🔍<CR>")
-map("n", "<leader>fF", ":Telescope find_files find_command=rg,--ignore,--hidden,--files prompt_prefix=🔍<CR>")
 map("n", "<leader>fg", ":Telescope live_grep find_command=rg,--ignore,--files prompt_prefix=🔍<CR>")
-map("n", "<leader>fG", ":Telescope live_grep find_command=rg,--ignore,--hidden,--files prompt_prefix=🔍<CR>")
 map("n", "<leader>fs", ":Telescope grep_string find_command=rg,--ignore,--hidden,--files prompt_prefix=🔍<CR>")
 map("n", "<leader>fb", "<CMD>Telescope buffers<CR>")
 map("n", "<leader>fh", "<CMD>Telescope help_tags<CR>")
 
+map("n", "<leader>fF", function()
+	require("telescope.builtin").find_files({ hidden = true, no_ignore = true })
+end)
+
+map("n", "<leader>fG", function()
+	require("telescope.builtin").live_grep({
+		additional_args = function(args)
+			return vim.list_extend(args, { "--hidden", "--no-ignore" })
+		end,
+	})
+end)
 --harpoon
 
 -- lspsaga
