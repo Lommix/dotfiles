@@ -33,7 +33,7 @@ map("n", "<leader>tp", ":tabp<CR>")
 map("n", "<leader>+", "<C-a>")
 map("n", "<leader>-", "<C-x>")
 map("n", "x", '"_x')
--- map("n", "<leader>e", ":NvimTreeFindFileToggle<CR>:NvimTreeFocus<CR>")
+map("n", "<leader>E", ":NvimTreeFindFileToggle<CR>:NvimTreeFocus<CR>")
 map("n", "<leader>e", ":Oil --float<CR>")
 
 -- resize
