@@ -11,11 +11,22 @@ exec_always xset s off
 exec_always xset s noblank
 exec_always xset -dpms
 
+# set background
 exec_always feh --bg-fill ~/.config/i3/bg/uwp3725474.jpeg
+
+# setup compton
 exec --no-startup-id "compton -b"
 
+# disable capslock
+exec setxkbmap -option ctrl:nocaps
+
+# monitor setup
+exec xrandr --output DisplayPort-0 --mode 2560x1440 --pos 1920x0 --rotate normal --output DisplayPort-1 --mode 1920x1080 --pos 7920x0 --rotate normal --output DisplayPort-2 --primary --mode 3440x1440 -r 164 --pos 4480x0 --rotate normal --output HDMI-A-0 --mode 1920x1080 --pos 0x0 --rotate normal
+
+# keyboard leyout
+exec setxkbmap -layout "de,fr" -variant "nodeadkeys,basic"
+
 # i3 config file (v4)
-#
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
