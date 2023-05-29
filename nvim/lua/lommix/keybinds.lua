@@ -36,6 +36,11 @@ map("n", "x", '"_x')
 map("n", "<leader>E", ":NvimTreeFindFileToggle<CR>:NvimTreeFocus<CR>")
 map("n", "<leader>e", ":Oil --float<CR>")
 
+-- load curent file path into yank register
+map("n", "<leader>y", function()
+	vim.cmd(':let @+="' .. vim.fn.expand("%:p") .. '"')
+end)
+
 -- resize
 map("n", "<C-Right>", "<C-w><")
 map("n", "<C-Left>", "<C-w>>")
@@ -60,6 +65,16 @@ end)
 
 map("n", "<leader>fG", function()
 	require("telescope.builtin").live_grep({
+		additional_args = function(args)
+			return vim.list_extend(args, { "--hidden", "--no-ignore" })
+		end,
+	})
+end)
+
+map("n", "<leader>FG", function()
+	filetype = vim.fn.input("Filetype: ")
+	require("telescope.builtin").live_grep({
+		type_filter = filetype,
 		additional_args = function(args)
 			return vim.list_extend(args, { "--hidden", "--no-ignore" })
 		end,
