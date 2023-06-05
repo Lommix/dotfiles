@@ -9,12 +9,12 @@ exec_always xset -dpms
 
 # set background
 exec_always feh --bg-fill ~/.config/i3/bg/uwp3725474.jpeg
+exec_always setxkbmap -option ctrl:nocaps
 
 # setup compton
 exec --no-startup-id "compton -b"
 
 # disable capslock
-exec setxkbmap -option ctrl:nocaps
 
 # monitor setup
 exec xrandr --output DisplayPort-0 --mode 2560x1440 --pos 1920x0 --rotate normal --output DisplayPort-1 --mode 1920x1080 --pos 7920x0 --rotate normal --output DisplayPort-2 --primary --mode 3440x1440 -r 164 --pos 4480x0 --rotate normal --output HDMI-A-0 --mode 1920x1080 --pos 0x0 --rotate normal
@@ -196,6 +196,9 @@ for_window [class="^Steam$" title="^Screenshot Uploader$"] floating enable
 for_window [class="^Steam$" title="^Steam Guard - Computer Authorization Required$"] floating enable
 for_window [title="^Steam Keyboard$"] floating enable
 
+
+for_window [title="^Bevy App$"] floating enable
+for_window [title="^Godot$"] floating enable
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)

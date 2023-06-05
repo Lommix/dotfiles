@@ -24,8 +24,8 @@ return require("packer").startup(function(use)
 		config = function()
 			require("nvim-surround").setup({
 				keymaps = {
-					["C-q"] = "actions.close"
-				}
+					["C-q"] = "actions.close",
+				},
 			})
 		end,
 	})
@@ -42,7 +42,19 @@ return require("packer").startup(function(use)
 	use("numToStr/Comment.nvim")
 	use("rafamadriz/friendly-snippets")
 	use("simrat39/rust-tools.nvim")
+
+	-- ai
+	use({
+		"jackMort/ChatGPT.nvim",
+		requires = {
+			"MunifTanjim/nui.nvim",
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope.nvim",
+		},
+	})
 	use("Exafunction/codeium.vim")
+
+	-- stuff
 	use("nvim-lua/lsp-status.nvim")
 	use({
 		"iamcco/markdown-preview.nvim",
