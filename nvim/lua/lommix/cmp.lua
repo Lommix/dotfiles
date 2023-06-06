@@ -24,6 +24,34 @@ local function contains(t, value)
 	return false
 end
 
+local kind_icons = {
+	Text = "",
+	Method = "m",
+	Function = "",
+	Constructor = "",
+	Field = "",
+	Variable = "",
+	Class = "",
+	Interface = "",
+	Module = "",
+	Property = "",
+	Unit = "",
+	Value = "",
+	Enum = "",
+	Keyword = "",
+	Snippet = "",
+	Color = "",
+	File = "",
+	Reference = "",
+	Folder = "",
+	EnumMember = "",
+	Constant = "",
+	Struct = "",
+	Event = "",
+	Operator = "",
+	TypeParameter = "",
+}
+
 local compare = require("cmp.config.compare")
 
 local has_words_before = function()
@@ -103,26 +131,12 @@ cmp.setup({
 		fields = { "kind", "abbr", "menu" },
 		format = function(entry, vim_item)
 			-- Kind icons
-			vim_item.kind = kind_icons[vim_item.kind]
-
-			if entry.source.name == "crates" then
-				vim_item.kind = icons.misc.Package
-				vim_item.kind_hl_group = "CmpItemKindCrate"
-			end
-
-			if entry.source.name == "lab.quick_data" then
-				vim_item.kind = icons.misc.CircuitBoard
-				vim_item.kind_hl_group = "CmpItemKindConstant"
-			end
-
-			-- NOTE: order matters
+			vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
 			vim_item.menu = ({
-				nvim_lsp = "LSP",
-				nvim_lua = "LUA",
-				luasnip = "SNIP",
-				buffer = "BUF",
-				path = "PATH",
-				emoji = "",
+				nvim_lsp = "[LSP]",
+				luasnip = "[Snippet]",
+				buffer = "[Buffer]",
+				path = "[Path]",
 			})[entry.source.name]
 			return vim_item
 		end,
@@ -130,32 +144,32 @@ cmp.setup({
 	sources = {
 		--	{ name = "crates", group_index = 1 },
 		{ name = "nvim_lsp" },
-		{ name = "nvim_lua", group_index = 2 },
 		{ name = "luasnip" },
-		{
-			name = "buffer",
-			group_index = 2,
-			filter = function(entry, ctx)
-				if not contains(buffer_fts, ctx.prev_context.filetype) then
-					return true
-				end
-			end,
-		},
+		{ name = "buffer" },
+		-- {
+		-- 	name = "buffer",
+		-- 	group_index = 2,
+		-- 	filter = function(entry, ctx)
+		-- 		if not contains(buffer_fts, ctx.prev_context.filetype) then
+		-- 			return true
+		-- 		end
+		-- 	end,
+		-- },
 		{ name = "path", group_index = 2 },
 	},
-	sorting = {
-		priority_weight = 2,
-		comparators = {
-			compare.offset,
-			compare.exact,
-			compare.score,
-			compare.recently_used,
-			compare.locality,
-			compare.sort_text,
-			compare.length,
-			compare.order,
-		},
-	},
+	-- sorting = {
+	-- 	priority_weight = 2,
+	-- 	comparators = {
+	-- 		compare.offset,
+	-- 		compare.exact,
+	-- 		compare.score,
+	-- 		compare.recently_used,
+	-- 		compare.locality,
+	-- 		compare.sort_text,
+	-- 		compare.length,
+	-- 		compare.order,
+	-- 	},
+	-- },
 	confirm_opts = {
 		behavior = cmp.ConfirmBehavior.Replace,
 		select = false,

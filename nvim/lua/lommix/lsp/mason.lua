@@ -79,6 +79,13 @@ mason_lspconfig.setup_handlers({
 			filetypes = { "js", "vue" },
 		})
 	end,
+	["cssmodules_ls"] = function()
+		lsp_config.cssmodules_ls.setup({
+			filetypes = { "css", "scss", "less" },
+			capabilities = opts.capabilities,
+			on_attach = opts.on_attach,
+		})
+	end,
 	["emmet_ls"] = function()
 		lsp_config.emmet_ls.setup({
 			filetypes = { "twig" },
