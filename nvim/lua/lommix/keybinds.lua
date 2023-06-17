@@ -90,7 +90,10 @@ map("n", "K", "<Cmd>Lspsaga hover_doc <CR>")
 map("n", "gd", "<cmd>Lspsaga goto_definition<CR>")
 map("n", "gD", "<cmd>Lspsaga lsp_finder<CR>")
 map("n", "gp", "<Cmd>Lspsaga peek_definition<CR>")
-map("n", "gr", "<Cmd>Lspsaga rename ++project<CR>")
+
+--map("n", "gr", "<Cmd>Lspsaga rename ++project<CR>")
+map("n", "gr",":IncRename ")
+
 map("n", "gt", "<Cmd>Lspsaga code_action<CR>")
 map("n", "gn", "<cmd>Telescope diagnostics<CR>")
 map("n", "gi", "<cmd>Lspsaga goto_type_definition<CR>")

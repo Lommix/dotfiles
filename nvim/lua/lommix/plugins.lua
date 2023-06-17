@@ -67,6 +67,14 @@ return require("packer").startup(function(use)
 	-- ui
 	use("brenoprata10/nvim-highlight-colors")
 	-- lsp
+
+	use({
+		"smjonas/inc-rename.nvim",
+		config = function()
+			require("inc_rename").setup()
+		end,
+	})
+
 	use("mfussenegger/nvim-dap")
 	use("leoluz/nvim-dap-go")
 	use("rcarriga/nvim-dap-ui")
