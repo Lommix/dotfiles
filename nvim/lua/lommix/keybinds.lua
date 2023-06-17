@@ -82,26 +82,38 @@ map("n", "<leader>FG", function()
 end)
 --harpoon
 
--- lspsaga
+-- lsp
 map("n", "<leader>i", ":LspInfo<CR>")
-map("n", "<leader>fa", ":lua vim.lsp.buf.format()<CR>")
-map("n", "<C-k>", "<Cmd>Lspsaga show_line_diagnostics <CR>")
-map("n", "K", "<Cmd>Lspsaga hover_doc <CR>")
-map("n", "gd", "<cmd>Lspsaga goto_definition<CR>")
-map("n", "gD", "<cmd>Lspsaga lsp_finder<CR>")
-map("n", "gp", "<Cmd>Lspsaga peek_definition<CR>")
 
---map("n", "gr", "<Cmd>Lspsaga rename ++project<CR>")
-map("n", "gr",":IncRename ")
+local opts = { silent = true }
 
-map("n", "gt", "<Cmd>Lspsaga code_action<CR>")
-map("n", "gn", "<cmd>Telescope diagnostics<CR>")
-map("n", "gi", "<cmd>Lspsaga goto_type_definition<CR>")
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+	callback = function(ev)
+		-- Enable completion triggered by <c-x><c-o>
+		vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+		local opts = { buffer = ev.buf }
+		vim.keymap.set("n", "<C-k>", vim.diagnostic.open_float, opts)
+		vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+		vim.keymap.set("n", "gt", vim.lsp.buf.code_action, opts)
+		vim.keymap.set("n", "gD", vim.lsp.buf.type_definition, opts)
+		map("n", "<leader>fa", ":lua vim.lsp.buf.format()<CR>")
+		map("n", "gn", "<cmd>Telescope diagnostics<CR>")
+	end,
+})
+-- map("n", "<C-k>", "<Cmd>Lspsaga show_line_diagnostics <CR>")
+-- map("n", "K", "<Cmd>Lspsaga hover_doc <CR>")
+-- map("n", "gd", "<cmd>Lspsaga goto_definition<CR>")
+-- map("n", "gD", "<cmd>Lspsaga lsp_finder<CR>")
+-- map("n", "gp", "<Cmd>Lspsaga peek_definition<CR>")
+-- map("n", "gt", "<Cmd>Lspsaga code_action<CR>")
+-- map("n", "gi", "<cmd>Lspsaga goto_type_definition<CR>")
 
+map("n", "gr", ":IncRename ")
 -- clear highlight search
 map("n", "<CR>", "<CR> :noh<CR><CR>")
 map("n", "<leader>r", ":lua require('nvim-reload').Reload()<CR>:syntax on<CR>")
-
 -- flowers
 map("n", "<leader><leader>1", ":colorscheme catppuccin_mocha<CR>")
 map("n", "<leader><leader>2", ":colorscheme tokyonight-moon<CR>")

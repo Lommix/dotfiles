@@ -7,7 +7,7 @@ require("lommix.auto")
 require("lommix.lsp")
 require("lommix.reloader")
 require("lommix.lsp-inlayhints")
-require'lommix.lspsage'
+-- require'lommix.lspsage'
 require("lommix.toggleterm")
 require("lommix.autotag")
 require("lommix.autopair")
