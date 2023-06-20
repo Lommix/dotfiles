@@ -100,6 +100,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "gD", vim.lsp.buf.type_definition, opts)
 		map("n", "<leader>fa", ":lua vim.lsp.buf.format()<CR>")
 		map("n", "gn", "<cmd>Telescope diagnostics<CR>")
+		map("n", "gR", "<cmd>Telescope lsp_references<CR>")
 	end,
 })
 -- map("n", "<C-k>", "<Cmd>Lspsaga show_line_diagnostics <CR>")
