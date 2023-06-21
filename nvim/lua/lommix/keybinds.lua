@@ -71,6 +71,14 @@ map("n", "<leader>fG", function()
 	})
 end)
 
+map("n", "<leader>fs", function()
+	require("telescope.builtin").grep_string({
+		additional_args = function(args)
+			return vim.list_extend(args, { "--hidden", "--no-ignore" })
+		end,
+	})
+end)
+
 map("n", "<leader>FG", function()
 	filetype = vim.fn.input("Filetype: ")
 	require("telescope.builtin").live_grep({
