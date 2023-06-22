@@ -74,16 +74,18 @@ mason_lspconfig.setup_handlers({
 			filetypes = { "html", "twig" },
 		}))
 	end,
+	["cssls"] = function()
+		local capabilities = opts.capabilities
+		capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+		lsp_config.cssls.setup(vim.tbl_extend("force", opts, {
+			filetypes = { "css", "scss",  },
+			capabilities = capabilities,
+		}))
+	end,
 	["vimls"] = function()
 		lsp_config.vimls.setup({
 			filetypes = { "js", "vue" },
-		})
-	end,
-	["cssmodules_ls"] = function()
-		lsp_config.cssmodules_ls.setup({
-			filetypes = { "css", "scss", "less" },
-			capabilities = opts.capabilities,
-			on_attach = opts.on_attach,
 		})
 	end,
 	["emmet_ls"] = function()
