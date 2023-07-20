@@ -64,6 +64,15 @@ return require("packer").startup(function(use)
 		end,
 		ft = { "markdown" },
 	})
+	use({
+		"epwalsh/obsidian.nvim",
+		config = function()
+			require("obsidian").setup({
+				dir = "~/my-vault",
+				-- see below for full list of options 👇
+			})
+		end,
+	})
 	-- ui
 	use("brenoprata10/nvim-highlight-colors")
 	-- lsp
