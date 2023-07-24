@@ -21,7 +21,6 @@ local sources = {
 	formatting.xmlFormat,
     diagnostics.gdlint,
     formatting.gdformat,
-	actions.xo, -- js/ts
 }
 
 null_ls.setup({
