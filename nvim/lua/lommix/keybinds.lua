@@ -100,6 +100,7 @@ end)
 
 -- lsp
 map("n", "<leader>i", ":LspInfo<CR>")
+map("n", "<leader>t", ":ChatGPT<CR>")
 
 local opts = { silent = true }
 
