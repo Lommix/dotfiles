@@ -21,6 +21,7 @@ dap.listeners.before.event_exited["dapui_config"] = function()
 end
 
 -- vim.keymap.set("n", "<F3>", dapui.toggle, {})
+vim.keymap.set("n", "<F3>", dapui.toggle, {})
 vim.keymap.set("n", "<F4>", ":DapToggleBreakpoint<CR>", {})
 vim.keymap.set("n", "<F5>", ":DapContinue<CR>", {})
 vim.keymap.set("n", "<F6>", ":DapStepOver<CR>", {})
@@ -71,7 +72,9 @@ dap.configurations.cpp = {
 		type = "lldb",
 		request = "launch",
 		program = function()
-			local path = vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+			local dir = vim.fn.getcwd()
+			local base_name = vim.fn.fnamemodify(dir, ':t')
+			local path =  dir .. "/target/debug/" .. base_name
 			return path
 		end,
 		cwd = "${workspaceFolder}",
