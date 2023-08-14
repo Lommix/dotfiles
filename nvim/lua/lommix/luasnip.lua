@@ -5,18 +5,19 @@ end
 
 -- any vscode like plugin
 require("luasnip.loaders.from_vscode").lazy_load()
-
--- custom plugins
-if vim.fn.isdirectory("~/.snippets/solid") then
-	require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.snippets/solid/" } })
-end
-
-if vim.fn.isdirectory("~/.snippets/svelete") then
-	require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.snippets/svelete/" } })
+if vim.fn.isdirectory("~/.vscode-oss/extensions") then
+	local paths = {}
+	local readdir = vim.fn.glob("~/.vscode-oss/extensions/*", true, true)
+	for _, dir in pairs(readdir) do
+		if vim.fn.isdirectory(dir) then
+			table.insert(paths, dir)
+		end
+	end
+	require("luasnip.loaders.from_vscode").lazy_load({ paths = paths })
 end
 
 -- lua snippets
-require("luasnip.loaders.from_lua").load({ paths = {"~/.config/nvim/snippets/"} })
+require("luasnip.loaders.from_lua").load({ paths = { "~/.config/nvim/snippets/" } })
 
 local types = require("luasnip.util.types")
 

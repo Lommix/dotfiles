@@ -18,15 +18,15 @@ local sources = {
 	--diagnostics.eslint_d,
 	--diagnostics.phpcs, -- not hard enough
 	-- diagnostics.psalm,
-	formatting.xmlFormat,
-    diagnostics.gdlint,
-    formatting.gdformat,
+	-- formatting.xmlFormat,
+	diagnostics.gdlint,
+	formatting.gdformat,
 }
 
-null_ls.setup({
-	sources = sources,
-})
-
-mason_null_ls.setup({
-	automatic_installation = true,
-})
+-- null_ls.setup({
+-- 	sources = sources,
+-- })
+--
+-- mason_null_ls.setup({
+-- 	automatic_installation = true,
+-- })

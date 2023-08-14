@@ -71,7 +71,8 @@ mason_lspconfig.setup_handlers({
 	end,
 	["html"] = function()
 		lsp_config.html.setup(vim.tbl_extend("force", opts, {
-			filetypes = { "html", "twig" },
+			filetypes = { "html", "twig", "htmldjango" },
+			capabilities = capabilities,
 		}))
 	end,
 	["cssls"] = function()
@@ -79,7 +80,7 @@ mason_lspconfig.setup_handlers({
 		capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 		lsp_config.cssls.setup(vim.tbl_extend("force", opts, {
-			filetypes = { "css", "scss",  },
+			filetypes = { "css", "scss" },
 			capabilities = capabilities,
 		}))
 	end,
@@ -90,7 +91,7 @@ mason_lspconfig.setup_handlers({
 	end,
 	["emmet_ls"] = function()
 		lsp_config.emmet_ls.setup({
-			filetypes = { "twig" },
+			filetypes = { "twig", "html", "htmldjango" },
 		})
 	end,
 	["lua_ls"] = function()
