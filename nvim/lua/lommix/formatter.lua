@@ -41,31 +41,36 @@ formatter.setup({
 			require("formatter.filetypes.markdown").prettier,
 		},
 		json = {
-			require("formatter.filetypes.json").jq()
+			require("formatter.filetypes.json").jq(),
 		},
 		python = {
 			require("formatter.filetypes.python").black,
 		},
 		javascript = {
-			require("formatter.filetypes.javascript").prettier
+			require("formatter.filetypes.javascript").prettier,
 		},
 		typescript = {
-			require("formatter.filetypes.typescript").prettier
+			require("formatter.filetypes.typescript").prettier,
 		},
 		twig = {
-			require("formatter.filetypes.html").prettier
+			require("formatter.filetypes.html").prettier,
 		},
 		smarty = {
-			require("formatter.filetypes.html").prettier
+			require("formatter.filetypes.html").prettier,
 		},
 		html = {
-			require("formatter.filetypes.html").prettier
+			require("formatter.filetypes.html").prettier,
 		},
 		htmljango = {
-			require("formatter.filetypes.html").prettier
+			require("formatter.filetypes.html").prettier,
 		},
 		["*"] = {
-			require("formatter.filetypes.any").remove_trailing_whitespace,
+			default
 		},
 	},
 })
+
+function default()
+	vim.lsp.buf.format()
+	require("formatter.filetypes.any").remove_trailing_whitespace()
+end
