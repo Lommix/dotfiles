@@ -2,6 +2,10 @@ SCRIPT=$(readlink -f "$0")
 BASEDIR=$(dirname "$SCRIPT")
 
 #tmux
+rm -f "${HOME}"/.prettierrc
+ln -s "$BASEDIR"/.prettierrc "${HOME}"/.prettierrc
+
+#tmux
 rm -f "${HOME}"/.tmux.conf
 ln -s "$BASEDIR"/.tmux.conf "${HOME}"/.tmux.conf
 

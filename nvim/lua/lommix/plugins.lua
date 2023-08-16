@@ -79,7 +79,7 @@ return require("packer").startup(function(use)
 	-- ui
 	use("brenoprata10/nvim-highlight-colors")
 	-- lsp
-
+	use { 'mhartington/formatter.nvim' }
 	use({
 		"smjonas/inc-rename.nvim",
 		config = function()
@@ -94,16 +94,19 @@ return require("packer").startup(function(use)
 	use("neovim/nvim-lspconfig")
 	use("williamboman/mason.nvim")
 	use("williamboman/mason-lspconfig.nvim")
-	use("jose-elias-alvarez/null-ls.nvim")
 	use("ray-x/lsp_signature.nvim")
 	use("SmiteshP/nvim-navic")
 	use("simrat39/symbols-outline.nvim")
 	use("b0o/SchemaStore.nvim")
 	use("WhoIsSethDaniel/mason-tool-installer.nvim")
-	use("jayp0521/mason-null-ls.nvim")
 	use("glepnir/lspsaga.nvim")
 	use("lvimuser/lsp-inlayhints.nvim")
 	use("fladson/vim-kitty")
+
+	-- dep null ls
+	-- use("jose-elias-alvarez/null-ls.nvim")
+	-- use("jayp0521/mason-null-ls.nvim")
+
 	-- cmp
 	use("hrsh7th/nvim-cmp")
 	use("hrsh7th/cmp-nvim-lsp")

@@ -101,6 +101,7 @@ end)
 -- lsp
 map("n", "<leader>i", ":LspInfo<CR>")
 map("n", "<leader>t", ":ChatGPT<CR>")
+map("n", "<leader>fa", ":Format<CR>")
 
 local opts = { silent = true }
 
@@ -115,11 +116,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
 		vim.keymap.set("n", "gt", vim.lsp.buf.code_action, opts)
 		vim.keymap.set("n", "gD", vim.lsp.buf.type_definition, opts)
-		map("n", "<leader>fa", ":lua vim.lsp.buf.format()<CR>")
+		-- map("n", "<leader>fa", ":lua vim.lsp.buf.format()<CR>")
 		map("n", "gn", "<cmd>Telescope diagnostics<CR>")
 		map("n", "gR", "<cmd>Telescope lsp_references<CR>")
 	end,
 })
+
+
 -- map("n", "<C-k>", "<Cmd>Lspsaga show_line_diagnostics <CR>")
 -- map("n", "K", "<Cmd>Lspsaga hover_doc <CR>")
 -- map("n", "gd", "<cmd>Lspsaga goto_definition<CR>")
