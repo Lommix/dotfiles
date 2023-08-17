@@ -14,7 +14,10 @@ local curl_get = s(
 	"curl_get",
 	fmt(
 		[[
-curl -s -X GET -H "Content-Type: application/json" -u {}:{} {}/api/
+curl -s -X GET \
+-H "Content-Type: application/json" \
+-u {}:{} \
+{}/api/
 		]],
 		{ i(1,"user"), i(2,"token"),  i(3,"url") }
 	)
@@ -24,7 +27,11 @@ local curl_post = s(
 	"curl_post",
 	fmt(
 		[[
-curl -s -X POST -H "Content-Type: application/json" -u {}:{} -d '{}' {}/api/
+curl -s -X POST \
+-H "Content-Type: application/json" \
+-u {}:{} \
+-d '{}' \
+{}/api/
 		]],
 		{ i(1,"user"), i(2,"token"), i(3,"{\"foo\":\"bar\"}"),  i(4,"url") }
 	)
