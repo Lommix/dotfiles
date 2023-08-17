@@ -116,7 +116,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
-
 -- map("n", "<C-k>", "<Cmd>Lspsaga show_line_diagnostics <CR>")
 -- map("n", "K", "<Cmd>Lspsaga hover_doc <CR>")
 -- map("n", "gd", "<cmd>Lspsaga goto_definition<CR>")
@@ -140,15 +139,20 @@ map("n", "<leader><leader>b", ":hi normal ctermbg=none guibg=none<CR>")
 -- rust
 map("n", "<leader>ta", ":!cargo test -- --nocapture<CR>")
 
-
 -- super usefull yank, execute and paste result for scripts
-map("n", "<leader>p", function ()
-    local cmd = vim.fn.getreg('"')
+map("n", "<leader>p", function()
+	local cmd = vim.fn.getreg('"')
 	local output = vim.fn.system(cmd)
 
-    output = output:gsub('\027%[[%d;]+m', '') -- Remove ANSI color codes
-    output = output:gsub('^%s*(.-)%s*$', '%1') -- Trim leading/trailing whitespace
+	output = output:gsub("[\t]+", "") -- Remove tabs
+	output = output:gsub("[\x1b]+%[.-m", "") -- Remove ANSI escape sequences
 
-    vim.api.nvim_put({output}, 'c', true, true)
+	local current_line, current_col = unpack(vim.api.nvim_win_get_cursor(0))
+	local lines = {}
+
+	for line in output:gmatch("[^\r\n]+") do
+		table.insert(lines, line)
+	end
+
+	vim.api.nvim_buf_set_lines(0, current_line - 1, current_line - 1, false, lines)
 end)
-
