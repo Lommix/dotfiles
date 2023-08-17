@@ -39,5 +39,3 @@ rest.setup({
 	yank_dry_run = true,
 })
 
---- bindings
-vim.keymap.set("n", "<leader>pp", rest.run)

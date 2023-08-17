@@ -139,3 +139,16 @@ map("n", "<leader><leader>b", ":hi normal ctermbg=none guibg=none<CR>")
 
 -- rust
 map("n", "<leader>ta", ":!cargo test -- --nocapture<CR>")
+
+
+-- super usefull yank, execute and paste result for scripts
+map("n", "<leader>p", function ()
+    local cmd = vim.fn.getreg('"')
+	local output = vim.fn.system(cmd)
+
+    output = output:gsub('\027%[[%d;]+m', '') -- Remove ANSI color codes
+    output = output:gsub('^%s*(.-)%s*$', '%1') -- Trim leading/trailing whitespace
+
+    vim.api.nvim_put({output}, 'c', true, true)
+end)
+

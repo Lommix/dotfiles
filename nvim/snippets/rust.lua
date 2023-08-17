@@ -35,4 +35,5 @@ pub struct {}
 )
 table.insert(snippets, comp)
 
+
 return snippets
