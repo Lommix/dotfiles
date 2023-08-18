@@ -78,11 +78,21 @@ return require("packer").startup(function(use)
 	-- ui
 	use("brenoprata10/nvim-highlight-colors")
 	-- lsp
-	use { 'mhartington/formatter.nvim' }
+	use({ "mhartington/formatter.nvim" })
 	use({
 		"smjonas/inc-rename.nvim",
 		config = function()
 			require("inc_rename").setup()
+		end,
+	})
+
+	use({
+		"weilbith/nvim-code-action-menu",
+		config = function()
+			require("packer").use({
+				"weilbith/nvim-code-action-menu",
+				cmd = "CodeActionMenu",
+			})
 		end,
 	})
 

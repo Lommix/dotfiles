@@ -64,6 +64,9 @@ formatter.setup({
 		htmljango = {
 			require("formatter.filetypes.html").prettier,
 		},
+		rust = {
+			require("formatter.filetypes.rust").rustfmt,
+		},
 		["*"] = {
 			default
 		},
@@ -72,5 +75,4 @@ formatter.setup({
 
 function default()
 	vim.lsp.buf.format()
-	require("formatter.filetypes.any").remove_trailing_whitespace()
 end

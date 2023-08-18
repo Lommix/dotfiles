@@ -8,8 +8,6 @@ if not status_cmp_ok then
 end
 
 M.capabilities.textDocument.completion.completionItem.snippetSupport = true
---M.capabilities = cmp_nvim_lsp.update_capabilities(M.capabilities)
-local test
 M.setup = function()
 	local icons = require("lommix.icons")
 	local signs = {
@@ -24,17 +22,17 @@ M.setup = function()
 	end
 
 	local config = {
-		virtual_lines = false,
+		virtual_lines = true,
 		--virtual_text = false,
 		virtual_text = {
 			prefix = icons.ui.Gear,
-			severity = vim.diagnostic.severity.ERROR,
+			severity = vim.diagnostic.severity.ERROR
 		},
         signs = {
 			active = signs,
 		},
 		update_in_insert = true,
-		underline = false,
+		underline = true,
 		severity_sort = true,
 		float = {
 			focusable = false,

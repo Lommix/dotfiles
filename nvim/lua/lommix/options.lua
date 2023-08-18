@@ -31,12 +31,11 @@ o.clipboard = "unnamedplus"
 o.swapfile = false
 o.undofile = true
 o.nuw = 6
-opt.fillchars = { eob = ' ' }
+opt.fillchars = { eob = " " }
 opt.mouse = "a"
 opt.equalalways = true
 o.termguicolors = true
-
 opt.list = true
 -- opt.listchars:append "space:⋅"
-opt.listchars:append "eol:↴"
+opt.listchars:append("eol:↴")
 vim.g.gitblame_enabled = 0

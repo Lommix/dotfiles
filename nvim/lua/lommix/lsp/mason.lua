@@ -61,7 +61,6 @@ local opts = {
 	on_attach = function(client, bufnr)
 		require("lsp-inlayhints").on_attach(client, bufnr)
 		lsp_status.on_attach(client)
-		--client.resolved_capabilities.document_formatting = false
 	end,
 }
 
@@ -69,16 +68,35 @@ mason_lspconfig.setup_handlers({
 	function(server_name)
 		lsp_config[server_name].setup(opts)
 	end,
+	["ltex"] = function()
+		lsp_config.ltex.setup(vim.tbl_extend("force", opts, {
+			filetypes = { "text", "markdown", "md" },
+			flags = { debounce_text_changes = 300 },
+			cmd = { "ltex-ls" },
+			settings = {
+				ltex = {
+					enabled = { "latex", "tex", "bib", "markdown", "tex" },
+					-- language = "auto",
+					-- language = "en-US",
+					-- language = "de-DE",
+					diagnosticSeverity = "INFO",
+					setenceCacheSize = 4000,
+					additionalRules = {
+						enablePickyRules = true,
+					},
+					completionEnabled = true,
+				},
+			},
+		}))
+	end,
 	["html"] = function()
 		lsp_config.html.setup(vim.tbl_extend("force", opts, {
 			filetypes = { "html", "twig", "htmldjango" },
-			capabilities = capabilities,
 		}))
 	end,
 	["cssls"] = function()
 		local capabilities = opts.capabilities
 		capabilities.textDocument.completion.completionItem.snippetSupport = true
-
 		lsp_config.cssls.setup(vim.tbl_extend("force", opts, {
 			filetypes = { "css", "scss" },
 			capabilities = capabilities,
@@ -101,9 +119,6 @@ mason_lspconfig.setup_handlers({
 			},
 		})
 		lsp_config.lua_ls.setup(vim.tbl_deep_extend("force", luadev, {
-			on_attach = function(client, bufnr)
-				-- client.resolved_capabilities.document_formatting = false
-			end,
 			settings = {
 				Lua = {
 					runtime = {
