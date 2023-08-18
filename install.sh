@@ -9,6 +9,9 @@ ln -s "$BASEDIR"/.prettierrc "${HOME}"/.prettierrc
 rm -f "${HOME}"/.tmux.conf
 ln -s "$BASEDIR"/.tmux.conf "${HOME}"/.tmux.conf
 
+rm -f "${HOME}"/.local/bin/tmux_sessionizer
+ln -s "$BASEDIR"/scripts/tmux/tmux_sessionizer.sh "${HOME}"/.local/bin/tmux_sessionizer
+
 #i3
 rm -rf "${HOME}"/.config/i3
 ln -s "$BASEDIR"/i3 "${HOME}"/.config/i3
@@ -27,5 +30,5 @@ ln -s "$BASEDIR"/kitty.conf "${HOME}"/.config/kitty/kitty.conf
 rm -f "${HOME}"/.vimplugin.vim
 ln -s "$BASEDIR"/.vimplugin.vim "${HOME}"/.vimplugin.vim
 
-echo "cloning tmux plugin manager"
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+# echo "cloning tmux plugin manager"
+# git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
