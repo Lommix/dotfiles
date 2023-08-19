@@ -2,7 +2,7 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find ~/Projects ~/Projects/rust ~/Projects/work ~/Documents/Projects ~/Documents/obsidian | fzf)
+    selected=$(find ~/Projects ~/Projects/rust ~/Projects/work ~/Documents/Projects ~/Documents/obsidian -mindepth 1 -maxdepth 1 | fzf)
 fi
 
 if [[ -z $selected ]]; then
