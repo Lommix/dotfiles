@@ -42,9 +42,9 @@ map("n", "<C-Up>", "<C-w>+")
 map("n", "<C-Down>", "<C-w>-")
 
 -- git
-map("n", "<leader>lg", ":lua _LAZYGIT_TOGGLE()<CR>")
-map("n", "<leader>ld", ":lua _LAZYDOCKER_TOGGLE()<CR>")
-map("n", "<leader>go", ":lua _GOQUICKRUN_TOGGLE()<CR>")
+-- map("n", "<leader>lg", ":lua _LAZYGIT_TOGGLE()<CR>")
+-- map("n", "<leader>ld", ":lua _LAZYDOCKER_TOGGLE()<CR>")
+-- map("n", "<leader>go", ":lua _GOQUICKRUN_TOGGLE()<CR>")
 
 -- telescope
 map("n", "<leader>ff", ":Telescope find_files find_command=rg,--ignore,--files prompt_prefix=🔍<CR>")
