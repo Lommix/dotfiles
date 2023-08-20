@@ -29,6 +29,3 @@ ln -s "$BASEDIR"/kitty.conf "${HOME}"/.config/kitty/kitty.conf
 #vimrc
 rm -f "${HOME}"/.vimplugin.vim
 ln -s "$BASEDIR"/.vimplugin.vim "${HOME}"/.vimplugin.vim
-
-# echo "cloning tmux plugin manager"
-# git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
