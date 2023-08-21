@@ -32,7 +32,7 @@ formatter.setup({
 			end,
 		},
 		php = {
-			require("formatter.filetypes.php").phpcbf,
+			require("formatter.filetypes.php").php_cs_fixer,
 		},
 		sql = {
 			require("formatter.filetypes.sql").pgformat,
