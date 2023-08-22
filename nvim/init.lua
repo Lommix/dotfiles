@@ -29,7 +29,7 @@ require("lommix.chatgpt")
 require("lommix.obsidian")
 -- after plugins
 
-vim.cmd[[colorscheme terafox]]
+vim.cmd[[colorscheme duskfox]]
 -- vim.cmd("colorscheme sobrio_ghost")
 -- vim.cmd("syntax on")
 --
