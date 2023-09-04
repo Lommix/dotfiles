@@ -111,11 +111,6 @@ return require("packer").startup(function(use)
 	use("glepnir/lspsaga.nvim")
 	use("lvimuser/lsp-inlayhints.nvim")
 	use("fladson/vim-kitty")
-
-	-- dep null ls
-	-- use("jose-elias-alvarez/null-ls.nvim")
-	-- use("jayp0521/mason-null-ls.nvim")
-
 	-- cmp
 	use("hrsh7th/nvim-cmp")
 	use("hrsh7th/cmp-nvim-lsp")
@@ -126,6 +121,10 @@ return require("packer").startup(function(use)
 	use("vim-autoformat/vim-autoformat")
 	use("L3MON4D3/LuaSnip")
 	use("nvim-lualine/lualine.nvim")
+
+	use("tpope/vim-fugitive")
+	use("tpope/vim-dadbod")
+
 	use("windwp/nvim-ts-autotag")
 	use("windwp/nvim-autopairs")
 	use({
