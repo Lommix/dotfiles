@@ -126,8 +126,6 @@ return require("packer").startup(function(use)
 	use("vim-autoformat/vim-autoformat")
 	use("L3MON4D3/LuaSnip")
 	use("nvim-lualine/lualine.nvim")
-
-	use("tpope/vim-fugitive")
 	use("windwp/nvim-ts-autotag")
 	use("windwp/nvim-autopairs")
 	use({
@@ -154,43 +152,6 @@ return require("packer").startup(function(use)
 					},
 				},
 				default = true,
-			})
-		end,
-	})
-	use({
-		"kyazdani42/nvim-tree.lua",
-		requires = {
-			"kyazdani42/nvim-web-devicons", -- optional, for file icons
-		},
-		tag = "nightly", -- optional, updated every week. (see issue #1193)
-		config = function()
-			vim.g.loaded = 1
-			vim.g.loaded_netrwPlugin = 1
-			require("nvim-tree").setup({
-				sort_by = "case_sensitive",
-				view = {
-					adaptive_size = true,
-				},
-				renderer = {
-					group_empty = true,
-					icons = {
-						show = {
-							git = true,
-						},
-					},
-				},
-				filters = {
-					dotfiles = false,
-				},
-				actions = {
-					open_file = {
-						quit_on_open = true,
-					},
-				},
-				git = {
-					enable = true,
-					ignore = false,
-				},
 			})
 		end,
 	})

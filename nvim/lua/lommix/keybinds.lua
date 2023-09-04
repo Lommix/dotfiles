@@ -27,7 +27,6 @@ map("n", "<leader>tp", ":tabp<CR>")
 map("n", "<leader>+", "<C-a>")
 map("n", "<leader>-", "<C-x>")
 map("n", "x", '"_x')
-map("n", "<leader>E", ":NvimTreeFindFileToggle<CR>:NvimTreeFocus<CR>")
 map("n", "<leader>e", ":Oil --float<CR>")
 
 -- load curent file path into yank register
@@ -53,7 +52,7 @@ map("n", "<leader>fs", ":Telescope grep_string find_command=rg,--ignore,--hidden
 map("n", "<leader>fb", "<CMD>Telescope buffers<CR>")
 map("n", "<leader>fh", "<CMD>Telescope help_tags<CR>")
 
-map("n", "<leader>fF", function()
+map("n", "<leader>FF", function()
 	require("telescope.builtin").find_files({ hidden = true, no_ignore = true })
 end)
 
