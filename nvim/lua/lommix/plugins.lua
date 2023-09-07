@@ -137,7 +137,6 @@ return require("packer").startup(function(use)
 	})
 	use("famiu/nvim-reload")
 	use("christianchiarulli/lua-dev.nvim")
-	use("akinsho/toggleterm.nvim")
 	use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
 	use("nvim-treesitter/playground")
 	use({
