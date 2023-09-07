@@ -45,6 +45,9 @@ map("n", "<C-Down>", "<C-w>-")
 -- map("n", "<leader>ld", ":lua _LAZYDOCKER_TOGGLE()<CR>")
 -- map("n", "<leader>go", ":lua _GOQUICKRUN_TOGGLE()<CR>")
 
+-- DB
+
+map("n", "<leader>db",":DBUIToggle<CR>")
 -- telescope
 map("n", "<leader>ff", ":Telescope find_files find_command=rg,--ignore,--files prompt_prefix=🔍<CR>")
 map("n", "<leader>fg", ":Telescope live_grep find_command=rg,--ignore,--files prompt_prefix=🔍<CR>")
@@ -89,7 +92,6 @@ map("n", "<leader>FG", function()
 		end,
 	})
 end)
---harpoon
 
 -- lsp
 map("n", "<leader>i", ":LspInfo<CR>")

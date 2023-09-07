@@ -27,6 +27,7 @@ require("lommix.codeium")
 require("lommix.scripts.sftp")
 require("lommix.chatgpt")
 require("lommix.obsidian")
+require("lommix.db")
 -- after plugins
 
 vim.cmd[[colorscheme duskfox]]
