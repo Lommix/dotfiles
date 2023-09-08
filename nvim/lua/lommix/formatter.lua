@@ -67,6 +67,9 @@ formatter.setup({
 		rust = {
 			require("formatter.filetypes.rust").rustfmt,
 		},
+		go = {
+			require("formatter.filetypes.go").gofmt,
+		},
 		["*"] = {
 			default
 		},
