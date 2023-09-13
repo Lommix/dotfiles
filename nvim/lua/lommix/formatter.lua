@@ -41,7 +41,7 @@ formatter.setup({
 			require("formatter.filetypes.markdown").prettier,
 		},
 		json = {
-			require("formatter.filetypes.json").jq(),
+			require("formatter.filetypes.json").jq,
 		},
 		python = {
 			require("formatter.filetypes.python").black,
@@ -68,14 +68,12 @@ formatter.setup({
 			require("formatter.filetypes.rust").rustfmt,
 		},
 		go = {
-			require("formatter.filetypes.go").gofmt,
+			require("formatter.filetypes.go").gofumpt,
 		},
 		["*"] = {
-			default
+			function ()
+				vim.lsp.buf.format()
+			end
 		},
 	},
 })
-
-function default()
-	vim.lsp.buf.format()
-end
