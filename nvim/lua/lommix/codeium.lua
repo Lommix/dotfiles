@@ -27,6 +27,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		"*.less",
 		"*.jsx",
 		"*.tsx",
+		"*.sql"
 	},
 	command = "CodeiumEnable",
 })
