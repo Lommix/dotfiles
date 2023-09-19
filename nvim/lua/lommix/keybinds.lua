@@ -47,7 +47,7 @@ map("n", "<C-Down>", "<C-w>-")
 
 -- DB
 
-map("n", "<leader>db",":DBUIToggle<CR>")
+map("n", "<leader>db", ":DBUIToggle<CR>")
 -- telescope
 map("n", "<leader>ff", ":Telescope find_files find_command=rg,--ignore,--files prompt_prefix=🔍<CR>")
 map("n", "<leader>fg", ":Telescope live_grep find_command=rg,--ignore,--files prompt_prefix=🔍<CR>")
@@ -159,4 +159,26 @@ map("n", "<leader>p", function()
 	end
 
 	vim.api.nvim_buf_set_lines(0, current_line - 1, current_line - 1, false, lines)
+end)
+
+-- general purpose build
+map("n", "<leader>b", function()
+	local build_file = vim.fn.findfile("build.sh", ".;")
+	if build_file == "" then
+		P("Build file not found")
+		return
+	else
+		vim.cmd("!./"..build_file)
+	end
+end)
+
+-- general purpose build run
+map("n", "<leader>r", function()
+	local run_file = vim.fn.findfile("run.sh", ".;")
+	if run_file == "" then
+		P("Run file not found")
+		return
+	else
+		vim.cmd("!./"..run_file)
+	end
 end)
