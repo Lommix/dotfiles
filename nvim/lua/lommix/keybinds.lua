@@ -131,7 +131,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 map("n", "gr", ":IncRename ")
 -- clear highlight search
 map("n", "<CR>", "<CR> :noh<CR><CR>")
-map("n", "<leader>r", ":lua require('nvim-reload').Reload()<CR>:syntax on<CR>")
+map("n", "<leader>R", ":lua require('nvim-reload').Reload()<CR>:syntax on<CR>")
 -- flowers
 map("n", "<leader><leader>1", ":colorscheme catppuccin_mocha<CR>")
 map("n", "<leader><leader>2", ":colorscheme tokyonight-moon<CR>")
