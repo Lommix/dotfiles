@@ -43,6 +43,14 @@ formatter.setup({
 		json = {
 			require("formatter.filetypes.json").jq,
 		},
+		xml = {
+			function()
+				return {
+					exe = "xmlformat",
+					args = { "-i" },
+				}
+			end,
+		},
 		python = {
 			require("formatter.filetypes.python").black,
 		},
@@ -69,11 +77,6 @@ formatter.setup({
 		},
 		go = {
 			require("formatter.filetypes.go").gofumpt,
-		},
-		["*"] = {
-			function ()
-				vim.lsp.buf.format()
-			end
 		},
 	},
 })

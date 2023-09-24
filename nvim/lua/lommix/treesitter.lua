@@ -4,38 +4,13 @@ if not status then
 end
 
 ts.setup({
-	highlight = {
-		enable = true,
-		disable = {},
-	},
-	indent = {
-		enable = true,
-		disable = {},
-	},
-	ensure_installed = {
-		"tsx",
-		"toml",
-		"fish",
-		"twig",
-		"php",
-		"json",
-		"yaml",
-		"css",
-		"go",
-		"rust",
-		"html",
-		"lua",
-		"gdscript",
-        "dockerfile",
-        "javascript",
-        "godot_resource",
-		"markdown",
-		"markdown_inline"
-	},
-	autotag = {
-		enable = true,
-	},
+	ensure_installed = { "tsx", "toml", "json","xml", "twig", "php", "json", "yaml", "css", "go", "rust", "html", "lua", "gdscript", "dockerfile", "javascript", "godot_resource", "markdown", "markdown_inline" },
+	sync_install = false,
+	auto_install = true,
+	highlight = { enable = true },
+	indent = { enable = true, disable = {}},
 })
+
 vim.filetype.add({extension = {wgsl = "wgsl"}})
 
 local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
