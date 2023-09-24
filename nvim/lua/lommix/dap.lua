@@ -109,6 +109,4 @@ dap.configurations.cs = {
 -- TODO: finish when bored
 -- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation
 ------------------------------------------------------
--- PHP
-------------------------------------------------------
 -- JS
