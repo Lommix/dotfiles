@@ -40,20 +40,20 @@ map("n", "<C-Left>", "<C-w>>")
 map("n", "<C-Up>", "<C-w>+")
 map("n", "<C-Down>", "<C-w>-")
 
--- git
--- map("n", "<leader>lg", ":lua _LAZYGIT_TOGGLE()<CR>")
--- map("n", "<leader>ld", ":lua _LAZYDOCKER_TOGGLE()<CR>")
--- map("n", "<leader>go", ":lua _GOQUICKRUN_TOGGLE()<CR>")
+-- GIT
+map("n", "<leader>gg", ":Git<CR>")
+map("n", "<leader>gp", ":Git push<CR>")
 
 -- DB
-
 map("n", "<leader>db", ":DBUIToggle<CR>")
+
 -- telescope
 map("n", "<leader>ff", ":Telescope find_files find_command=rg,--ignore,--files prompt_prefix=🔍<CR>")
 map("n", "<leader>fg", ":Telescope live_grep find_command=rg,--ignore,--files prompt_prefix=🔍<CR>")
 map("n", "<leader>fs", ":Telescope grep_string find_command=rg,--ignore,--hidden,--files prompt_prefix=🔍<CR>")
 map("n", "<leader>fb", "<CMD>Telescope buffers<CR>")
 map("n", "<leader>fh", "<CMD>Telescope help_tags<CR>")
+map("n", "<leader>fc", "<CMD>Telescope colorscheme<CR>")
 
 map("n", "<leader>FF", function()
 	require("telescope.builtin").find_files({ hidden = true, no_ignore = true })
@@ -84,7 +84,7 @@ map("v", "<leader>fs", function()
 end)
 
 map("n", "<leader>FG", function()
-	filetype = vim.fn.input("Filetype: ")
+	local filetype = vim.fn.input("Filetype: ")
 	require("telescope.builtin").live_grep({
 		type_filter = filetype,
 		additional_args = function(args)
@@ -120,18 +120,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
--- map("n", "<C-k>", "<Cmd>Lspsaga show_line_diagnostics <CR>")
--- map("n", "K", "<Cmd>Lspsaga hover_doc <CR>")
--- map("n", "gd", "<cmd>Lspsaga goto_definition<CR>")
--- map("n", "gD", "<cmd>Lspsaga lsp_finder<CR>")
--- map("n", "gp", "<Cmd>Lspsaga peek_definition<CR>")
--- map("n", "gt", "<Cmd>Lspsaga code_action<CR>")
--- map("n", "gi", "<cmd>Lspsaga goto_type_definition<CR>")
-
 map("n", "gr", ":IncRename ")
 -- clear highlight search
 map("n", "<CR>", "<CR> :noh<CR><CR>")
 map("n", "<leader>R", ":lua require('nvim-reload').Reload()<CR>:syntax on<CR>")
+
 -- flowers
 map("n", "<leader><leader>1", ":colorscheme catppuccin_mocha<CR>")
 map("n", "<leader><leader>2", ":colorscheme tokyonight-moon<CR>")
@@ -172,7 +165,7 @@ map("n", "<leader>b", function()
 	end
 end)
 
--- general purpose build run
+-- general purpose run
 map("n", "<leader>r", function()
 	local run_file = vim.fn.findfile("run.sh", ".;")
 	if run_file == "" then
