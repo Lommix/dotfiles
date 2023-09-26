@@ -2,7 +2,7 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find ~/Documents ~/Projects ~/Projects/rust ~/Projects/go ~/Projects/work ~/Documents/Projects ~/Documents/obsidian -type d -not -path '*/\.*' -mindepth 1 -maxdepth 1 | fzf)
+    selected=$(find ~/Documents ~/Projects ~/Projects/rust ~/Projects/godot ~/Projects/go ~/Projects/work ~/Documents/Projects ~/Documents/obsidian -type d -not -path '*/\.*' -mindepth 1 -maxdepth 1 | fzf)
 fi
 
 if [[ -z $selected ]]; then
