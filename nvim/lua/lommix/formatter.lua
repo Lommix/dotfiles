@@ -51,6 +51,13 @@ formatter.setup({
 				}
 			end,
 		},
+		gdscript = {
+			function()
+				return {
+					exe = "gdformat",
+				}
+			end,
+		},
 		python = {
 			require("formatter.filetypes.python").black,
 		},

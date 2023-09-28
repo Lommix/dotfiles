@@ -3,7 +3,7 @@
 exec_always xset s off
 exec_always xset s noblank
 exec_always xset -dpms
-
+exec_always xset r rate 350 50
 #############################################################################
 # i3 autorun
 
