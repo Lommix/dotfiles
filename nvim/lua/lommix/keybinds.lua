@@ -23,6 +23,9 @@ map("n", "<leader>tx", ":tabclose<CR>")
 map("n", "<leader>tn", ":tabn<CR>")
 map("n", "<leader>tp", ":tabp<CR>")
 
+-- term
+map('t', '<Esc>', '<C-\\><C-n>')
+
 -- util
 map("n", "<leader>+", "<C-a>")
 map("n", "<leader>-", "<C-x>")
@@ -154,24 +157,54 @@ map("n", "<leader>p", function()
 	vim.api.nvim_buf_set_lines(0, current_line - 1, current_line - 1, false, lines)
 end)
 
--- general purpose build
-map("n", "<leader>b", function()
-	local build_file = vim.fn.findfile("build.sh", ".;")
-	if build_file == "" then
-		P("Build file not found")
+
+-- run shell script
+local function run_shell(filename)
+	local file = vim.fn.findfile(filename, ".;")
+	if file == "" then
+		P("file not found: ".. filename)
 		return
 	else
-		vim.cmd("!./"..build_file)
+		vim.cmd(":term ./"..file)
 	end
+end
+
+-- general purpose build
+map("n", "<leader>b", function()
+	run_shell("build.sh")
 end)
 
 -- general purpose run
 map("n", "<leader>r", function()
-	local run_file = vim.fn.findfile("run.sh", ".;")
-	if run_file == "" then
-		P("Run file not found")
-		return
-	else
-		vim.cmd("!./"..run_file)
-	end
+	run_shell("run.sh")
 end)
+
+-- project notes
+local function open_notes ()
+
+	local buffer = vim.api.nvim_create_buf(false, true)
+	local dir = "~/.quicky"
+	local path = dir .. "/" .. string.gsub(vim.fn.getcwd(), "/", "") .. ".txt"
+
+	if not vim.fn.filereadable(path) == true then
+		print("cannot open " .. path)
+		return
+	end
+
+	vim.api.nvim_open_win(buffer, true, {
+		height = vim.api.nvim_get_option("lines") - 10,
+		width = vim.api.nvim_get_option("columns") - 10,
+		border = "double",
+		relative = "editor",
+		col = 5,
+		row = 5,
+	})
+
+	vim.api.nvim_buf_call(buffer, function ()
+		vim.cmd("e ".. path)
+	end)
+
+	vim.api.nvim_buf_set_keymap(buffer, "n", "q", ":wq<CR>", { silent = true })
+end
+
+map("n", "<leader>n", open_notes)
