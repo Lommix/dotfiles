@@ -3,26 +3,14 @@
 exec_always xset s off
 exec_always xset s noblank
 exec_always xset -dpms
-exec_always xset r rate 350 50
-#############################################################################
-# i3 autorun
-
-# set background
+exec_always xset r rate 350 70
+exec_always setxkbmap -layout "de,fr" -variant "nodeadkeys,nodeadkeys" -option "ctrl:nocaps,ctrl:nocaps"
 exec_always feh --bg-fill ~/.config/i3/bg/uwp3725474.jpeg
-exec_always setxkbmap -option ctrl:nocaps
-
-# setup compton
 exec --no-startup-id "compton -b"
-
-# disable capslock
-#exec
-
 
 #############################################################################
 # i3 config
-
 set $mod Mod4
-
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 font pango:Mononoki Nerd Font 16
