@@ -180,9 +180,8 @@ map("n", "<leader>r", function()
 end)
 
 -- project notes
+local buffer = vim.api.nvim_create_buf(false, true)
 local function open_notes ()
-
-	local buffer = vim.api.nvim_create_buf(false, true)
 	local dir = "~/.quicky"
 	local path = dir .. "/" .. string.gsub(vim.fn.getcwd(), "/", "") .. ".txt"
 
