@@ -78,7 +78,7 @@ mason_lspconfig.setup_handlers({
 					enabled = { "latex", "tex", "bib", "markdown", "tex" },
 					-- language = "auto",
 					-- language = "en-US",
-					-- language = "de-DE",
+					language = "de-DE",
 					diagnosticSeverity = "INFO",
 					setenceCacheSize = 4000,
 					additionalRules = {
