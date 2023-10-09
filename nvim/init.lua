@@ -31,7 +31,7 @@ require("lommix.db")
 -- after plugins
 
 -- vim.cmd[[colorscheme duskfox]]
-vim.cmd("colorscheme sobrio_verde")
+vim.cmd("colorscheme tokyonight")
 -- vim.cmd("syntax on")
 --
 -- after after

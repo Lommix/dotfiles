@@ -75,7 +75,7 @@ mason_lspconfig.setup_handlers({
 			cmd = { "ltex-ls" },
 			settings = {
 				ltex = {
-					enabled = { "latex", "tex", "bib", "markdown", "tex" },
+					enabled = { "latex", "bib", "markdown", "tex" },
 					-- language = "auto",
 					-- language = "en-US",
 					language = "de-DE",
