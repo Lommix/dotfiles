@@ -35,6 +35,7 @@ M.setup = function()
 		underline = true,
 		severity_sort = true,
 		float = {
+			severity = vim.diagnostic.severity.ERROR,
 			focusable = false,
 			style = "minimal",
 			border = "rounded",

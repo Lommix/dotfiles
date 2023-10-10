@@ -118,10 +118,18 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "gi", vim.lsp.buf.declaration, opts)
 		vim.keymap.set("n", "gR", vim.lsp.buf.references, opts)
 		-- map("n", "<leader>fa", ":lua vim.lsp.buf.format()<CR>")
-		map("n", "gn", "<cmd>Telescope diagnostics<CR>")
+		map("n", "GN", function()
+			require('telescope.builtin').diagnostics({})
+		end)
+		map("n", "gn", function()
+			require('telescope.builtin').diagnostics({
+				severity = vim.diagnostic.severity.ERROR,
+			})
+		end)
 		map("n", "gR", "<cmd>Telescope lsp_references<CR>")
 	end,
 })
+
 
 map("n", "gr", ":IncRename ")
 -- clear highlight search
