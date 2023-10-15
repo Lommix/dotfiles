@@ -8,13 +8,14 @@ M.opts = {
 --- @param context string
 --- @param prompt string
 --- @param buf_nr number
+--- @return number
 M.exec_to_buffer = function(context, prompt, buf_nr)
 	local args = vim.fn.shellescape(context .. "\n" .. prompt)
 	local cmd = M.opts.cmd:gsub("$prompt", args)
 	cmd = cmd:gsub("$model", M.opts.model, 1)
 	local words = {}
 	local line = 0
-	local job_id = vim.fn.jobstart(cmd, {
+	return vim.fn.jobstart(cmd, {
 		on_stdout = function(_, data, _)
 			for i, token in ipairs(data) do
 
