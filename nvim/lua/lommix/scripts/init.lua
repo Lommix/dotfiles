@@ -7,10 +7,8 @@ local win_options = {
 }
 
 vim.keymap.set("n", "<leader>cc", function()
-	ollama.exec("", vim.fn.input("Prompt: "), function(lines)
-		local float = plen.percentage_range_window(0.8, 0.8, win_options)
-		vim.api.nvim_buf_set_lines(float.bufnr, 0, -1, false, lines)
-	end)
+	local float = plen.percentage_range_window(0.8, 0.8, win_options)
+	ollama.exec_to_buffer("", vim.fn.input("Prompt: "), float.bufnr)
 end, { silent = true })
 
 vim.keymap.set("v", "<leader>cc", function()

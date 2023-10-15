@@ -11,23 +11,23 @@ vim.g.codeium_filetypes = {
 }
 
 -- enable by default for filetypes
-vim.api.nvim_create_autocmd({ "BufEnter" }, {
-	pattern = {
-		"*.php",
-		"*.lua",
-		"*.js",
-		"*.ts",
-		"*.svelte",
-		"*.rs",
-		"*.html",
-		"*.go",
-		"*.py",
-		"*.css",
-		"*.scss",
-		"*.less",
-		"*.jsx",
-		"*.tsx",
-		"*.sql"
-	},
-	command = "CodeiumEnable",
-})
+-- vim.api.nvim_create_autocmd({ "BufEnter" }, {
+-- 	pattern = {
+-- 		"*.php",
+-- 		"*.lua",
+-- 		"*.js",
+-- 		"*.ts",
+-- 		"*.svelte",
+-- 		"*.rs",
+-- 		"*.html",
+-- 		"*.go",
+-- 		"*.py",
+-- 		"*.css",
+-- 		"*.scss",
+-- 		"*.less",
+-- 		"*.jsx",
+-- 		"*.tsx",
+-- 		"*.sql"
+-- 	},
+-- 	command = "CodeiumEnable",
+-- })

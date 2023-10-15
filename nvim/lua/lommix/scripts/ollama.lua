@@ -5,15 +5,40 @@ M.opts = {
 	cmd = "ollama run $model $prompt",
 }
 
+--- @param context string
+--- @param prompt string
+--- @param buf_nr number
+M.exec_to_buffer = function(context, prompt, buf_nr)
+	local args = vim.fn.shellescape(context .. "\n" .. prompt)
+	local cmd = M.opts.cmd:gsub("$prompt", args)
+	cmd = cmd:gsub("$model", M.opts.model, 1)
+	local words = {}
+	local line = 0
+	local job_id = vim.fn.jobstart(cmd, {
+		on_stdout = function(_, data, _)
+			for i, token in ipairs(data) do
 
--- @param context string
--- @param prompt string
--- @param callback function
+				-- line break
+				if i > 1 then
+					line = line + 1
+					words = {}
+				end
+
+				table.insert(words, token)
+				vim.api.nvim_buf_set_lines(buf_nr, line, line + 1, false, {table.concat(words, "")})
+			end
+		end,
+	})
+end
+
+--- @param context string
+--- @param prompt string
+--- @param callback function
 M.exec = function(context, prompt, callback)
 	local args = vim.fn.shellescape(context .. "\n" .. prompt)
 	local cmd = M.opts.cmd:gsub("$prompt", args)
 	cmd = cmd:gsub("$model", M.opts.model, 1)
-	local output = "----- INPUT: ----- \n".. prompt .. "\n\n ----- OUTPUT: ----- \n"
+	local output = "----- INPUT: ----- \n" .. prompt .. "\n\n ----- OUTPUT: ----- \n"
 	local job_id = vim.fn.jobstart(cmd, {
 		on_stdout = function(_, data, _)
 			output = output .. table.concat(data, "\n")
@@ -25,14 +50,14 @@ M.exec = function(context, prompt, callback)
 	})
 end
 
--- @param context string
--- @param callback function
+--- @param context string
+--- @param callback function
 M.run_visual_as_prompt = function(context, callback)
 	local prompt = vim.fn.shellescape(M.get_visual_selection())
 	M.exec(context, prompt, callback)
 end
 
--- @return string
+--- @return string
 M.get_visual_selection = function()
 	local start_pos = vim.fn.getpos("'<")
 	local end_pos = vim.fn.getpos("'>")
