@@ -4,7 +4,7 @@ local ollama = require("lommix.scripts.ollama")
 local win_options = {
 	winblend = 10,
 	border = "rounded",
-	bufnr = vim.api.nvim_create_buf(false, true)
+	bufnr = vim.api.nvim_create_buf(false, true),
 }
 
 ------------------------------------------------------------------
@@ -15,11 +15,20 @@ vim.keymap.set("n", "<leader>cc", function()
 	ollama.run("mistral:instruct", "", vim.fn.input("Prompt: "), float.bufnr)
 end, { silent = true })
 
-vim.keymap.set("v", "<leader>cc", function()
+vim.keymap.set("v", "<leader>cp", function()
 	local prompt = ollama.get_visual_lines(0)
 	plen.clear(win_options.bufnr)
 	local float = plen.percentage_range_window(0.8, 0.8, win_options)
 	ollama.run("mistral:instruct", "", prompt, float.bufnr)
+end, { silent = true })
+
+------------------------------------------------------------------
+-- coding
+vim.keymap.set("v", "<leader>cc", function()
+	local prompt = ollama.get_visual_lines(0)
+	plen.clear(win_options.bufnr)
+	local float = plen.percentage_range_window(0.8, 0.8, win_options)
+	ollama.run("codellama:7b", "", prompt, float.bufnr)
 end, { silent = true })
 
 ------------------------------------------------------------------
