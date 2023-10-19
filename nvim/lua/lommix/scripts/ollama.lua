@@ -1,30 +1,26 @@
 local M = {}
 
-M.opts = {
-	model = "mistral:instruct",
-	cmd = "ollama run $model $prompt",
-}
+local ESC_FEEDKEY = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
 
+--- @param model string
 --- @param context string
 --- @param prompt string
 --- @param buf_nr number
 --- @return number
-M.exec_to_buffer = function(context, prompt, buf_nr)
-	local args = vim.fn.shellescape(context .. "\n" .. prompt)
-	local cmd = M.opts.cmd:gsub("$prompt", args)
-	cmd = cmd:gsub("$model", M.opts.model, 1)
+M.run = function(model, context, prompt, buf_nr)
+	local cmd = ("ollama run $model $prompt"):gsub("$model", model):gsub("$prompt", vim.fn.shellescape(context .. "\n" .. prompt))
+	local header = vim.split(prompt,"\n")
+	table.insert(header, "----------------------------------------")
+	vim.api.nvim_buf_set_lines(buf_nr, 0, -1, false, header)
+	local line = vim.tbl_count(header)
 	local words = {}
-	local line = 0
 	return vim.fn.jobstart(cmd, {
 		on_stdout = function(_, data, _)
 			for i, token in ipairs(data) do
-
-				-- line break
-				if i > 1 then
+				if i > 1 then -- if returned data array has more than one element, a line break occured.
 					line = line + 1
 					words = {}
 				end
-
 				table.insert(words, token)
 				vim.api.nvim_buf_set_lines(buf_nr, line, line + 1, false, {table.concat(words, "")})
 			end
@@ -32,44 +28,31 @@ M.exec_to_buffer = function(context, prompt, buf_nr)
 	})
 end
 
---- @param context string
---- @param prompt string
---- @param callback function
-M.exec = function(context, prompt, callback)
-	local args = vim.fn.shellescape(context .. "\n" .. prompt)
-	local cmd = M.opts.cmd:gsub("$prompt", args)
-	cmd = cmd:gsub("$model", M.opts.model, 1)
-	local output = "----- INPUT: ----- \n" .. prompt .. "\n\n ----- OUTPUT: ----- \n"
-	local job_id = vim.fn.jobstart(cmd, {
-		on_stdout = function(_, data, _)
-			output = output .. table.concat(data, "\n")
-		end,
-		on_exit = function(a, b)
-			local lines = vim.split(output, "\n")
-			callback(lines)
-		end,
-	})
-end
-
---- @param context string
---- @param callback function
-M.run_visual_as_prompt = function(context, callback)
-	local prompt = vim.fn.shellescape(M.get_visual_selection())
-	M.exec(context, prompt, callback)
-end
 
 --- @return string
-M.get_visual_selection = function()
-	local start_pos = vim.fn.getpos("'<")
-	local end_pos = vim.fn.getpos("'>")
-	local lines = vim.api.nvim_buf_get_text(
-		vim.api.nvim_get_current_buf(),
-		start_pos[2] - 1,
-		start_pos[3] - 1,
-		end_pos[2] - 1,
-		end_pos[3] - 1,
-		{}
-	)
+M.get_visual_lines = function(bufnr)
+	vim.api.nvim_feedkeys(ESC_FEEDKEY, "n", true)
+	vim.api.nvim_feedkeys("gv", "x", false)
+	vim.api.nvim_feedkeys(ESC_FEEDKEY, "n", true)
+
+	local start_row, start_col = unpack(vim.api.nvim_buf_get_mark(bufnr, "<"))
+	local end_row, end_col = unpack(vim.api.nvim_buf_get_mark(bufnr, ">"))
+	local lines = vim.api.nvim_buf_get_lines(bufnr, start_row - 1, end_row, false)
+
+	if start_row == 0 then
+		lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+		start_row = 1
+		start_col = 0
+		end_row = #lines
+		end_col = #lines[#lines]
+	end
+
+	start_col = start_col + 1
+	end_col = math.min(end_col, #lines[#lines] - 1) + 1
+
+	lines[#lines] = lines[#lines]:sub(1, end_col)
+	lines[1] = lines[1]:sub(start_col)
+
 	return table.concat(lines, "\n")
 end
 
