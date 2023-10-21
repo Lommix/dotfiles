@@ -28,12 +28,7 @@ require("lommix.scripts.sftp")
 require("lommix.chatgpt")
 require("lommix.obsidian")
 require("lommix.db")
--- after plugins
-
--- vim.cmd[[colorscheme duskfox]]
-vim.cmd("colorscheme tokyonight")
--- vim.cmd("syntax on")
---
--- after after
 require("lommix.dap")
 require("lommix.luasnip")
+
+vim.cmd("colorscheme duskfox")

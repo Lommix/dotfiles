@@ -1,9 +1,10 @@
 vim.cmd([[packadd packer.nvim]])
 return require("packer").startup(function(use)
-	-- packer & libs{{{
+	-- packer
 	use("wbthomason/packer.nvim")
 	use("nvim-lua/plenary.nvim") -- }}}
-	-- colorschemes{{{
+
+	-- color
 	use("gruvbox-community/gruvbox")
 	use("folke/tokyonight.nvim")
 	use("catppuccin/vim")
@@ -13,8 +14,7 @@ return require("packer").startup(function(use)
 	use("liuchengxu/space-vim-dark")
 	use("ray-x/aurora")
 	use("elvessousa/sobrio")
-	use("EdenEast/nightfox.nvim") -- }}}
-	-- telescope{{{
+	use("EdenEast/nightfox.nvim")
 	use("nvim-telescope/telescope.nvim")
 	use("nvim-telescope/telescope-live-grep-args.nvim")
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" }) -- }}}
