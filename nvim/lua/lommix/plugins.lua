@@ -42,6 +42,7 @@ return require("packer").startup(function(use)
 	use("simrat39/rust-tools.nvim")
 
 	-- ai
+	use("TabbyML/vim-tabby")
 	use({
 		"jackMort/ChatGPT.nvim",
 		requires = {
@@ -51,6 +52,45 @@ return require("packer").startup(function(use)
 		},
 	})
 	use("Exafunction/codeium.vim")
+	use({
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+		config = function ()
+			require("copilot").setup {
+				panel = {
+					keymap = {
+						jump_next = "<C-j>",
+						jump_prev = "<C-k>",
+						accept = "<C-t>",
+						refresh = "r",
+						open = "<M-CR>",
+					},
+				},
+				suggestion = {
+					enabled = true,
+					auto_trigger = true,
+					keymap = {
+						accept = "<C-t>",
+						next = "<C-j>",
+						prev = "<C-k>",
+						dismiss = "<C-h>",
+					},
+				},
+				filetypes = {
+					yaml = false,
+					markdown = true,
+					help = false,
+					gitcommit = false,
+					gitrebase = false,
+					hgcommit = false,
+					svn = false,
+					cvs = false,
+					["."] = false,
+				},
+			}
+		end
+	})
 
 	-- stuff
 	use("nvim-lua/lsp-status.nvim")

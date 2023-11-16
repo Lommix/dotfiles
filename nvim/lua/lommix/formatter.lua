@@ -31,6 +31,9 @@ formatter.setup({
 				}
 			end,
 		},
+		ron = {
+			require("formatter.filetypes.rust").rustfmt(),
+		},
 		php = {
 			require("formatter.filetypes.php").php_cs_fixer,
 		},

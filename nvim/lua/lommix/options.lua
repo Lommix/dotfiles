@@ -39,3 +39,6 @@ opt.list = true
 -- opt.listchars:append "space:⋅"
 opt.listchars:append("eol:↴")
 vim.g.gitblame_enabled = 0
+
+
+vim.g.tabby_keybinding_accept = '<C-a>'
