@@ -24,7 +24,7 @@ map("n", "<leader>tn", ":tabn<CR>")
 map("n", "<leader>tp", ":tabp<CR>")
 
 -- term
-map('t', '<Esc>', '<C-\\><C-n>')
+map("t", "<Esc>", "<C-\\><C-n>")
 
 -- util
 map("n", "<leader>+", "<C-a>")
@@ -119,17 +119,16 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "gR", vim.lsp.buf.references, opts)
 		-- map("n", "<leader>fa", ":lua vim.lsp.buf.format()<CR>")
 		map("n", "GN", function()
-			require('telescope.builtin').diagnostics({})
+			require("telescope.builtin").diagnostics({})
 		end)
 		map("n", "gn", function()
-			require('telescope.builtin').diagnostics({
+			require("telescope.builtin").diagnostics({
 				severity = vim.diagnostic.severity.ERROR,
 			})
 		end)
 		map("n", "gR", "<cmd>Telescope lsp_references<CR>")
 	end,
 })
-
 
 map("n", "gr", ":IncRename ")
 -- clear highlight search
@@ -165,15 +164,14 @@ map("n", "<leader>p", function()
 	vim.api.nvim_buf_set_lines(0, current_line - 1, current_line - 1, false, lines)
 end)
 
-
 -- run shell script
 local function run_shell(filename)
 	local file = vim.fn.findfile(filename, ".;")
 	if file == "" then
-		P("file not found: ".. filename)
+		P("file not found: " .. filename)
 		return
 	else
-		vim.cmd(":term ./"..file)
+		vim.cmd(":term ./" .. file)
 	end
 end
 
@@ -189,9 +187,9 @@ end)
 
 -- project notes
 local buffer = vim.api.nvim_create_buf(false, true)
-local function open_notes ()
+local function open_notes()
 	local dir = "~/.quicky"
-	local path = dir .. "/" .. string.gsub(vim.fn.getcwd(), "/", "") .. ".txt"
+	local path = dir .. "/" .. string.gsub(vim.fn.getcwd(), "/", "") .. ".md"
 
 	if not vim.fn.filereadable(path) == true then
 		print("cannot open " .. path)
@@ -207,8 +205,8 @@ local function open_notes ()
 		row = 5,
 	})
 
-	vim.api.nvim_buf_call(buffer, function ()
-		vim.cmd("e ".. path)
+	vim.api.nvim_buf_call(buffer, function()
+		vim.cmd("e " .. path)
 	end)
 
 	vim.api.nvim_buf_set_keymap(buffer, "n", "q", ":wq<CR>", { silent = true })
