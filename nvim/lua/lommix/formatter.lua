@@ -32,7 +32,12 @@ formatter.setup({
 			end,
 		},
 		ron = {
-			require("formatter.filetypes.rust").rustfmt(),
+			function()
+				return {
+					exe = "ronfmt",
+					args ={},
+				}
+			end,
 		},
 		php = {
 			require("formatter.filetypes.php").php_cs_fixer,
@@ -47,7 +52,7 @@ formatter.setup({
 			require("formatter.filetypes.json").jq,
 		},
 		xml = {
-			function()
+		function()
 				return {
 					exe = "xmlformat",
 					args = { "-i" },
