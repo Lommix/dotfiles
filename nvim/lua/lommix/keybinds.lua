@@ -101,6 +101,11 @@ map("n", "<leader>i", ":LspInfo<CR>")
 map("n", "<leader>t", ":ChatGPT<CR>")
 map("n", "<leader>fa", ":Format<CR>")
 
+map("i", "<C-g>", function()
+	P("copilot!")
+	require("copilot.suggestion").accept()
+end);
+
 local opts = { silent = true }
 
 vim.api.nvim_create_autocmd("LspAttach", {

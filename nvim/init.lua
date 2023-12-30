@@ -31,4 +31,4 @@ require("lommix.db")
 require("lommix.dap")
 require("lommix.luasnip")
 
-vim.cmd("colorscheme nordfox")
+vim.cmd("colorscheme kanagawa")

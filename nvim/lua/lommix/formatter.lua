@@ -8,7 +8,7 @@ if not ok then
 	return
 end
 
-formatter.setup({
+require("formatter").setup({
 	logging = true,
 	log_level = vim.log.levels.WARN,
 	filetype = {
@@ -35,7 +35,7 @@ formatter.setup({
 			function()
 				return {
 					exe = "ronfmt",
-					args ={},
+					args = {},
 				}
 			end,
 		},
@@ -52,7 +52,7 @@ formatter.setup({
 			require("formatter.filetypes.json").jq,
 		},
 		xml = {
-		function()
+			function()
 				return {
 					exe = "xmlformat",
 					args = { "-i" },

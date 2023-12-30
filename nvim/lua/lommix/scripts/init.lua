@@ -9,6 +9,7 @@ local win_options = {
 
 vim.api.nvim_buf_set_option(win_options.bufnr, "filetype", "markdown")
 
+
 ------------------------------------------------------------------
 -- general purpose questions
 vim.keymap.set("n", "<leader>cc", function()
