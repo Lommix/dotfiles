@@ -1,37 +1,77 @@
+local Job = require("plenary.job")
 local M = {}
+
+local PromptArgs = { "--silent", "--no-buffer", "-X", "POST", "http://127.0.0.1:11434/api/generate", "-d" }
+local ChatArgs = { "--silent", "--no-buffer", "-X", "POST", "http://127.0.0.1:11434/api/chat", "-d" }
 
 local ESC_FEEDKEY = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
 
---- @param model string
---- @param context string
---- @param prompt string
+--- @param request table
 --- @param buf_nr number
 --- @param max_width number
 --- @return number
-M.run = function(model, context, prompt, buf_nr, max_width)
-	local cmd = ("ollama run $model $prompt")
-		:gsub("$model", model)
-		:gsub("$prompt", vim.fn.shellescape(context .. "\n" .. prompt))
-	local header = vim.split(prompt, "\n")
-	table.insert(header, "----------------------------------------")
-	vim.api.nvim_buf_set_lines(buf_nr, 0, -1, false, header)
+M.run = function(request, buf_nr, max_width)
+	local header = {}
 	local line = vim.tbl_count(header)
 	local line_char_count = 0
 	local words = {}
-	return vim.fn.jobstart(cmd, {
-		on_stdout = function(_, data, _)
-			for i, token in ipairs(data) do
-				if i > 1 or (string.match(token, "^%s") and line_char_count > max_width) then -- if returned data array has more than one element, a line break occured.
+
+	local success, json = pcall(function()
+		return vim.fn.json_encode(request)
+	end)
+
+	if not success then
+		print("Error: " .. json)
+		return -1
+	end
+
+	local args = vim.deepcopy(PromptArgs)
+	table.insert(args, json)
+
+	local job = Job:new({
+		command = "curl",
+		args = args,
+		on_stdout = function(_, data)
+			vim.schedule(function()
+				if not vim.api.nvim_buf_is_valid(buf_nr) then
+					job:stop()
+				end
+
+				local success, result = pcall(function()
+					return vim.fn.json_decode(data)
+				end)
+
+				if not success then
+					print("Error: " .. result)
+					return
+				end
+
+				local token = result.response
+
+				if string.match(token, "^%s") and line_char_count > max_width then -- if returned data array has more than one element, a line break occured.
 					line = line + 1
 					words = {}
 					line_char_count = 0
 				end
 				line_char_count = line_char_count + #token
-				table.insert(words, token)
+
+				-- remove newlines
+				local t = token:gsub("\n", " ")
+				table.insert(words, t)
 				vim.api.nvim_buf_set_lines(buf_nr, line, line + 1, false, { table.concat(words, "") })
-			end
+			end)
+		end,
+		-- Callback when the job has some data on stderr
+		on_stderr = function(_, data)
+			print("stderr: " .. data)
+		end,
+		-- Callback when the job is done
+		on_exit = function(j, return_val)
+			print("Job finished with return value: " .. return_val)
 		end,
 	})
+	job:start()
+	return job.pid
 end
 
 --- @return string

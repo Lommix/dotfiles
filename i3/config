@@ -6,7 +6,7 @@ exec_always xset -dpms
 exec_always xset r rate 350 70
 exec_always setxkbmap -layout "de,fr" -variant "nodeadkeys,nodeadkeys" -option "ctrl:nocaps,ctrl:nocaps"
 exec_always feh --bg-fill ~/.config/i3/bg/uwp3725474.jpeg
-exec --no-startup-id "compton -b"
+exec_always picom
 
 #############################################################################
 # i3 config
@@ -235,3 +235,6 @@ bar {
 
 focus_on_window_activation none
 focus_follows_mouse no
+
+gaps inner 5
+gaps outer 5
