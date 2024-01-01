@@ -48,13 +48,13 @@ M.run = function(request, buf_nr, max_width)
 
 				local token = result.response
 
-				if string.match(token, "^%s") and line_char_count > max_width then -- if returned data array has more than one element, a line break occured.
+				if ( string.match(token, "^%s") and line_char_count > max_width ) or string.match(token, "\n") then -- if returned data array has more than one element, a line break occured.
 					line = line + 1
 					words = {}
 					line_char_count = 0
 				end
-				line_char_count = line_char_count + #token
 
+				line_char_count = line_char_count + #token
 				-- remove newlines
 				local t = token:gsub("\n", " ")
 				table.insert(words, t)
