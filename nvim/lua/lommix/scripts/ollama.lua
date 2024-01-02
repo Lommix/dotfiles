@@ -17,10 +17,11 @@ local win_options = {
 --- Add a message to the current chat.
 --- @param chat_table table
 --- @param buf_nr number
+--- @param win_nr number
 --- @param max_width number
 --- @param callback function
 --- @return number
-M.chat = function(chat_table, buf_nr, max_width, callback)
+M.chat = function(chat_table, buf_nr, win_nr, max_width, callback)
 	local line = vim.api.nvim_buf_line_count(buf_nr)
 	local line_char_count = 0
 	local words = {}
@@ -73,6 +74,9 @@ M.chat = function(chat_table, buf_nr, max_width, callback)
 					local t = token:gsub("\n", " ")
 					table.insert(words, t)
 					vim.api.nvim_buf_set_lines(buf_nr, line, line + 1, false, { table.concat(words, "") })
+
+					-- scroll to bottom
+					vim.api.nvim_win_set_cursor(win_nr, { line + 1, 0 })
 
 					-- save response
 					response.content = response.content .. result.message.content

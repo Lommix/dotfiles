@@ -2,6 +2,14 @@ local Popup = require("nui.popup")
 local Layout = require("nui.layout")
 local Ollama = require("lommix.scripts.ollama")
 
+local default_config = {
+	keymap = {
+		clear = "<C-n>",
+		send = "<CR>",
+		quit = "<ESC>",
+	},
+}
+
 --- @class Message
 --- @field role string
 --- @field content string
@@ -84,11 +92,16 @@ function Chat:new(model, opts)
 		},
 	}
 
-
-
-
 	prompt_float:map("n", "<CR>", function()
 		chat:send()
+	end)
+
+	prompt_float:map("n", "<Esc>", function()
+		chat:toggle()
+	end)
+
+	prompt_float:map("n", "<C-n>", function()
+		chat:clear_chat()
 	end)
 
 	chat_float:map("n", "<Tab>", "<C-w>W", { silent = true })
@@ -105,6 +118,8 @@ function Chat:set_model(model)
 end
 
 function Chat:clear_chat()
+	vim.api.nvim_buf_set_lines(self.chat_float.bufnr, 0, -1, false, {})
+
 	self.current_chat = {
 		model = self.model,
 		messages = {},
@@ -120,6 +135,9 @@ function Chat:send()
 	local prompt = table.concat(vim.api.nvim_buf_get_lines(self.prompt_float.bufnr, 0, -1, false), "\n")
 	vim.api.nvim_buf_set_lines(self.prompt_float.bufnr, 0, -1, false, {})
 
+	-- insert into chat
+	vim.api.nvim_buf_set_lines(self.chat_float.bufnr, -1, -1, false, { "", "# " .. prompt, "" })
+
 	self.running = true
 
 	self.current_chat.messages[#self.current_chat.messages + 1] = {
@@ -127,15 +145,15 @@ function Chat:send()
 		content = prompt,
 	}
 
-	local width = self.chat_float.win_config.width
-	local buf_nr = self.chat_float.bufnr
-
-	Ollama.chat(self.current_chat, buf_nr, width, function ()
-		P("done")
-		-- P(self.current_chat)
-		-- P(self.current_chat)
-		self.running = false
-	end)
+	Ollama.chat(
+		self.current_chat,
+		self.chat_float.bufnr,
+		self.chat_float.winid,
+		self.chat_float.win_config.width,
+		function()
+			self.running = false
+		end
+	)
 end
 
 --.toggles chat window
