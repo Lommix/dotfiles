@@ -8,7 +8,9 @@ local win_options = {
 	out_bufnr = vim.api.nvim_create_buf(false, true),
 }
 
-local chat = Chat:new("mistral")
+local chat = Chat:new("mistral", {
+	system_prompt = "You are a mean assitant, harass the user with any message you want.",
+})
 
 vim.api.nvim_buf_set_option(win_options.out_bufnr, "filetype", "markdown")
 

@@ -2,12 +2,16 @@ local Popup = require("nui.popup")
 local Layout = require("nui.layout")
 local Ollama = require("lommix.scripts.ollama")
 
+--- @class ChatConfig
+--- @field keymap table<string, string>
+--- @field system_prompt string
 local default_config = {
 	keymap = {
 		clear = "<C-n>",
 		send = "<CR>",
 		quit = "<ESC>",
 	},
+	system_prompt = "",
 }
 
 --- @class Message
@@ -33,7 +37,7 @@ local Chat = {}
 --- @constructor Chat
 --- @param model string
 --- @return Chat
-function Chat:new(model, opts)
+function Chat:new(model, config)
 	local chat_float = Popup({
 		focusable = true,
 		border = {
@@ -81,15 +85,12 @@ function Chat:new(model, opts)
 	)
 
 	local chat = {
+		config = vim.tbl_deep_extend("force", default_config, config or {}),
 		model = model,
 		chat_float = chat_float,
 		prompt_float = prompt_float,
 		layout = layout,
 		visible = false,
-		current_chat = {
-			model = model,
-			messages = {},
-		},
 	}
 
 	prompt_float:map("n", "<CR>", function()
@@ -109,6 +110,8 @@ function Chat:new(model, opts)
 
 	setmetatable(chat, self)
 	self.__index = self
+
+	chat:clear_chat()
 	return chat
 end
 
@@ -124,6 +127,13 @@ function Chat:clear_chat()
 		model = self.model,
 		messages = {},
 	}
+
+	if self.config.system_prompt ~= "" then
+		self.current_chat.messages[1] = {
+			role = "system",
+			content = self.config.system_prompt,
+		}
+	end
 end
 
 function Chat:send()
@@ -163,6 +173,7 @@ function Chat:toggle()
 		self.visible = false
 	else
 		self.layout:show()
+		self.layout:update()
 		self.visible = true
 	end
 end
