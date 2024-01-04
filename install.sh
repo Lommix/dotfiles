@@ -23,11 +23,3 @@ ln -s "$BASEDIR"/i3status "${HOME}"/.config/i3status
 #nvim
 rm -rf "${HOME}"/.config/nvim
 ln -s "$BASEDIR"/nvim "${HOME}"/.config/nvim
-
-#kitty
-rm -rf "${HOME}"/.config/kitty/kitty.conf
-ln -s "$BASEDIR"/kitty.conf "${HOME}"/.config/kitty/kitty.conf
-
-#vimrc
-rm -f "${HOME}"/.vimplugin.vim
-ln -s "$BASEDIR"/.vimplugin.vim "${HOME}"/.vimplugin.vim
