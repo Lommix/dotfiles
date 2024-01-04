@@ -3,6 +3,9 @@ local o = vim.o
 local opt = vim.opt
 local api = vim.api
 
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
 -- general
 o.splitright = true
 o.splitbelow = true
@@ -39,6 +42,3 @@ opt.list = true
 -- opt.listchars:append "space:⋅"
 opt.listchars:append("eol:↴")
 vim.g.gitblame_enabled = 0
-
-
-vim.g.tabby_keybinding_accept = '<C-a>'
