@@ -11,21 +11,20 @@ return {
 				sync_install = false,
 				auto_install = false,
 				highlight = { enable = true },
-				indent = { enable = true, disable = {}},
+				indent = { enable = true, disable = {} },
 				ignore_install = {},
 			})
 
-			vim.filetype.add({extension = {wgsl = "wgsl"}})
+			vim.filetype.add({ extension = { wgsl = "wgsl" } })
 
 			local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
 			parser_config.wgsl = {
 				install_info = {
 					url = "https://github.com/szebniok/tree-sitter-wgsl",
-					files = {"src/parser.c"}
+					files = { "src/parser.c" }
 				},
 			}
 			parser_config.tsx.filetype_to_parsername = { "javascript", "typescript.tsx" }
 		end
 	}
-
 }

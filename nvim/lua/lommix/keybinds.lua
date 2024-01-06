@@ -8,6 +8,9 @@ map("n", "<A-j>", "<C-w>j")
 map("n", "<A-k>", "<C-w>k")
 map("n", "<A-l>", "<C-w>l")
 
+map("v", "J", ":m '>+1<CR>gv=gv")
+map("v", "K", ":m '<-2<CR>gv=gv")
+
 -- split
 map("n", "<leader>sh", "<C-w>s")
 map("n", "<leader>sv", "<C-w>v")
@@ -86,7 +89,7 @@ map("n", "<leader>p", function()
 	local cmd = vim.fn.getreg('"')
 	local output = vim.fn.system(cmd)
 
-	output = output:gsub("[\t]+", "") -- Remove tabs
+	output = output:gsub("[\t]+", "")     -- Remove tabs
 	output = output:gsub("[\x1b]+%[.-m", "") -- Remove ANSI escape sequences
 
 	local current_line, current_col = unpack(vim.api.nvim_win_get_cursor(0))

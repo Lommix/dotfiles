@@ -4,7 +4,9 @@ return {
 		require("trouble").setup {
 		}
 	end,
+	opts = {},
 	keys = {
-		{ "gx", ":TroubleToggle quickfix<CR>", mode = "n" }
+		{ "gf", ":TroubleToggle quickfix<CR>", mode = "n" },
+		{ "gn", ":TroubleToggle workspace_diagnostics<CR>", mode = "n" },
 	}
 }
