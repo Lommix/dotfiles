@@ -1,7 +1,6 @@
 return {
 	"L3MON4D3/LuaSnip",
 	config = function()
-
 		local ls = require("luasnip")
 		require("luasnip.loaders.from_vscode").lazy_load()
 
@@ -16,8 +15,6 @@ return {
 
 			require("luasnip.loaders.from_vscode").lazy_load({ paths = paths })
 			require("luasnip.loaders.from_lua").load({ paths = { "~/.config/nvim/snippets/" } })
-
-			local types = require("luasnip.util.types")
 
 			ls.config.set_config({
 				history = true,
