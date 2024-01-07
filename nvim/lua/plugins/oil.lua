@@ -2,7 +2,7 @@ return {
 	"stevearc/oil.nvim",
 	lazy = false,
 	keys = {
-		{"<leader>", ":Oil --float<CR>"}
+		{"<leader>e", ":Oil<CR>"}
 	},
 	config = function()
 		require("oil").setup()

@@ -20,6 +20,9 @@ local ts = vim.treesitter
 local snippets = {}
 
 
+---@param node TSNode
+---@param type string
+---@return TSNode|nil
 local function find_next(node, type)
 	local function next_node(n)
 		-- Try to go to the first child
