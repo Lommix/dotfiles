@@ -17,18 +17,12 @@ map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-u", "<C-u>zz")
 
 -- marks
--- iteratre all lowercase ascci letters
 for i = 97, 122 do
 	local lower = string.char(i)
 	local upper = string.upper(lower)
-	-- Map lowercase and uppercase letter to set the same uppercase mark
 	map("n", "m" .. lower, "m" .. upper)
-	map("n", "m" .. upper, "m" .. upper)
-	-- Map lowercase and uppercase letter to jump to the same uppercase mark
 	map("n", "." .. lower, "'" .. upper)
-	map("n", "." .. upper, "'" .. upper)
 end
-
 
 -- split
 map("n", "<leader>sh", "<C-w>s")

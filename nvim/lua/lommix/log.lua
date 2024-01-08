@@ -1,7 +1,9 @@
 local M = {}
 
+---@type string
 local log_file = "/home/lommix/.log/nvim/nvim.log"
 
+---@param msg string
 M.log = function(msg)
 	local fp = io.open(log_file, "a")
 	if fp then
