@@ -76,7 +76,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "<C-k>", vim.diagnostic.open_float, opts)
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-		vim.keymap.set("n", "gt", require('actions-preview').code_actions, opts)
+
+		local ok, preview = pcall(require, "actions-preview")
+		if ok then
+			vim.keymap.set("n", "gt", preview.code_actions, opts)
+		else
+			vim.keymap.set("n", "gt", vim.lsp.buf.code_action, opts)
+		end
+
 		-- vim.keymap.set("n", "gt", vim.lsp.buf.code_action, opts)
 		vim.keymap.set("n", "gD", vim.lsp.buf.type_definition, opts)
 		vim.keymap.set("n", "gi", vim.lsp.buf.declaration, opts)
