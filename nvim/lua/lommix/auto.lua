@@ -1,5 +1,5 @@
 -- auto commands here
-local group = vim.api.nvim_create_augroup("autocmd",{clear = true })
+local group = vim.api.nvim_create_augroup("autocmd", { clear = true })
 
 -- auto center cursor
 -- vim.api.nvim_create_autocmd("CursorMoved",{
@@ -9,6 +9,7 @@ local group = vim.api.nvim_create_augroup("autocmd",{clear = true })
 
 -- auto trim whitespace
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-  pattern = { "*" },
-  command = [[%s/\s\+$//e]],
+	pattern = { "*" },
+	command = [[%s/\s\+$//e]],
+	group = group,
 })

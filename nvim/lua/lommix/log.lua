@@ -1,7 +1,7 @@
 local M = {}
 
 ---@type string
-local log_file = "/home/lommix/.log/nvim/nvim.log"
+local log_file = "~/.log/nvim/nvim.log"
 
 ---@param msg string
 M.log = function(msg)

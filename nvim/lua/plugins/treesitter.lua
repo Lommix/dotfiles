@@ -8,13 +8,15 @@ return {
 			config = function()
 				local ts = require("nvim-treesitter.configs")
 
+				local list =
+				{ "tsx", "toml", "xml", "twig", "php", "json", "yaml", "css", "go", "rust", "html", "lua", "gdscript",
+					"dockerfile", "javascript", "markdown", "markdown_inline" }
+
 				ts.setup({
-					ensure_installed = { "tsx", "toml", "xml", "twig", "php", "json", "yaml", "css", "go", "rust", "html", "lua", "gdscript", "dockerfile", "javascript", "godot_resource", "markdown", "markdown_inline" },
 					sync_install = false,
 					auto_install = false,
 					highlight = { enable = true },
 					indent = { enable = true, disable = {} },
-					ignore_install = {},
 				})
 
 				vim.filetype.add({ extension = { wgsl = "wgsl" } })
