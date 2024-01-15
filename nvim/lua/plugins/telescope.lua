@@ -6,7 +6,6 @@ return {
 			"plenary"
 		},
 		lazy = false,
-
 		config = function()
 			require("telescope").setup({
 				fzf = {
