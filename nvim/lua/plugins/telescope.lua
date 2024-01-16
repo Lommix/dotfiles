@@ -5,7 +5,6 @@ return {
 		dependencies = {
 			"plenary"
 		},
-		lazy = false,
 		config = function()
 			require("telescope").setup({
 				fzf = {
@@ -20,6 +19,10 @@ return {
 				},
 			})
 		end,
+		after = {
+			'nvim-lspconfig',
+			'nvim-treesitter',
+		},
 		keys = {
 			{ "<leader>ff", ":Telescope find_files find_command=rg,--ignore,--files prompt_prefix=🔍<CR>" },
 			{ "<leader>fg", ":Telescope live_grep find_command=rg,--ignore,--files prompt_prefix=🔍<CR>" },

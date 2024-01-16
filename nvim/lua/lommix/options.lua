@@ -8,6 +8,7 @@ vim.g.maplocalleader = " "
 
 -- general
 o.splitright = true
+o.iskeyword="-"
 o.splitbelow = true
 o.showmatch = true
 o.ignorecase = true
