@@ -103,25 +103,20 @@ return {
 				end,
 				["html"] = function()
 					lsp_config.html.setup(vim.tbl_extend("force", handler_opts, {
-						filetypes = { "html", "twig", "htmldjango" },
+						filetypes = { "html", "twig", "htmldjango", "javascript" },
 					}))
 				end,
 				["cssls"] = function()
 					local capabilities = handler_opts.capabilities
 					capabilities.textDocument.completion.completionItem.snippetSupport = true
 					lsp_config.cssls.setup(vim.tbl_extend("force", handler_opts, {
-						filetypes = { "css", "scss" },
+						filetypes = { "css", "scss", "less", "javascript" },
 						capabilities = capabilities,
 					}))
 				end,
-				["vimls"] = function()
-					lsp_config.vimls.setup({
-						filetypes = { "js", "vue" },
-					})
-				end,
 				["emmet_ls"] = function()
 					lsp_config.emmet_ls.setup({
-						filetypes = { "twig", "html", "htmldjango" },
+						filetypes = { "twig", "html", "htmldjango", "smarty" },
 					})
 				end,
 				["lua_ls"] = function()
