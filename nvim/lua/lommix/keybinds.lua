@@ -69,8 +69,6 @@ map("n", "<leader><leader>b", ":hi normal ctermbg=none guibg=none<CR>")
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 	callback = function(ev)
-		-- Enable completion triggered by <c-x><c-o>
-		-- vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 		local opts = { buffer = ev.buf }
 
 		vim.keymap.set("n", "<C-k>", vim.diagnostic.open_float, opts)
@@ -78,6 +76,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
 
 		local ok, preview = pcall(require, "actions-preview")
+
 		if ok then
 			vim.keymap.set("n", "gt", preview.code_actions, opts)
 		else
@@ -89,15 +88,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "gi", vim.lsp.buf.declaration, opts)
 		vim.keymap.set("n", "gR", vim.lsp.buf.references, opts)
 
-		map("n", "<leader>fa", ":lua vim.lsp.buf.format()<CR>")
-		map("n", "GN", function()
-			require("telescope.builtin").diagnostics({})
-		end)
+		map("n", "<leader>fa", ":Format()<CR>")
+
 		map("n", "gn", function()
 			require("trouble").toggle()
-			-- require("telescope.builtin").diagnostics({
-			-- 	severity = vim.diagnostic.severity.ERROR,
-			-- })
 		end)
 		map("n", "gR", "<cmd>Telescope lsp_references<CR>")
 	end,
