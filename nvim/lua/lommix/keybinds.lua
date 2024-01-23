@@ -88,7 +88,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "gi", vim.lsp.buf.declaration, opts)
 		vim.keymap.set("n", "gR", vim.lsp.buf.references, opts)
 
-		map("n", "<leader>fa", ":Format()<CR>")
+		map("n", "<leader>fa", ":Format<CR>")
 
 		map("n", "gn", function()
 			require("trouble").toggle()

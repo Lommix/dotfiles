@@ -42,5 +42,5 @@ o.termguicolors = true
 opt.list = true
 opt.listchars:append("eol:↴")
 
-
 vim.cmd([[set iskeyword-=-]])
+vim.cmd([[set iskeyword-=_]])

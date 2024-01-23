@@ -1,7 +1,7 @@
 return {
 	"nvim-tree/nvim-web-devicons",
 	{ "nvim-lua/plenary.nvim", name = "plenary", priority = 9999 },
-	{ "MunifTanjim/nui.nvim",  name = "nui",     priority = 9999 },
+	{ "MunifTanjim/nui.nvim", name = "nui", priority = 9999 },
 	{
 		"kylechui/nvim-surround",
 		config = function()
@@ -20,7 +20,12 @@ return {
 	},
 	{
 		"aznhe21/actions-preview.nvim",
+		config = function() end,
+	},
+	{
+		"brenoprata10/nvim-highlight-colors",
 		config = function()
-		end
-	}
+			require("nvim-highlight-colors").setup({})
+		end,
+	},
 }
