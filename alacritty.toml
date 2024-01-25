@@ -47,7 +47,8 @@ white = "0x93a1a1"
 yellow = "0xb58900"
 
 [colors.primary]
-background = "0x102235"
+# background = "0x102235"
+background = "0x102020"
 foreground = "0x93a1a1"
 
 [env]

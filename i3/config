@@ -5,7 +5,7 @@ exec_always xset s noblank
 exec_always xset -dpms
 exec_always xset r rate 350 70
 exec_always setxkbmap -layout "de,fr" -variant "nodeadkeys,nodeadkeys" -option "ctrl:nocaps,ctrl:nocaps"
-exec_always feh --bg-fill ~/.config/i3/bg/uwp3725474.jpeg
+exec_always feh --bg-fill ~/.config/i3/bg/540884.jpeg
 exec_always picom
 
 #############################################################################
@@ -168,6 +168,7 @@ bindsym $mod+Shift+F7 move container to workspace number $ws17
 bindsym $mod+Shift+F8 move container to workspace number $ws18
 bindsym $mod+Shift+F9 move container to workspace number $ws19
 
+for_window [class="^.*"] border pixel 3
 for_window [class="^Steam$" title="^Friends$"] floating enable
 for_window [class="^Steam$" title="Steam - News"] floating enable
 for_window [class="^Steam$" title=".* - Chat"] floating enable
