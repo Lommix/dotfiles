@@ -14,6 +14,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lommix.options")
 require("lommix.keybinds")
 require("lommix.auto")
+require("lommix.notes")
 
 require("lazy").setup("plugins")
 

@@ -136,31 +136,3 @@ end)
 map("n", "<leader>r", function()
 	run_shell("run.sh")
 end)
----------------------------------------------------------------------------------
--- project notes
-local buffer = vim.api.nvim_create_buf(false, true)
-local function open_notes()
-	local dir = "~/.quicky"
-	local path = dir .. "/" .. string.gsub(vim.fn.getcwd(), "/", "") .. ".md"
-
-	if not vim.fn.filereadable(path) == true then
-		print("cannot open " .. path)
-		return
-	end
-
-	vim.api.nvim_open_win(buffer, true, {
-		height = vim.api.nvim_get_option("lines") - 10,
-		width = vim.api.nvim_get_option("columns") - 10,
-		border = "double",
-		relative = "editor",
-		col = 5,
-		row = 5,
-	})
-
-	vim.api.nvim_buf_call(buffer, function()
-		vim.cmd("e " .. path)
-	end)
-
-	vim.api.nvim_buf_set_keymap(buffer, "n", "q", ":wq<CR>", { silent = true })
-end
-map("n", "<leader>n", open_notes)
