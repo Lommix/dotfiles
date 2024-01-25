@@ -19,4 +19,4 @@ require("lommix.notes")
 require("lazy").setup("plugins")
 
 -- Colorscheme
-vim.cmd("colorscheme kanagawa")
+vim.cmd("colorscheme space-vim-dark")
