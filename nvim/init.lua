@@ -19,4 +19,4 @@ require("lommix.notes")
 require("lazy").setup("plugins")
 
 -- Colorscheme
-vim.cmd("colorscheme space-vim-dark")
+vim.cmd("colorscheme sobrio_ghost")

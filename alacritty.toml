@@ -83,6 +83,7 @@ history = 5000
 
 [window]
 title = "Alacritty"
+opacity = 0.90
 
 [window.class]
 general = "Alacritty"
