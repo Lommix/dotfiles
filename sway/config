@@ -45,34 +45,23 @@ bindsym $mod+Shift+q kill
 bindsym $mod+d exec --no-startup-id rofi -show drun
 bindsym $mod+t exec --no-startup-id rofi -show window
 bindsym $mod+g exec --no-startup-id rofi -show ssh
-
 # change focus
 bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
-
 # move focused window
 bindsym $mod+Shift+j move left
 bindsym $mod+Shift+k move down
 bindsym $mod+Shift+l move up
 bindsym $mod+Shift+odiaeresis move right
-
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
-
-# split in horizontal orientation
-# bindsym $mod+h split h
-
-# split in vertical orientation
-# bindsym $mod+v split v
-
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
-
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
@@ -87,8 +76,8 @@ bindsym $mod+space focus mode_toggle
 # focus the parent container
 bindsym $mod+a focus parent
 
-# focus the child container
-#bindsym $mod+d focus child
+# moving floating windows
+bindsym $mod+button1 floating move
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
@@ -167,7 +156,8 @@ for_window [class="^Steam$" title="^Steam Guard - Computer Authorization Require
 for_window [title="^Steam Keyboard$"] floating enable
 
 
-for_window [title="^Bevy App$"] floating enable
+for_window [title="^App$"] floating enable
+for_window [title="^Bevy$"] floating enable
 for_window [title="^Godot$"] floating enable
 # reload the configuration file
 bindsym $mod+Shift+r reload
@@ -225,5 +215,5 @@ bar {
 focus_on_window_activation none
 focus_follows_mouse no
 
-gaps inner 2
-gaps outer 2
+gaps inner 3
+gaps outer 3

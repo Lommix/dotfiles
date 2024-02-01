@@ -8,4 +8,8 @@ return {
 	"EdenEast/nightfox.nvim",
 	"liuchengxu/space-vim-dark",
 	"catppuccin/vim",
+	"folke/tokyonight.nvim",
+	"savq/melange-nvim",
+	"jacoborus/tender.vim",
+	"Shatur/neovim-ayu",
 }
