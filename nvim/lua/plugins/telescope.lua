@@ -15,7 +15,7 @@ return {
 				},
 				defaults = {
 					path_display = { "smart" },
-					file_ignore_patterns = { ".png", ".jpg", ".svg", ".import", ".jepg" },
+					file_ignore_patterns = { ".png", ".jpg", ".svg", ".import", ".jepg", ".aseprite", ".glb" },
 				},
 			})
 		end,

@@ -101,6 +101,11 @@ return {
 						},
 					}))
 				end,
+				["wgsl_analyzer"] = function()
+					lsp_config.wgsl_analyzer.setup(vim.tbl_extend("force", handler_opts, {
+						filetypes = { "wgsl" },
+					}))
+				end,
 				["html"] = function()
 					lsp_config.html.setup(vim.tbl_extend("force", handler_opts, {
 						filetypes = { "html", "twig", "htmldjango", "javascript" },

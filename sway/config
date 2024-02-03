@@ -12,7 +12,7 @@ font pango:Mononoki Nerd Font 16
 exec --no-startup-id nm-applet
 
 input * {
-	xkb_layout de,fr
+	xkb_layout de
 	xkb_variant nodeadkeys,nodeadkeys
 	xkb_options ctrl:nocaps
     repeat_delay 300
