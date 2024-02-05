@@ -83,12 +83,12 @@ history = 5000
 
 [window]
 title = "Alacritty"
-opacity = 0.90
+opacity = 0.75
 
 [window.class]
 general = "Alacritty"
 instance = "Alacritty"
 
 [window.padding]
-x = 3
-y = 3
+x = 0
+y = 0

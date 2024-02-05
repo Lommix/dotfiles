@@ -23,7 +23,7 @@ output DP-1 resolution 2560x1440 position 0,0
 output DP-2 resolution 3440x1440@164.900Hz position 2560,0
 output HDMI-A-1 resolution 1920x1080 position 6000,0
 
-output * bg ~/Documents/wallpapers/wallhaven-2k3jex.jpg fill
+output * bg ~/Documents/wallpapers/enchanted.png fill
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -197,8 +197,9 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 # panel
 bar {
+	swaybar_command waybar
 	position top
-	height 20
+	height 30
         colors {
         background #2f343f
         statusline #2f343f
@@ -209,7 +210,6 @@ bar {
         active_workspace        #2f343f #2f343f #d8dee8
         inactive_workspace      #2f343f #2f343f #d8dee8
      }
-		status_command i3status
 }
 
 focus_on_window_activation none
