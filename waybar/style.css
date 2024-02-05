@@ -4,22 +4,14 @@
     font-family: "Agave Nerd Font";
     font-size: 16px;
     min-height: 0;
+	padding: 0 1px;
 }
 
 window#waybar {
     background: transparent;
     color: white;
+	/* border: 1px solid #FFF; */
 }
-
-#window {
-    font-weight: bold;
-    font-family: "Ubuntu";
-}
-/*
-#workspaces {
-    padding: 0 5px;
-}
-*/
 
 #workspaces button {
     padding: 0 5px;
