@@ -19,4 +19,4 @@ require("lommix.notes")
 require("lazy").setup("plugins")
 
 -- Colorscheme
-vim.cmd("colorscheme ayu-mirage")
+vim.cmd("colorscheme lommix_ghost")

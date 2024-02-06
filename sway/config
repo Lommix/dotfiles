@@ -143,7 +143,7 @@ bindsym $mod+Shift+F7 move container to workspace number $ws17
 bindsym $mod+Shift+F8 move container to workspace number $ws18
 bindsym $mod+Shift+F9 move container to workspace number $ws19
 
-for_window [app_id=".*" title=".*"] border pixel 2
+for_window [app_id=".*" title=".*"] border pixel 5
 for_window [class="^Steam$" title="^Friends$"] floating enable
 for_window [class="^Steam$" title="Steam - News"] floating enable
 for_window [class="^Steam$" title=".* - Chat"] floating enable
@@ -155,6 +155,12 @@ for_window [class="^Steam$" title="^Screenshot Uploader$"] floating enable
 for_window [class="^Steam$" title="^Steam Guard - Computer Authorization Required$"] floating enable
 for_window [title="^Steam Keyboard$"] floating enable
 
+
+client.focused              #0a0b16 #2f343f #00cfff #00cfff   #00cfff
+client.focused_inactive     #2f343f #2f343f #d8dee8 #2f343f   #2f343f
+client.unfocused            #2f343f #2f343f #d8dee8 #2f343f   #2f343f
+client.urgent               #2f343f #2f343f #d8dee8 #2f343f   #2f343f
+client.placeholder          #2f343f #2f343f #d8dee8 #2f343f   #2f343f
 
 for_window [title="^App$"] floating enable
 for_window [title="^Bevy$"] floating enable
@@ -198,22 +204,10 @@ bindsym $mod+r mode "resize"
 # panel
 bar {
 	swaybar_command waybar
-	position top
-	height 30
-        colors {
-        background #2f343f
-        statusline #2f343f
-        separator #4b5262
-
-        # colour of border, background, and text
-        focused_workspace       #2f343f #bf616a #d8dee8
-        active_workspace        #2f343f #2f343f #d8dee8
-        inactive_workspace      #2f343f #2f343f #d8dee8
-     }
 }
 
 focus_on_window_activation none
 focus_follows_mouse no
 
-gaps inner 3
-gaps outer 3
+gaps inner 2
+gaps outer 2
