@@ -19,6 +19,10 @@ input * {
     repeat_rate 70
 }
 
+input "1386:912:Wacom_Cintiq_16_Pen" {
+	map_to_output "Wacom Tech Cintiq 16 9IQ00X1008903"
+}
+
 output DP-1 resolution 2560x1440 position 0,0
 output DP-2 resolution 3440x1440@164.900Hz position 2560,0
 output HDMI-A-1 resolution 1920x1080 position 6000,0
