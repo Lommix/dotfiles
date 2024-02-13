@@ -10,7 +10,7 @@ return {
 			filetype = {
 				lua = {
 					require("formatter.filetypes.lua").stylua,
-				function()
+					function()
 						if util.get_current_buffer_file_name() == "special.lua" then
 							return nil
 						end
@@ -28,7 +28,7 @@ return {
 					end,
 				},
 				ron = {
-				function()
+					function()
 						return {
 							exe = "ronfmt",
 							args = {},
@@ -48,7 +48,7 @@ return {
 					require("formatter.filetypes.json").jq,
 				},
 				xml = {
-				function()
+					function()
 						return {
 							exe = "xmlformat",
 							args = { "-i" },
@@ -56,7 +56,7 @@ return {
 					end,
 				},
 				gdscript = {
-				function()
+					function()
 						return {
 							exe = "gdformat",
 						}
@@ -70,6 +70,14 @@ return {
 				},
 				typescript = {
 					require("formatter.filetypes.typescript").prettier,
+				},
+				odin = {
+					function ()
+						return {
+							exe = "odinfmt",
+							args = { "-w"},
+						}
+					end,
 				},
 				twig = {
 					require("formatter.filetypes.html").prettier,
@@ -91,5 +99,5 @@ return {
 				},
 			},
 		})
-	end
+	end,
 }

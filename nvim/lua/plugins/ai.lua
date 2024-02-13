@@ -8,18 +8,19 @@ return {
 			"nvim-telescope/telescope.nvim",
 		},
 		keys = {
-			{"<leader>t", ":ChatGPT<CR>"}
+			{ "<leader>t", ":ChatGPT<CR>" },
 		},
 		event = "VeryLazy",
 		config = function()
 			require("chatgpt").setup()
-		end
+		end,
 	},
 	-- copilot
 	{
 		"zbirenbaum/copilot.lua",
 		cmd = "Copilot",
-		event="InsertEnter",
+		disable = true,
+		event = "InsertEnter",
 		config = function()
 			require("copilot").setup({
 				panel = {
@@ -59,7 +60,6 @@ return {
 	{
 		"Lommix/ollamachad.nvim",
 		config = function()
-
 			local Chat = require("ollamachad.chat")
 			local gen = require("ollamachad.generate")
 			local util = require("ollamachad.util")
@@ -82,7 +82,7 @@ return {
 			-- rewrite text
 			vim.keymap.set("v", "<leader>cr", function()
 				local instruction =
-				"Please rewrite the following text to improve clarity, coherence, and technical accuracy. Ensure that the revised version maintains the original meaning but is more polished and professional. The text may contain technical terms and concepts, but it's not exclusively technical. Here is the text that needs to be rewritten: "
+					"Please rewrite the following text to improve clarity, coherence, and technical accuracy. Ensure that the revised version maintains the original meaning but is more polished and professional. The text may contain technical terms and concepts, but it's not exclusively technical. Here is the text that needs to be rewritten: "
 				local request = {
 					model = "mistral",
 					prompt = instruction .. util.read_visiual_lines(),
@@ -98,7 +98,6 @@ return {
 			vim.keymap.set("n", "<leader>o", function()
 				mistral_chat:toggle()
 			end, { silent = true })
-
 		end,
-	}
+	},
 }

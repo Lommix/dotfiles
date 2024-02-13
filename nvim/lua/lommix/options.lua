@@ -41,5 +41,5 @@ opt.equalalways = true
 o.termguicolors = true
 opt.list = true
 opt.listchars:append("eol:↴")
-opt.iskeyword:remove('-')
-opt.iskeyword:remove('_')
+-- opt.iskeyword:remove('-')
+-- opt.iskeyword:remove('_')
