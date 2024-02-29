@@ -41,9 +41,9 @@ return {
 
 			local signs = {
 				{ name = "DiagnosticSignError", text = icons.diagnostics.Error },
-				{ name = "DiagnosticSignWarn",  text = icons.diagnostics.Warning },
-				{ name = "DiagnosticSignHint",  text = icons.diagnostics.Hint },
-				{ name = "DiagnosticSignInfo",  text = icons.diagnostics.Information },
+				{ name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
+				{ name = "DiagnosticSignHint", text = icons.diagnostics.Hint },
+				{ name = "DiagnosticSignInfo", text = icons.diagnostics.Information },
 			}
 
 			for _, sign in ipairs(signs) do
@@ -88,8 +88,8 @@ return {
 						settings = {
 							ltex = {
 								enabled = { "latex", "bib", "markdown", "tex" },
-								-- language = "auto",
-								language = "en-US",
+								language = "auto",
+								-- language = "en-US",
 								-- language = "de-DE",
 								diagnosticSeverity = "INFO",
 								setenceCacheSize = 4000,
@@ -194,7 +194,7 @@ return {
 						},
 						debug_mode = false,
 					})
-				end
+				end,
 			},
 			{
 				"williamboman/mason.nvim",

@@ -69,10 +69,13 @@ size = 20.0
 # family = "Hurmit Nerd Font"
 # style = "Bold Italic"
 
-[font.normal]
-family = "CaskaydiaMono Nerd Font"
-style = "Regular"
+# [font.normal]
+# family = "CaskaydiaMono NF"
+# style = "Regular"
 
+[font.normal]
+family = "Mononoki Nerd Font Mono"
+style = "Bold"
 
 [font.offset]
 x = 0

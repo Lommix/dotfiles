@@ -12,4 +12,11 @@ return {
 	"savq/melange-nvim",
 	"jacoborus/tender.vim",
 	"Shatur/neovim-ayu",
+
+	{
+		"loctvl842/monokai-pro.nvim",
+		config = function()
+			require("monokai-pro").setup()
+		end
+	}
 }

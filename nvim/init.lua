@@ -19,4 +19,4 @@ require("lommix.notes")
 require("lazy").setup("plugins")
 
 -- Colorscheme
-vim.cmd("colorscheme ayu")
+vim.cmd("colorscheme monokai-pro")

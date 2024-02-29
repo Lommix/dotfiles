@@ -15,47 +15,58 @@ return {
 			require("chatgpt").setup()
 		end,
 	},
+	-- {
+	-- 	"Exafunction/codeium.nvim",
+	-- 	dependencies = {
+	-- 		"nvim-lua/plenary.nvim",
+	-- 		"hrsh7th/nvim-cmp",
+	-- 	},
+	-- 	config = function ()
+	-- 		require("codeium").setup({})
+	-- 	end
+	-- }
+	-- rip copilot, you suck
 	-- copilot
-	{
-		"zbirenbaum/copilot.lua",
-		cmd = "Copilot",
-		disable = true,
-		event = "InsertEnter",
-		config = function()
-			require("copilot").setup({
-				panel = {
-					keymap = {
-						jump_next = "<C-j>",
-						jump_prev = "<C-k>",
-						accept = "<C-t>",
-						refresh = "r",
-						open = "<M-CR>",
-					},
-				},
-				suggestion = {
-					enabled = true,
-					auto_trigger = true,
-					keymap = {
-						accept = "<C-g>",
-						next = "<C-j>",
-						prev = "<C-k>",
-						dismiss = "<C-h>",
-					},
-				},
-				filetypes = {
-					yaml = false,
-					markdown = true,
-					help = false,
-					gitcommit = false,
-					gitrebase = false,
-					hgcommit = false,
-					svn = false,
-					cvs = false,
-					["."] = false,
-				},
-			})
-		end,
-	},
+	-- {
+	-- 	"zbirenbaum/copilot.lua",
+	-- 	cmd = "Copilot",
+	-- 	disable = true,
+	-- 	event = "InsertEnter",
+	-- 	config = function()
+	-- 		require("copilot").setup({
+	-- 			panel = {
+	-- 				keymap = {
+	-- 					jump_next = "<C-j>",
+	-- 					jump_prev = "<C-k>",
+	-- 					accept = "<C-t>",
+	-- 					refresh = "r",
+	-- 					open = "<M-CR>",
+	-- 				},
+	-- 			},
+	-- 			suggestion = {
+	-- 				enabled = true,
+	-- 				auto_trigger = true,
+	-- 				keymap = {
+	-- 					accept = "<C-g>",
+	-- 					next = "<C-j>",
+	-- 					prev = "<C-k>",
+	-- 					dismiss = "<C-h>",
+	-- 				},
+	-- 			},
+	-- 			filetypes = {
+	-- 				yaml = false,
+	-- 				markdown = true,
+	-- 				help = false,
+	-- 				gitcommit = false,
+	-- 				gitrebase = false,
+	-- 				hgcommit = false,
+	-- 				svn = false,
+	-- 				cvs = false,
+	-- 				["."] = false,
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- },
 	-- Ollama
 	{
 		"Lommix/ollamachad.nvim",
