@@ -74,7 +74,7 @@ size = 20.0
 # style = "Regular"
 
 [font.normal]
-family = "Mononoki Nerd Font Mono"
+family = "CaskaydiaMono Nerd Font Mono"
 style = "Bold"
 
 [font.offset]

@@ -35,6 +35,9 @@ return {
 						}
 					end,
 				},
+				toml = {
+					require("formatter.filetypes.toml").taplo(),
+				},
 				php = {
 					require("formatter.filetypes.php").php_cs_fixer,
 				},
@@ -72,10 +75,10 @@ return {
 					require("formatter.filetypes.typescript").prettier,
 				},
 				odin = {
-					function ()
+					function()
 						return {
 							exe = "odinfmt",
-							args = { "-w"},
+							args = { "-w" },
 						}
 					end,
 				},

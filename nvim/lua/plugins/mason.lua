@@ -88,8 +88,8 @@ return {
 						settings = {
 							ltex = {
 								enabled = { "latex", "bib", "markdown", "tex" },
-								language = "auto",
-								-- language = "en-US",
+								-- language = "auto",
+								language = "en-US",
 								-- language = "de-DE",
 								diagnosticSeverity = "INFO",
 								setenceCacheSize = 4000,
