@@ -1,4 +1,8 @@
-local Popup = require("nui.popup")
+local ok, Popup = pcall(require, "nui.popup")
+if not ok then
+	return
+end
+
 local M = {}
 
 local defaults = {

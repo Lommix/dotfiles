@@ -10,13 +10,13 @@ if not vim.loop.fs_stat(lazypath) then
 	})
 end
 vim.opt.rtp:prepend(lazypath)
+require("lazy").setup("plugins")
 
+-- custom
 require("lommix.options")
 require("lommix.keybinds")
 require("lommix.auto")
 require("lommix.notes")
-
-require("lazy").setup("plugins")
 
 -- Colorscheme
 vim.cmd("colorscheme monokai-pro-machine")
