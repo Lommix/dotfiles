@@ -9,11 +9,13 @@ if not vim.loop.fs_stat(lazypath) then
 		lazypath,
 	})
 end
+
+require("lommix.options")
+
 vim.opt.rtp:prepend(lazypath)
 require("lazy").setup("plugins")
 
 -- custom
-require("lommix.options")
 require("lommix.keybinds")
 require("lommix.auto")
 require("lommix.notes")

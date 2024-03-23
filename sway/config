@@ -169,7 +169,7 @@ client.placeholder          #2f343f #2f343f #d8dee8 #2f343f   #2f343f
 # for_window [title="^App$"] floating enable
 # for_window [title="^Bevy$"] floating enable
 for_window [title="^Godot$"] floating enable
-for_window [title="^App$"] floating enable, move position 2100 0
+#for_window [title="^App$"] floating enable, move position 2100 0
 # reload the configuration file
 bindsym $mod+Shift+r reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)

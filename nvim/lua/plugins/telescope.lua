@@ -14,7 +14,22 @@ return {
 					case_mode = "ignore_case", -- or "ignore_case" or "respect_case"
 				},
 				defaults = {
-					path_display = { "smart" },
+					path_display = function(opts, path)
+						local parts = {}
+						for part in string.gmatch(path, "[^/]+") do
+							table.insert(parts, part)
+						end
+
+						local new_path = {}
+						for i, part in ipairs(parts) do
+							if i ~= #parts then
+								table.insert(new_path, string.sub(part, 1, 3))
+							else
+								table.insert(new_path, part)
+							end
+						end
+						return table.concat(new_path, '/')
+					end,
 					file_ignore_patterns = { ".png", ".jpg", ".svg", ".import", ".jepg", ".aseprite", ".glb" },
 				},
 			})

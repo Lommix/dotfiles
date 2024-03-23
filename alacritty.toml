@@ -74,12 +74,12 @@ size = 20.0
 # style = "Regular"
 
 [font.normal]
-family = "Hasklug Nerd Font Propo"
+family = "MartianMono Nerd Font Mono"
 style = "Bold"
 
 [font.offset]
 x = 0
-y = 0
+y = 2
 
 [scrolling]
 history = 5000
