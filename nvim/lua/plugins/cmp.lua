@@ -3,6 +3,7 @@ return {
 	dependencies = {
 		"hrsh7th/cmp-nvim-lsp",
 		"hrsh7th/cmp-buffer",
+		"hrsh7th/cmp-calc",
 		"hrsh7th/cmp-path",
 		"hrsh7th/cmp-cmdline",
 		"saadparwaiz1/cmp_luasnip",
@@ -12,6 +13,8 @@ return {
 		local cmp = require("cmp")
 		local luasnip = require("luasnip")
 		local icons = require("lommix.icons")
+
+		require("lommix.rel_path")
 
 		cmp.setup({
 			enabled = function()
@@ -79,8 +82,6 @@ return {
 		formatting = {
 			fields = { "kind", "abbr", "menu" },
 			format = function(entry, vim_item)
-				-- Kind icons
-				vim_item.kind = string.format('%s %s', icons.kind[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
 				vim_item.menu = ({
 					nvim_lsp = "[LSP]",
 					luasnip = "[Snippet]",
@@ -95,8 +96,15 @@ return {
 			{ name = "nvim_lsp" },
 			{ name = "luasnip" },
 			{ name = "vim-dadbod-completion" },
+			{ name = "calc" },
 			{ name = "buffer" },
-			{ name = "path", group_index = 2 },
+			{ name = "rel_path" },
+			-- {
+			-- 	name = "path",
+			-- 	option= {
+			-- 		trailing_slash = true,
+			-- 	}
+			-- },
 		},
 		confirm_opts = {
 			behavior = cmp.ConfirmBehavior.Replace,

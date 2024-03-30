@@ -13,6 +13,9 @@ return {
 					return is_dotfile or is_bk
 				end,
 			},
+			float = {
+				padding = 1,
+			},
 		})
 	end,
 }
