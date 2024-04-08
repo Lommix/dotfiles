@@ -21,9 +21,5 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	pattern = { "*.typ" },
-	callback = function()
-		print("I am typ")
-		vim.cmd("set filetype=typst")
-		require("lspconfig").tinymist.setup({})
-	end,
+	command = "set filetype=typst",
 })

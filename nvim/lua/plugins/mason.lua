@@ -11,6 +11,7 @@ local servers = {
 	"yamlls",
 	"bashls",
 	"clangd",
+	"typst_lsp",
 }
 
 return {
@@ -79,6 +80,10 @@ return {
 			local handlers = {
 				function(server_name)
 					lsp_config[server_name].setup(handler_opts)
+				end,
+				["tinymist"] = function()
+					print("hello world")
+					require("lspconfig").tinymist.setup({})
 				end,
 				["ltex"] = function()
 					lsp_config.ltex.setup(vim.tbl_extend("force", handler_opts, {
@@ -214,9 +219,7 @@ return {
 					})
 				end,
 				opts = {
-					ensure_installed = {
-						"tinymist",
-					},
+					ensure_installed = {},
 				},
 			},
 		},
