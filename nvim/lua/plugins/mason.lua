@@ -213,6 +213,11 @@ return {
 						max_concurrent_installers = 4,
 					})
 				end,
+				opts = {
+					ensure_installed = {
+						"tinymist",
+					},
+				},
 			},
 		},
 	},

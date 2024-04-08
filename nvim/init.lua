@@ -17,9 +17,9 @@ require("lazy").setup("plugins")
 
 -- custom
 require("lommix.keybinds")
-require("lommix.auto")
 require("lommix.notes")
 require("lommix.rel_path")
+require("lommix.auto")
 
 -- Colorscheme
 vim.cmd("colorscheme monokai-pro-machine")
