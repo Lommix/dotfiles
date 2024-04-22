@@ -42,6 +42,8 @@ map("n", "<C-Left>", "<C-w>>")
 map("n", "<C-Up>", "<C-w>+")
 map("n", "<C-Down>", "<C-w>-")
 
+map("n", "<leader>e", ":E<CR>")
+
 -- GIT
 map("n", "<leader>gg", ":Git<CR>")
 map("n", "<leader>gp", ":Git push<CR>")

@@ -9,8 +9,8 @@ local defaults = {
 	path = "~/.quicky",
 	popup_config = {
 		size = {
-			width = "80%",
-			height = "80%",
+			width = "90%",
+			height = "90%",
 		},
 		position = "50%",
 		enter = true,
@@ -36,11 +36,12 @@ local defaults = {
 	},
 }
 
-local popup = Popup(defaults.popup_config)
-
 M.open_notes = function()
 	local path = defaults.path .. "/" .. string.gsub(vim.fn.getcwd(), "/", "") .. ".md"
+
+	local popup = Popup(defaults.popup_config)
 	popup:show()
+
 
 	vim.api.nvim_buf_call(popup.bufnr, function()
 		vim.cmd("e " .. path)
@@ -50,6 +51,7 @@ M.open_notes = function()
 	popup:map("n", "q", function()
 		vim.cmd("w")
 		popup:hide()
+		popup:unmount()
 	end)
 end
 

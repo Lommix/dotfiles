@@ -12,6 +12,7 @@ local servers = {
 	"bashls",
 	"clangd",
 	"typst_lsp",
+	"sqlls",
 }
 
 return {
@@ -94,8 +95,8 @@ return {
 							ltex = {
 								enabled = { "latex", "bib", "markdown", "tex" },
 								-- language = "auto",
-								language = "en-US",
-								-- language = "de-DE",
+								-- language = "en-US",
+								language = "de-DE",
 								diagnosticSeverity = "INFO",
 								setenceCacheSize = 4000,
 								additionalRules = {

@@ -82,6 +82,17 @@ return {
 						}
 					end,
 				},
+				typst = {
+					function()
+						return {
+							exe = "typstfmt",
+							args = { "--config-path", "~/typstfmt.toml" },
+						}
+					end,
+				},
+				sql = {
+					require("formatter.filetypes.sql").sqlfluff,
+				},
 				twig = {
 					require("formatter.filetypes.html").prettier,
 				},
