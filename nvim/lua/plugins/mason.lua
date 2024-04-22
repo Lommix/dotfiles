@@ -87,25 +87,7 @@ return {
 					require("lspconfig").tinymist.setup({})
 				end,
 				["ltex"] = function()
-					lsp_config.ltex.setup(vim.tbl_extend("force", handler_opts, {
-						filetypes = { "text", "markdown", "md" },
-						flags = { debounce_text_changes = 300 },
-						cmd = { "ltex-ls" },
-						settings = {
-							ltex = {
-								enabled = { "latex", "bib", "markdown", "tex" },
-								-- language = "auto",
-								-- language = "en-US",
-								language = "de-DE",
-								diagnosticSeverity = "INFO",
-								setenceCacheSize = 4000,
-								additionalRules = {
-									enablePickyRules = true,
-								},
-								completionEnabled = true,
-							},
-						},
-					}))
+					-- spell checking is enabled via cmd in spell.lua
 				end,
 				["wgsl_analyzer"] = function()
 					lsp_config.wgsl_analyzer.setup(vim.tbl_extend("force", handler_opts, {

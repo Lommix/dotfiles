@@ -20,6 +20,7 @@ require("lommix.keybinds")
 require("lommix.notes")
 require("lommix.rel_path")
 require("lommix.auto")
+require("lommix.spell")
 
 -- Colorscheme
 vim.cmd("colorscheme monokai-pro-machine")
