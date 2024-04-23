@@ -39,5 +39,5 @@ local function enable_de()
 	enable("de-DE")
 end
 
-vim.api.nvim_create_user_command("EN", enable_en, {})
-vim.api.nvim_create_user_command("DE", enable_de, {})
+vim.api.nvim_create_user_command("SEN", enable_en, {})
+vim.api.nvim_create_user_command("SDE", enable_de, {})
