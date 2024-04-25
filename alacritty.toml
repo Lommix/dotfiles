@@ -95,3 +95,8 @@ instance = "Alacritty"
 [window.padding]
 x = 0
 y = 0
+
+[[keyboard.bindings]]
+key = "z"
+mods = "Control"
+action = "None"
