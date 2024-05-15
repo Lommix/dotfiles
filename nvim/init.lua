@@ -23,4 +23,4 @@ require("lommix.auto")
 require("lommix.spell")
 
 -- Colorscheme
-vim.cmd("colorscheme monokai-pro-machine")
+vim.cmd("colorscheme nordfox")

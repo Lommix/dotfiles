@@ -79,14 +79,14 @@ style = "Bold"
 
 [font.offset]
 x = 0
-y = 2
+y = 4
 
 [scrolling]
 history = 5000
 
 [window]
 title = "Alacritty"
-opacity = 0.85
+opacity = 0.75
 
 [window.class]
 general = "Alacritty"

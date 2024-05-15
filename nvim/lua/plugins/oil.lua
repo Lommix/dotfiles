@@ -1,22 +1,18 @@
 return {
-	-- "stevearc/oil.nvim",
-	-- lazy = false,
+	"stevearc/oil.nvim",
+	lazy = false,
 	-- keys = {
-	-- 	{ "<leader>e", ":Oil<CR>" },
+	-- 	{ "<leader>e", ":Oil <CR>" },
 	-- },
-	-- disabled = true,
-	-- config = function()
-	-- 	require("oil").setup({
-	-- 		view_options = {
-	-- 			is_hidden_file = function(name, bufnr)
-	-- 				local is_dotfile = vim.startswith(name, ".")
-	-- 				local is_bk = vim.startswith(name, "~")
-	-- 				return is_dotfile or is_bk
-	-- 			end,
-	-- 		},
-	-- 		float = {
-	-- 			padding = 1,
-	-- 		},
-	-- 	})
-	-- end,
+	config = function()
+		require("oil").setup({
+			view_options = {
+				is_hidden_file = function(name, bufnr)
+					local is_dotfile = vim.startswith(name, ".")
+					local is_bk = vim.startswith(name, "~")
+					return is_dotfile or is_bk
+				end,
+			},
+		})
+	end,
 }
