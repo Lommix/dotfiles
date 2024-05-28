@@ -109,7 +109,7 @@ return {
 				end,
 				["emmet_ls"] = function()
 					lsp_config.emmet_ls.setup({
-						filetypes = { "twig", "html", "htmldjango", "smarty" },
+						filetypes = { "twig", "html", "htmldjango", "smarty", "markdown" },
 					})
 				end,
 				["lua_ls"] = function()

@@ -19,8 +19,15 @@ return {
 						file_status = true, -- displays file status (readonly status, modified status)
 						path = 0, -- 0 = just filename, 1 = relative path, 2 = absolute path
 					},
-				function()
+					function()
 						return lsp_status.status()
+					end,
+					function()
+						if vim.g.oil_dir == nil then
+							return ""
+						end
+
+						return vim.g.oil_dir
 					end,
 				},
 
@@ -53,5 +60,5 @@ return {
 			tabline = {},
 			extensions = { "fugitive" },
 		})
-	end
+	end,
 }

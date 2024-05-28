@@ -5,7 +5,8 @@ return {
 	-- 	{ "<leader>e", ":Oil <CR>" },
 	-- },
 	config = function()
-		require("oil").setup({
+		local oil = require("oil")
+		oil.setup({
 			view_options = {
 				is_hidden_file = function(name, bufnr)
 					local is_dotfile = vim.startswith(name, ".")

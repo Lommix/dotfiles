@@ -23,3 +23,18 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	pattern = { "*.typ" },
 	command = "set filetype=typst",
 })
+
+-- save current oil dir in a global var
+vim.api.nvim_create_autocmd(
+	{ "DirChanged", "CursorMoved", "BufWinEnter", "BufFilePost", "InsertEnter", "BufWritePost" },
+	{
+		callback = function()
+			local ok, oil = pcall(require, "oil")
+			if not ok then
+				return
+			end
+
+			vim.g.oil_dir = oil.get_current_dir()
+		end,
+	}
+)

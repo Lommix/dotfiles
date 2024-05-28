@@ -41,9 +41,6 @@ return {
 				php = {
 					require("formatter.filetypes.php").php_cs_fixer,
 				},
-				sql = {
-					require("formatter.filetypes.sql").pgformat,
-				},
 				markdown = {
 					require("formatter.filetypes.markdown").prettier,
 				},
@@ -89,6 +86,15 @@ return {
 							args = { "--config-path", "~/typstfmt.toml" },
 						}
 					end,
+				},
+				less = {
+					require("formatter.filetypes.css").prettier,
+				},
+				scss = {
+					require("formatter.filetypes.css").prettier,
+				},
+				css = {
+					require("formatter.filetypes.css").prettier,
 				},
 				sql = {
 					require("formatter.filetypes.sql").sqlfluff,
