@@ -1,6 +1,7 @@
 window.bar {
     background-color: transparent;
-    color: green;
+    color: white;
+    background-image: none;
 }
 
 button {
@@ -8,12 +9,17 @@ button {
     padding-top: 0;
     padding-bottom: 0;
     background-color: transparent;
+    box-shadow: none;
+    border: none;
+    background: #242424;
 }
 
 button:active {
+    background: #2e3440;
 }
 
 button:hover {
+    background: #2e3440;
 }
 
 label {
@@ -21,12 +27,22 @@ label {
 }
 
 .workspaces button.focused {
-	color: red;
+    color: white;
+    font-weight: bold;
+    background-color: green;
+}
 
+.workspaces button {
+    margin-right: 0.15rem;
+    background-image: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    color: white;
 }
 
 .client-title {
-    color: red;
+    color: white;
 }
 
 .notification {
@@ -36,4 +52,12 @@ label {
 levelbar block,
 highlight {
     min-height: 10px;
+}
+
+.test > * {
+    background-image: none;
+    background: none;
+    border: none;
+    box-shadow: none;
+    color: white;
 }

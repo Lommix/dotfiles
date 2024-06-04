@@ -23,4 +23,4 @@ require("lommix.auto")
 require("lommix.spell")
 
 -- Colorscheme
-vim.cmd("colorscheme nordfox")
+vim.cmd("colorscheme lommix_ghost")
