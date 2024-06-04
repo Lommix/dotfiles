@@ -1,25 +1,32 @@
 #!/bin/bash
 
-SCRIPT=$(readlink -f "$0")
-BASEDIR=$(dirname "$SCRIPT")
+SOURCE_DIR="$(pwd)/config"
+TARGET_DIR="$HOME/.config"
 
-#tmux
-rm -f "${HOME}"/.prettierrc
-ln -s "$BASEDIR"/.prettierrc "${HOME}"/.prettierrc
+if [ ! -d "$SOURCE_DIR" ]; then
+  echo "Source directory $SOURCE_DIR does not exist."
+  exit 1
+fi
+# Iterate through each folder in the source directory
+for folder in "$SOURCE_DIR"/*; do
+  if [ -d "$folder" ]; then
+    # Extract the folder name
+    folder_name=$(basename "$folder")
 
-#tmux
-rm -f "${HOME}"/.tmux.conf
-ln -s "$BASEDIR"/.tmux.conf "${HOME}"/.tmux.conf
+    # Target path
+    target_path="$TARGET_DIR/$folder_name"
 
-rm -f "${HOME}"/.local/bin/tmux_sessionizer
-ln -s "$BASEDIR"/scripts/tmux/tmux_sessionizer.sh "${HOME}"/.local/bin/tmux_sessionizer
-
-#i3
-rm -rf "${HOME}"/.config/i3
-ln -s "$BASEDIR"/i3 "${HOME}"/.config/i3
-rm -rf "${HOME}"/.config/i3status
-ln -s "$BASEDIR"/i3status "${HOME}"/.config/i3status
-
-#nvim
-rm -rf "${HOME}"/.config/nvim
-ln -s "$BASEDIR"/nvim "${HOME}"/.config/nvim
+    # Remove the existing directory in the target if it exists
+    if [ -d "$target_path" ]; then
+      echo "Removing existing directory: $target_path"
+      rm -rf "$target_path"
+    elif [ -L "$target_path" ]; then
+      echo "Removing existing symlink: $target_path"
+      rm -f "$target_path"
+    fi
+    # Create a symbolic link from the source to the target
+    echo "Linking $folder to $target_path"
+    ln -s "$folder" "$target_path"
+  fi
+done
+echo "Symlinks have been created."
