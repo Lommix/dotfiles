@@ -1,10 +1,7 @@
 #!/bin/bash
 
-# Super nice screen recorder
-timestamp=$(date +%Y%m%d%H%M%S)
-output_file="${timestamp}.mp4"
-output_file=$(echo $output_file | tr -d \'\" )
-
+timestamp=$(date +%Y_%m_%d_%S)
+output_file="/home/lommix/Documents/Screenrecs/${timestamp}.mp4"
 
 wf-recorder -f ${output_file} -g "$(slurp)"
 
