@@ -4,6 +4,7 @@ const mpris = await Service.import("mpris");
 const audio = await Service.import("audio");
 const battery = await Service.import("battery");
 const systemtray = await Service.import("systemtray");
+const network = await Service.import("network");
 
 const date = Variable("", {
     poll: [1000, 'date "+%H:%M %b %e."'],
@@ -156,6 +157,8 @@ function SysTray() {
         children: items,
     });
 }
+
+function Wlan() {}
 
 // layout of the bar
 function Left() {

@@ -68,6 +68,14 @@ map("n", "<leader><leader>5", ":colorscheme nightfly<CR>")
 map("n", "<leader><leader>6", ":colorscheme kanagawa<CR>")
 map("n", "<leader><leader>b", ":hi normal ctermbg=none guibg=none<CR>")
 
+
+vim.api.nvim_create_autocmd({ "TextChangedI" }, {
+	pattern = { "*" },
+	callback = function(ev)
+		vim.lsp.buf.signature_help()
+	end
+})
+
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 	callback = function(ev)
@@ -76,8 +84,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "<C-k>", vim.diagnostic.open_float, opts)
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-
+		vim.keymap.set("i", "<c-k>", vim.lsp.buf.signature_help, opts)
 		local ok, preview = pcall(require, "actions-preview")
+
+
 
 		if ok then
 			vim.keymap.set("n", "gt", preview.code_actions, opts)
@@ -105,7 +115,7 @@ map("n", "<leader>p", function()
 	local cmd = vim.fn.getreg('"')
 	local output = vim.fn.system(cmd)
 
-	output = output:gsub("[\t]+", "")     -- Remove tabs
+	output = output:gsub("[\t]+", "") -- Remove tabs
 	output = output:gsub("[\x1b]+%[.-m", "") -- Remove ANSI escape sequences
 
 	local current_line, current_col = unpack(vim.api.nvim_win_get_cursor(0))
