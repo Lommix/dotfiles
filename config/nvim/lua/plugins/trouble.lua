@@ -5,8 +5,15 @@ return {
 			require("trouble").setup({})
 		end,
 		opts = {},
+		cmd = "Trouble",
 		keys = {
-			{ "gn", ":TroubleToggle workspace_diagnostics<CR>", mode = "n" },
+			{
+				"gn",
+				"<cmd>Trouble diagnostics filter.severity=vim.diagnostic.severity.ERROR<cr>",
+				desc = "diagnostics",
+			},
+			{ "GN", "<cmd>Trouble diagnostics<cr>", desc = "all diagnostics" },
+			{ "gx", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "buffer only" },
 		},
 	},
 	{

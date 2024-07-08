@@ -68,13 +68,18 @@ map("n", "<leader><leader>5", ":colorscheme nightfly<CR>")
 map("n", "<leader><leader>6", ":colorscheme kanagawa<CR>")
 map("n", "<leader><leader>b", ":hi normal ctermbg=none guibg=none<CR>")
 
-
-vim.api.nvim_create_autocmd({ "TextChangedI" }, {
-	pattern = { "*" },
-	callback = function(ev)
-		vim.lsp.buf.signature_help()
-	end
-})
+-- vim.api.nvim_create_autocmd({ "TextChangedI" }, {
+-- 	pattern = { "*" },
+-- 	callback = function(ev)
+--         local clients = vim.lsp.get_clients()
+--         for _, client in pairs(clients) do
+--             if client.resolved_capabilities.signature_help then
+--                 vim.lsp.buf.signature_help()
+--                 break -- Only call signature_help once if multiple clients support it
+--             end
+--         end
+-- 	end
+-- })
 
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("UserLspConfig", {}),

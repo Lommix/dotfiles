@@ -23,5 +23,5 @@ require("lommix.auto")
 require("lommix.spell")
 
 -- Colorscheme
-vim.cmd("colorscheme space-vim-dark")
-vim.cmd(":hi normal ctermbg=none guibg=none<CR>")
+vim.cmd("colorscheme lommix_ghost")
+-- vim.cmd(":hi normal ctermbg=none guibg=none<CR>")

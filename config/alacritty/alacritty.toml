@@ -74,7 +74,7 @@ size = 20.0
 # style = "Regular"
 
 [font.normal]
-family = "MartianMono Nerd Font Mono"
+family = "ProFont IIx Nerd Font Mono"
 style = "Bold"
 
 [font.offset]
