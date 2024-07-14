@@ -9,10 +9,10 @@ return {
 		keys = {
 			{
 				"gn",
-				"<cmd>Trouble diagnostics filter.severity=vim.diagnostic.severity.ERROR<cr>",
+				":Trouble diagnostics filter.severity=vim.diagnostic.severity.ERROR<CR>",
 				desc = "diagnostics",
 			},
-			{ "GN", "<cmd>Trouble diagnostics<cr>", desc = "all diagnostics" },
+			{ "GN", ":Trouble diagnostics<CR>", desc = "all diagnostics" },
 			{ "gx", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "buffer only" },
 		},
 	},
