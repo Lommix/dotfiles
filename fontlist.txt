@@ -1,0 +1,109 @@
+BigBlue_TerminalPlus Nerd Font
+BigBlue_TerminalPlus Nerd Font Mono
+BigBlue_Terminal_437TT Nerd Font
+BigBlue_Terminal_437TT Nerd Font Mono
+CaskaydiaCove Nerd Font Mono,CaskaydiaCove NFM
+CaskaydiaCove Nerd Font Mono,CaskaydiaCove NFM ExtraLight
+CaskaydiaCove Nerd Font Mono,CaskaydiaCove NFM Light
+CaskaydiaCove Nerd Font Mono,CaskaydiaCove NFM SemiBold
+CaskaydiaCove Nerd Font Mono,CaskaydiaCove NFM SemiLight
+CaskaydiaCove Nerd Font Propo,CaskaydiaCove NFP
+CaskaydiaCove Nerd Font Propo,CaskaydiaCove NFP ExtraLight
+CaskaydiaCove Nerd Font Propo,CaskaydiaCove NFP Light
+CaskaydiaCove Nerd Font Propo,CaskaydiaCove NFP SemiBold
+CaskaydiaCove Nerd Font Propo,CaskaydiaCove NFP SemiLight
+CaskaydiaCove Nerd Font,CaskaydiaCove NF
+CaskaydiaCove Nerd Font,CaskaydiaCove NF ExtraLight
+CaskaydiaCove Nerd Font,CaskaydiaCove NF Light
+CaskaydiaCove Nerd Font,CaskaydiaCove NF SemiBold
+CaskaydiaCove Nerd Font,CaskaydiaCove NF SemiLight
+CaskaydiaMono Nerd Font Mono,CaskaydiaMono NFM
+CaskaydiaMono Nerd Font Mono,CaskaydiaMono NFM ExtraLight
+CaskaydiaMono Nerd Font Mono,CaskaydiaMono NFM Light
+CaskaydiaMono Nerd Font Mono,CaskaydiaMono NFM SemiBold
+CaskaydiaMono Nerd Font Mono,CaskaydiaMono NFM SemiLight
+CaskaydiaMono Nerd Font Propo,CaskaydiaMono NFP
+CaskaydiaMono Nerd Font Propo,CaskaydiaMono NFP ExtraLight
+CaskaydiaMono Nerd Font Propo,CaskaydiaMono NFP Light
+CaskaydiaMono Nerd Font Propo,CaskaydiaMono NFP SemiBold
+CaskaydiaMono Nerd Font Propo,CaskaydiaMono NFP SemiLight
+CaskaydiaMono Nerd Font,CaskaydiaMono NF
+CaskaydiaMono Nerd Font,CaskaydiaMono NF ExtraLight
+CaskaydiaMono Nerd Font,CaskaydiaMono NF Light
+CaskaydiaMono Nerd Font,CaskaydiaMono NF SemiBold
+CaskaydiaMono Nerd Font,CaskaydiaMono NF SemiLight
+Hack Nerd Font
+Hack Nerd Font Mono
+Hasklug Nerd Font
+Hasklug Nerd Font Mono
+Hasklug Nerd Font Mono,Hasklug Nerd Font Mono Black
+Hasklug Nerd Font Mono,Hasklug Nerd Font Mono ExtLt
+Hasklug Nerd Font Mono,Hasklug Nerd Font Mono Light
+Hasklug Nerd Font Mono,Hasklug Nerd Font Mono Med
+Hasklug Nerd Font Mono,Hasklug Nerd Font Mono SemBd
+Hasklug Nerd Font Propo
+Hasklug Nerd Font Propo,Hasklug Nerd Font Propo Black
+Hasklug Nerd Font Propo,Hasklug Nerd Font Propo ExtLt
+Hasklug Nerd Font Propo,Hasklug Nerd Font Propo Light
+Hasklug Nerd Font Propo,Hasklug Nerd Font Propo Med
+Hasklug Nerd Font Propo,Hasklug Nerd Font Propo SemBd
+Hasklug Nerd Font,Hasklug Nerd Font Black
+Hasklug Nerd Font,Hasklug Nerd Font ExtLt
+Hasklug Nerd Font,Hasklug Nerd Font Light
+Hasklug Nerd Font,Hasklug Nerd Font Med
+Hasklug Nerd Font,Hasklug Nerd Font SemBd
+Hurmit Nerd Font
+Hurmit Nerd Font Mono
+Iosevka Term,Iosevka Nerd Font
+Iosevka Term,Iosevka Nerd Font Mono
+Iosevka,Iosevka Nerd Font
+Iosevka,Iosevka Nerd Font Mono
+Lilex Nerd Font
+Lilex Nerd Font Mono
+Lilex Nerd Font Mono,Lilex Nerd Font Mono ExtraLight
+Lilex Nerd Font Mono,Lilex Nerd Font Mono Medium
+Lilex Nerd Font Mono,Lilex Nerd Font Mono Thin
+Lilex Nerd Font Propo
+Lilex Nerd Font Propo,Lilex Nerd Font Propo ExtraLight
+Lilex Nerd Font Propo,Lilex Nerd Font Propo Medium
+Lilex Nerd Font Propo,Lilex Nerd Font Propo Thin
+Lilex Nerd Font,Lilex Nerd Font ExtraLight
+Lilex Nerd Font,Lilex Nerd Font Medium
+Lilex Nerd Font,Lilex Nerd Font Thin
+LilexExtraThick Nerd Font
+LilexExtraThick Nerd Font Mono
+LilexExtraThick Nerd Font Propo
+MartianMono Nerd Font Mono,MartianMono NFM
+MartianMono Nerd Font Mono,MartianMono NFM Cond
+MartianMono Nerd Font Mono,MartianMono NFM Cond Med
+MartianMono Nerd Font Mono,MartianMono NFM Med
+MartianMono Nerd Font Propo,MartianMono NFP
+MartianMono Nerd Font Propo,MartianMono NFP Cond
+MartianMono Nerd Font Propo,MartianMono NFP Cond Med
+MartianMono Nerd Font Propo,MartianMono NFP Med
+MartianMono Nerd Font,MartianMono NF
+MartianMono Nerd Font,MartianMono NF Cond
+MartianMono Nerd Font,MartianMono NF Cond Med
+MartianMono Nerd Font,MartianMono NF Med
+Mononoki Nerd Font
+Mononoki Nerd Font Mono
+OpenDyslexic Nerd Font
+OpenDyslexicAlta Nerd Font
+OpenDyslexicMono Nerd Font
+OpenDyslexicMono Nerd Font Mono
+ProFont IIx Nerd Font
+ProFont IIx Nerd Font Mono
+ProFont IIx Nerd Font Propo
+ProFontWindows Nerd Font
+ProFontWindows Nerd Font Mono
+ProFontWindows Nerd Font Propo
+SauceCodePro Nerd Font
+SauceCodePro Nerd Font Mono
+ShureTechMono Nerd Font
+ShureTechMono Nerd Font Mono
+Ubuntu Nerd Font
+Ubuntu Nerd Font Mono
+UbuntuCondensed Nerd Font
+UbuntuCondensed Nerd Font Mono
+agave Nerd Font
+agave Nerd Font Mono
