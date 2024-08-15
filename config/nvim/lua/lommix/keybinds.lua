@@ -92,8 +92,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("i", "<c-k>", vim.lsp.buf.signature_help, opts)
 		local ok, preview = pcall(require, "actions-preview")
 
-
-
 		if ok then
 			vim.keymap.set("n", "gt", preview.code_actions, opts)
 		else
@@ -106,10 +104,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "gR", vim.lsp.buf.references, opts)
 
 		map("n", "<leader>fa", ":Format<CR>")
-
-		map("n", "gn", function()
-			require("trouble").toggle()
-		end)
 		map("n", "gR", "<cmd>Telescope lsp_references<CR>")
 	end,
 })

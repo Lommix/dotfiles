@@ -3,13 +3,13 @@ return {
 		"folke/trouble.nvim",
 		config = function()
 			require("trouble").setup({})
-			vim.keymap.set("n", "gn", ":Trouble diagnostics toggle focus<Cr>", {
-				silent = true,
-			})
 		end,
 		opts = {},
+		lazy = false,
 		cmd = "Trouble",
-		keys = {},
+		keys = {
+			{ "gn", ":Trouble diagnostics toggle focus<Cr>", mode = "n" },
+		},
 	},
 	{
 		"folke/todo-comments.nvim",
