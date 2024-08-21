@@ -9,7 +9,6 @@ return {
 		"saadparwaiz1/cmp_luasnip",
 	},
 	config = function()
-
 		local cmp = require("cmp")
 		local luasnip = require("luasnip")
 		local icons = require("lommix.icons")
@@ -22,47 +21,47 @@ return {
 					require("cmp.config.context").in_treesitter_capture("comment") == true
 					or require("cmp.config.context").in_syntax_group("Comment")
 					or vim.api.nvim_buf_get_option(0, "buftype") == "prompt"
-					then
-						return false
-					else
-						return true
-					end
+				then
+					return false
+				else
+					return true
+				end
+			end,
+			matching = {
+				disallow_fuzzy_matching = true,
+				disallow_fullfuzzy_matching = true,
+				disallow_partial_fuzzy_matching = true,
+				disallow_partial_matching = true,
+				disallow_prefix_unmatching = false,
+			},
+			preselect = cmp.PreselectMode.None,
+			snippet = {
+				expand = function(args)
+					luasnip.lsp_expand(args.body) -- For `luasnip` users.
 				end,
-				matching = {
-					disallow_fuzzy_matching = true,
-					disallow_fullfuzzy_matching = true,
-					disallow_partial_fuzzy_matching = true,
-					disallow_partial_matching = true,
-					disallow_prefix_unmatching = false,
-				},
-				preselect = cmp.PreselectMode.None,
-				snippet = {
-					expand = function(args)
-						luasnip.lsp_expand(args.body) -- For `luasnip` users.
-					end,
-				},
-				mapping = cmp.mapping.preset.insert({
-					["<C-p>"] = cmp.mapping.select_prev_item(),
-					["<C-n>"] = cmp.mapping.select_next_item(),
-					["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
-					["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
-					["<C-q>"] = cmp.mapping({
-						i = cmp.mapping.abort(),
-						c = cmp.mapping.close(),
-					}),
-					["<CR>"] = cmp.mapping.confirm({
-						behavior = cmp.ConfirmBehavior.Replace,
-						select = false,
-					}),
-					["<TAB>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_next_item()
-							-- elseif require("luasnip").jumpable() then
-							-- 	vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
-						else
-							fallback()
-						end
-					end, {
+			},
+			mapping = cmp.mapping.preset.insert({
+				["<C-p>"] = cmp.mapping.select_prev_item(),
+				["<C-n>"] = cmp.mapping.select_next_item(),
+				["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
+				["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
+				["<C-q>"] = cmp.mapping({
+					i = cmp.mapping.abort(),
+					c = cmp.mapping.close(),
+				}),
+				["<CR>"] = cmp.mapping.confirm({
+					behavior = cmp.ConfirmBehavior.Replace,
+					select = false,
+				}),
+				["<TAB>"] = cmp.mapping(function(fallback)
+					if cmp.visible() then
+						cmp.select_next_item()
+						-- elseif require("luasnip").jumpable() then
+						-- 	vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
+					else
+						fallback()
+					end
+				end, {
 					"i",
 					"s",
 				}),
@@ -75,54 +74,56 @@ return {
 						fallback()
 					end
 				end, {
-				"i",
-				"s",
+					"i",
+					"s",
+				}),
 			}),
-		}),
-		formatting = {
-			fields = { "kind", "abbr", "menu" },
-			format = function(entry, vim_item)
-				vim_item.menu = ({
-					nvim_lsp = "[LSP]",
-					luasnip = "[Snippet]",
-					buffer = "[Buffer]",
-					path = "[Path]",
-				})[entry.source.name]
-				return vim_item
-			end,
-		},
-		sources = {
-			{ name = "copilot" },
-			{ name = "nvim_lsp" },
-			{ name = "luasnip" },
-			{ name = "vim-dadbod-completion" },
-			{ name = "calc" },
-			{ name = "buffer" },
-			{ name = "rel_path" },
-			-- {
-			-- 	name = "path",
-			-- 	option= {
-			-- 		trailing_slash = true,
-			-- 	}
-			-- },
-		},
-		confirm_opts = {
-			behavior = cmp.ConfirmBehavior.Replace,
-			select = false,
-		},
-		window = {
-			documentation = {
-				border = "rounded",
-				winhighlight = "NormalFloat:Pmenu,NormalFloat:Pmenu,CursorLine:PmenuSel,Search:None",
+			formatting = {
+				fields = { "kind", "abbr", "menu" },
+				format = function(entry, vim_item)
+					vim_item.kind = icons.kind[vim_item.kind] or "-"
+					vim_item.menu = ({
+						nvim_lsp = "[lsp]",
+						luasnip = "[snippet]",
+						buffer = "[buffer]",
+						path = "[path]",
+					})[entry.source.name]
+
+					return vim_item
+				end,
 			},
-			completion = {
-				border = "rounded",
-				winhighlight = "NormalFloat:Pmenu,NormalFloat:Pmenu,CursorLine:PmenuSel,Search:None",
+			sources = {
+				{ name = "copilot" },
+				{ name = "nvim_lsp" },
+				{ name = "luasnip" },
+				{ name = "vim-dadbod-completion" },
+				{ name = "calc" },
+				{ name = "buffer" },
+				{ name = "rel_path" },
+				-- {
+				-- 	name = "path",
+				-- 	option= {
+				-- 		trailing_slash = true,
+				-- 	}
+				-- },
 			},
-		},
-		experimental = {
-			ghost_text = true,
-		},
-	})
-end
+			confirm_opts = {
+				behavior = cmp.ConfirmBehavior.Replace,
+				select = false,
+			},
+			window = {
+				documentation = {
+					border = "rounded",
+					winhighlight = "NormalFloat:Pmenu,NormalFloat:Pmenu,CursorLine:PmenuSel,Search:None",
+				},
+				completion = {
+					border = "rounded",
+					winhighlight = "NormalFloat:Pmenu,NormalFloat:Pmenu,CursorLine:PmenuSel,Search:None",
+				},
+			},
+			experimental = {
+				ghost_text = true,
+			},
+		})
+	end,
 }

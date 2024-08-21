@@ -13,8 +13,4 @@ M.log = function(msg)
 	end
 end
 
-M.debug_log = function(var)
-	M.log(vim.inspect(var))
-end
-
 return M

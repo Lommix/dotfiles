@@ -101,11 +101,11 @@ return {
 					}))
 				end,
 				["cssls"] = function()
-					local capabilities = handler_opts.capabilities
-					capabilities.textDocument.completion.completionItem.snippetSupport = true
+					local caps = handler_opts.capabilities
+					caps.textDocument.completion.completionItem.snippetSupport = true
 					lsp_config.cssls.setup(vim.tbl_extend("force", handler_opts, {
 						filetypes = { "css", "scss", "less", "javascript" },
-						capabilities = capabilities,
+						capabilities = caps,
 					}))
 				end,
 				["emmet_ls"] = function()
@@ -137,7 +137,12 @@ return {
 					{
 						"folke/neodev.nvim",
 						config = function()
-							require("neodev").setup()
+							require("neodev").setup({
+								override = function(root_dir, library)
+									library.enable = true
+									library.plugins = true
+								end,
+							})
 						end,
 					},
 				},

@@ -51,40 +51,20 @@ map("n", "<leader>gp", ":Git push<CR>")
 -- DB
 map("n", "<leader>db", ":DBUIToggle<CR>")
 
--- lsp
-map("n", "<leader>i", ":LspInfo<CR>")
-map("n", "<leader>fa", ":Format<CR>")
-
-map("n", "gr", ":IncRename ")
-
--- clear highlight search
+-- MISC
 map("n", "<CR>", "<CR> :noh<CR><CR>")
-
--- flowers
-map("n", "<leader><leader>1", ":colorscheme catppuccin_mocha<CR>")
-map("n", "<leader><leader>2", ":colorscheme tokyonight-moon<CR>")
-map("n", "<leader><leader>3", ":colorscheme gruvbox<CR>")
-map("n", "<leader><leader>5", ":colorscheme nightfly<CR>")
-map("n", "<leader><leader>6", ":colorscheme kanagawa<CR>")
 map("n", "<leader><leader>b", ":hi normal ctermbg=none guibg=none<CR>")
 
--- vim.api.nvim_create_autocmd({ "TextChangedI" }, {
--- 	pattern = { "*" },
--- 	callback = function(ev)
---         local clients = vim.lsp.get_clients()
---         for _, client in pairs(clients) do
---             if client.resolved_capabilities.signature_help then
---                 vim.lsp.buf.signature_help()
---                 break -- Only call signature_help once if multiple clients support it
---             end
---         end
--- 	end
--- })
-
+---------------------------------------------------------------------------------
+-- lsp keys
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 	callback = function(ev)
 		local opts = { buffer = ev.buf }
+
+		vim.keymap.set("n", "<leader>i", ":LspInfo<CR>", opts)
+		vim.keymap.set("n", "<leader>fa", ":Format<CR>", opts)
+		vim.keymap.set("n", "gr", ":IncRename ", opts)
 
 		vim.keymap.set("n", "<C-k>", vim.diagnostic.open_float, opts)
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
@@ -98,7 +78,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			vim.keymap.set("n", "gt", vim.lsp.buf.code_action, opts)
 		end
 
-		-- vim.keymap.set("n", "gt", vim.lsp.buf.code_action, opts)
 		vim.keymap.set("n", "gD", vim.lsp.buf.type_definition, opts)
 		vim.keymap.set("n", "gi", vim.lsp.buf.declaration, opts)
 		vim.keymap.set("n", "gR", vim.lsp.buf.references, opts)

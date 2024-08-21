@@ -20,7 +20,5 @@ require("lommix.keybinds")
 require("lommix.notes")
 require("lommix.rel_path")
 require("lommix.auto")
+require("lommix.theme")
 require("lommix.spell")
-
--- Colorscheme
-vim.cmd("colorscheme ayu-dark")
