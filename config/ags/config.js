@@ -7,7 +7,11 @@ const systemtray = await Service.import("systemtray");
 const network = await Service.import("network");
 
 const date = Variable("", {
-    poll: [1000, 'date "+%H:%M %b %e."'],
+    poll: [1000, 'date "+%b %e"'],
+});
+
+const time = Variable("", {
+    poll: [1000, 'date "+%H:%m"'],
 });
 
 // widgets can be only assigned as a child in one container
@@ -30,6 +34,7 @@ function Workspaces() {
 
     return Widget.Box({
         class_name: "workspaces",
+        vertical: true,
         children: workspaces,
     });
 }
@@ -37,14 +42,23 @@ function Workspaces() {
 function ClientTitle() {
     return Widget.Label({
         class_name: "client-title",
-        label: hyprland.active.client.bind("title"),
+        label: hyprland.active.client.bind("title").transform((s) => s.substring(0, 20)),
     });
 }
 
 function Clock() {
-    return Widget.Label({
-        class_name: "clock",
-        label: date.bind(),
+    return Widget.Box({
+        vertical: true,
+        children: [
+            Widget.Label({
+                class_name: "clock_date",
+                label: date.bind(),
+            }),
+            Widget.Label({
+                class_name: "clock_time",
+                label: time.bind(),
+            }),
+        ],
     });
 }
 
@@ -107,19 +121,25 @@ function Volume() {
     });
 
     const slider = Widget.Slider({
-        hexpand: true,
+        hexpand: false,
         draw_value: false,
+        class_name: "volume_slider",
         on_change: ({ value }) => (audio.speaker.volume = value),
-        setup: (self) =>
+        setup: (self) => {
+
+            self.vertical = true;
             self.hook(audio.speaker, () => {
                 self.value = audio.speaker.volume || 0;
-            }),
+            });
+        },
     });
 
     return Widget.Box({
         class_name: "volume",
-        css: "min-width: 180px",
-        children: [icon, slider],
+        vertical: true,
+        widthRequest: 50,
+        css: "min-width: 50px",
+        children: [slider, icon],
     });
 }
 
@@ -154,6 +174,8 @@ function SysTray() {
     );
 
     return Widget.Box({
+        vertical: true,
+        widthRequest: 50,
         children: items,
     });
 }
@@ -161,26 +183,31 @@ function SysTray() {
 function Wlan() {}
 
 // layout of the bar
-function Left() {
+function Top() {
     return Widget.Box({
+        vertical: true,
         spacing: 8,
-        children: [Workspaces(), ClientTitle()],
+        class_name: "top-box",
+        children: [Workspaces()],
     });
 }
 
 function Center() {
     return Widget.Box({
         className: "test",
+        vertical: true,
         spacing: 8,
         children: [Media(), Notification()],
     });
 }
 
-function Right() {
+function Bottom() {
     return Widget.Box({
-        hpack: "end",
+        vpack: "end",
+        vertical: true,
+        class_name: "bottom-box",
         spacing: 8,
-        children: [Volume(), BatteryLabel(), Clock(), SysTray()],
+        children: [Volume(), Clock(), SysTray()],
     });
 }
 
@@ -189,12 +216,16 @@ function Bar(monitor = 0) {
         name: `bar-${monitor}`, // name has to be unique
         class_name: "bar",
         monitor,
-        anchor: ["bottom", "left", "right",],
+        anchor: ["bottom", "left", "top"],
         exclusivity: "exclusive",
+        margins: [0, 0],
+        widthRequest: 50,
+
         child: Widget.CenterBox({
-            start_widget: Left(),
-            center_widget: Center(),
-            end_widget: Right(),
+            vertical: true,
+            widthRequest: 50,
+            start_widget: Top(),
+            end_widget: Bottom(),
         }),
     });
 }

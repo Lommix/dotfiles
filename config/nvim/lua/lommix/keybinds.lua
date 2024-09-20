@@ -2,6 +2,8 @@ local function map(m, k, v)
 	vim.keymap.set(m, k, v, { silent = true })
 end
 
+map("n", "q:", "")
+
 -- split movement : linux
 map("n", "<A-h>", "<C-w>h")
 map("n", "<A-j>", "<C-w>j")
@@ -16,13 +18,13 @@ map("n", "N", "Nzzzv")
 map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-u", "<C-u>zz")
 
--- marks
-for i = 97, 122 do
-	local lower = string.char(i)
-	local upper = string.upper(lower)
-	map("n", "m" .. lower, "m" .. upper)
-	map("n", "." .. lower, "'" .. upper)
-end
+-- always global mark
+-- for i = 97, 122 do
+-- 	local lower = string.char(i)
+-- 	local upper = string.upper(lower)
+-- 	map("n", "m" .. lower, "m" .. upper)
+-- 	map("n", "." .. lower, "'" .. upper)
+-- end
 
 -- split
 map("n", "<leader>sh", "<C-w>s")

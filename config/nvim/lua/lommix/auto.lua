@@ -14,6 +14,14 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 	group = group,
 })
 
+-- auto format xml
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+	pattern = { "*.xml", "*.xsd" },
+	callback = function()
+		vim.lsp.buf.format()
+	end,
+	group = group,
+})
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 	pattern = { "*.typ" },
 	command = "setfiletype typst <CR> lua  require'lspconfig'.tinymist.setup{}",

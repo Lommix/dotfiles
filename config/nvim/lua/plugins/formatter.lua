@@ -11,9 +11,6 @@ return {
 				lua = {
 					require("formatter.filetypes.lua").stylua,
 					function()
-						if util.get_current_buffer_file_name() == "special.lua" then
-							return nil
-						end
 						return {
 							exe = "stylua",
 							args = {
@@ -46,21 +43,6 @@ return {
 				},
 				json = {
 					require("formatter.filetypes.json").jq,
-				},
-				xml = {
-					function()
-						return {
-							exe = "xmlformat",
-							args = { "-i" },
-						}
-					end,
-				},
-				gdscript = {
-					function()
-						return {
-							exe = "gdformat",
-						}
-					end,
 				},
 				python = {
 					require("formatter.filetypes.python").black,

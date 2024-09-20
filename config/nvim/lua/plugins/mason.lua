@@ -87,6 +87,29 @@ return {
 					print("hello world")
 					require("lspconfig").tinymist.setup({})
 				end,
+				["lemminx"] = function()
+					lsp_config.lemminx.setup(vim.tbl_extend("force", handler_opts, {
+						filetypes = { 'xml', 'xsd', 'xsl', 'xslt', 'svg' },
+						single_file_support = true,
+						settings = {
+							xml = {
+								trace = {
+									server = "verbose",
+								},
+								logs = {
+									client = true,
+								},
+								format = {
+									splitAttributes = "alignWithFirstAttr",
+									joinContentLines = true,
+									preservedNewlines = 1,
+									insertSpaces = true,
+									tabSize = 4,
+								},
+							},
+						},
+					}))
+				end,
 				["ltex"] = function()
 					-- spell checking is enabled via cmd in spell.lua
 				end,

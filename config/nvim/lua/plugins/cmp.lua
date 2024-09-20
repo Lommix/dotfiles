@@ -93,7 +93,6 @@ return {
 				end,
 			},
 			sources = {
-				{ name = "copilot" },
 				{ name = "nvim_lsp" },
 				{ name = "luasnip" },
 				{ name = "vim-dadbod-completion" },
@@ -122,7 +121,7 @@ return {
 				},
 			},
 			experimental = {
-				ghost_text = true,
+				ghost_text = false,
 			},
 		})
 	end,

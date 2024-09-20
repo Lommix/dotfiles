@@ -4,9 +4,9 @@ if not ok then
 	return
 end
 
-
-local NAME_REGEX = '\\%([^/\\\\:\\*?<>\'`\\|]\\)'
-local PATH_REGEX = vim.regex(([[\%(\%(/PAT*[^/\\\\:\\*?<>\'"`\\| .~]\)\|\%(/\.\.\)\)*/\zePAT*$]]):gsub('PAT', NAME_REGEX))
+local NAME_REGEX = "\\%([^/\\\\:\\*?<>'`\\|]\\)"
+local PATH_REGEX =
+	vim.regex(([[\%(\%(/PAT*[^/\\\\:\\*?<>\'"`\\| .~]\)\|\%(/\.\.\)\)*/\zePAT*$]]):gsub("PAT", NAME_REGEX))
 
 local source = {}
 
@@ -33,7 +33,7 @@ source.new = function()
 end
 
 source.get_trigger_characters = function()
-	return { "/", "." , '"'}
+	return { "/", ".", '"' }
 end
 
 source.get_keyword_pattern = function(self, params)
@@ -112,7 +112,7 @@ source._dirname = function(self, params, option)
 		-- Ignore / comment
 		accept = accept and (not prefix:match("^[%s/]*$") or not self:_is_slash_comment())
 		if accept then
-			return vim.fn.resolve(vim.fn.getcwd().. '/' .. dirname)
+			return vim.fn.resolve(vim.fn.getcwd() .. "/" .. dirname)
 		end
 	end
 	return nil
