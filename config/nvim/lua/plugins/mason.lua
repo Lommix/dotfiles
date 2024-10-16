@@ -89,7 +89,7 @@ return {
 				end,
 				["lemminx"] = function()
 					lsp_config.lemminx.setup(vim.tbl_extend("force", handler_opts, {
-						filetypes = { 'xml', 'xsd', 'xsl', 'xslt', 'svg' },
+						filetypes = { "xml", "xsd", "xsl", "xslt", "svg" },
 						single_file_support = true,
 						settings = {
 							xml = {

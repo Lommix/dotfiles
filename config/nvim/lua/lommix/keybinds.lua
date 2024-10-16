@@ -72,6 +72,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
 		vim.keymap.set("i", "<c-k>", vim.lsp.buf.signature_help, opts)
+
+		vim.keymap.set("n", "<c-n>", function()
+			vim.diagnostic.goto_next({
+				severity = vim.diagnostic.severity.ERROR,
+			})
+		end, opts)
+
 		local ok, preview = pcall(require, "actions-preview")
 
 		if ok then
@@ -127,4 +134,10 @@ end)
 -- general purpose run
 map("n", "<leader>r", function()
 	run_shell("run.sh")
+end)
+
+-- find path
+map("n", "<leader>fp", function()
+	local pwd = vim.fn.expand("%r")
+	print(pwd)
 end)

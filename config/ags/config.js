@@ -11,7 +11,7 @@ const date = Variable("", {
 });
 
 const time = Variable("", {
-    poll: [1000, 'date "+%H:%m"'],
+    poll: [1000, 'date "+%H:%M"'],
 });
 
 // widgets can be only assigned as a child in one container

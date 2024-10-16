@@ -48,7 +48,7 @@ yellow = "0xb58900"
 
 [colors.primary]
 # background = "0x102235"
-background = "0x102020"
+background = "0x282C34"
 foreground = "0x93a1a1"
 
 [env]
@@ -58,7 +58,8 @@ TERM = "xterm-256color"
 size = 20.0
 
 [font.normal]
-family = "CaskaydiaMono Nerd Font Mono"
+# family = "CaskaydiaMono Nerd Font Mono"
+family = "MartianMono Nerd Font"
 style = "Bold"
 
 [font.offset]
@@ -70,7 +71,11 @@ history = 5000
 
 [window]
 title = "Alacritty"
-opacity = 0.75
+opacity = 1.00
+dynamic_padding = true
+
+[mouse]
+hide_when_typing = true
 
 [window.class]
 general = "Alacritty"

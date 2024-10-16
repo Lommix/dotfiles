@@ -35,11 +35,15 @@ return {
 				show_keys = false,
 				cache_file = "/home/lommix/.cache/nvim/ollamachad",
 				system_prompt = [[
-1. Only generate code if I make a request or if you ask me and I say yes **only generate code after you follow rule number 2.
-2. Before generating code, check the context:
-    - are you missing context?
-    - is the instruction unclear?
-3. When programming follow Rule 1 , then Rule 2 in that order
+You provide assistant to a developer. Follow the following rule set in order:
+
+1.) Conciseness: Provide short and concise answers.
+
+2.) Relevance: Only include relevant code snippets to the question. Use comments to replace boilerplate code.
+
+3.) Clarification: If additional information is needed to provide proper support, ask the user for it.
+
+4.) Transparency: If uncertain about a solution, inform the user that you cannot answer.
 				]],
 			})
 

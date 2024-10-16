@@ -10,6 +10,14 @@ local c = ls.choice_node
 local f = ls.function_node
 local sn = ls.snippet_node
 
+function Uuid(length)
+	local out = ""
+	for _ = 1, length do
+		out = out .. string.format("%x", math.random(0, 15))
+	end
+	return out
+end
+
 local curl_get = s(
 	"curl_get",
 	fmt(
@@ -19,7 +27,7 @@ curl -s -X GET \
 -u {}:{} \
 {}/api/
 		]],
-		{ i(1,"user"), i(2,"token"),  i(3,"url") }
+		{ i(1, "user"), i(2, "token"), i(3, "url") }
 	)
 )
 
@@ -33,13 +41,14 @@ curl -s -X POST \
 -d '{}' \
 {}/api/
 		]],
-		{ i(1,"user"), i(2,"token"), i(3,"{\"foo\":\"bar\"}"),  i(4,"url") }
+		{ i(1, "user"), i(2, "token"), i(3, '{"foo":"bar"}'), i(4, "url") }
 	)
 )
 
 return {
 	curl_get,
 	curl_post,
+	s("uuid", partial(Uuid,32)),
 	s("time", partial(vim.fn.strftime, "%H:%M:%S")),
 	s("date", partial(vim.fn.strftime, "%Y-%m-%d")),
 	s("shrug", { ls.t("¯\\_(ツ)_/¯") }),

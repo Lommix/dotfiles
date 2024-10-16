@@ -8,7 +8,7 @@ return {
 		lazy = false,
 		cmd = "Trouble",
 		keys = {
-			{ "gn", ":Trouble diagnostics toggle focus<Cr>", mode = "n" },
+			{ "gn", ":Trouble diagnostics toggle<Cr>", mode = "n" },
 		},
 	},
 	{
