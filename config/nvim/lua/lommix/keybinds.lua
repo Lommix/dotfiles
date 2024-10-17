@@ -3,6 +3,7 @@ local function map(m, k, v)
 end
 
 map("n", "q:", "")
+map("t", "<esc>", [[<C-\><C-n>]])
 
 -- split movement : linux
 map("n", "<A-h>", "<C-w>h")
