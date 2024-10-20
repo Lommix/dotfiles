@@ -2,8 +2,11 @@ local function map(m, k, v)
 	vim.keymap.set(m, k, v, { silent = true })
 end
 
-map("n", "q:", "")
 map("t", "<esc>", [[<C-\><C-n>]])
+
+-- lang
+map("n", "<leader>sde", ":set spelllang=de<CR>")
+map("n", "<leader>sen", ":set spelllang=en<CR>")
 
 -- split movement : linux
 map("n", "<A-h>", "<C-w>h")
@@ -120,10 +123,11 @@ end)
 local function run_shell(filename)
 	local file = vim.fn.findfile(filename, ".;")
 	if file == "" then
-		P("file not found: " .. filename)
+		vim.print("file not found: " .. filename)
 		return
 	else
-		vim.cmd(":term ./" .. file)
+		vim.cmd("botright 20split term://./" .. file)
+		vim.cmd("normal! G")
 	end
 end
 ---------------------------------------------------------------------------------

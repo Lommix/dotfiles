@@ -1,6 +1,13 @@
 -- auto commands here
 local group = vim.api.nvim_create_augroup("autocmd", { clear = true })
 
+-- auto spell check
+vim.api.nvim_create_autocmd("BufRead", {
+	pattern = { "*.md", "*.txt" },
+	command = "set spell",
+	group = group,
+})
+
 -- auto center cursor
 vim.api.nvim_create_autocmd("CursorMoved", {
 	command = "normal! zz",

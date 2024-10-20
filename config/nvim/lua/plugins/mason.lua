@@ -110,9 +110,6 @@ return {
 						},
 					}))
 				end,
-				["ltex"] = function()
-					-- spell checking is enabled via cmd in spell.lua
-				end,
 				["wgsl_analyzer"] = function()
 					lsp_config.wgsl_analyzer.setup(vim.tbl_extend("force", handler_opts, {
 						filetypes = { "wgsl" },
