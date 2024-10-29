@@ -4,7 +4,7 @@ local group = vim.api.nvim_create_augroup("autocmd", { clear = true })
 -- auto spell check
 vim.api.nvim_create_autocmd("BufRead", {
 	pattern = { "*.md", "*.txt" },
-	command = "set spell",
+	command = "setlocal spell",
 	group = group,
 })
 

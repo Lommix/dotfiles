@@ -5,8 +5,8 @@ end
 map("t", "<esc>", [[<C-\><C-n>]])
 
 -- lang
-map("n", "<leader>sde", ":set spelllang=de<CR>")
-map("n", "<leader>sen", ":set spelllang=en<CR>")
+map("n", "<leader>sde", ":set spell<Cr>:set spelllang=de<CR>")
+map("n", "<leader>sen", ":set spell<Cr>:set spelllang=en<CR>")
 
 -- split movement : linux
 map("n", "<A-h>", "<C-w>h")

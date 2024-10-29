@@ -32,6 +32,9 @@ return {
 						}
 					end,
 				},
+				templ = {
+					require("formatter.filetypes.templ").templfmt(),
+				},
 				toml = {
 					require("formatter.filetypes.toml").taplo(),
 				},
