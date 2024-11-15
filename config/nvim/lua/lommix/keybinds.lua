@@ -102,28 +102,31 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 ---------------------------------------------------------------------------------
 -- super usefull yank, execute and paste result for scripts
-map("n", "<leader>p", function()
-	local cmd = vim.fn.getreg('"')
-	local output = vim.fn.system(cmd)
-
-	output = output:gsub("[\t]+", "") -- Remove tabs
-	output = output:gsub("[\x1b]+%[.-m", "") -- Remove ANSI escape sequences
-
-	local current_line, current_col = unpack(vim.api.nvim_win_get_cursor(0))
-	local lines = {}
-
-	for line in output:gmatch("[^\r\n]+") do
-		table.insert(lines, line)
-	end
-
-	vim.api.nvim_buf_set_lines(0, current_line - 1, current_line - 1, false, lines)
-end)
+-- map("n", "<leader>p", function()
+-- 	local cmd = vim.fn.getreg('"')
+-- 	local output = vim.fn.system(cmd)
+--
+-- 	output = output:gsub("[\t]+", "") -- Remove tabs
+-- 	output = output:gsub("[\x1b]+%[.-m", "") -- Remove ANSI escape sequences
+--
+-- 	local current_line, current_col = unpack(vim.api.nvim_win_get_cursor(0))
+-- 	local lines = {}
+--
+-- 	for line in output:gmatch("[^\r\n]+") do
+-- 		table.insert(lines, line)
+-- 	end
+--
+-- 	vim.api.nvim_buf_set_lines(0, current_line - 1, current_line - 1, false, lines)
+-- end)
 ---------------------------------------------------------------------------------
 -- run shell script
 local function run_shell(filename)
 	local file = vim.fn.findfile(filename, ".;")
 	if file == "" then
-		vim.print("file not found: " .. filename)
+		local header = { "#!/bin/bash" }
+		vim.fn.writefile(header, filename)
+		vim.fn.system("chmod +x " .. filename)
+		vim.cmd("e " .. filename)
 		return
 	else
 		vim.cmd("botright 20split term://./" .. file)
@@ -139,6 +142,11 @@ end)
 -- general purpose run
 map("n", "<leader>r", function()
 	run_shell("run.sh")
+end)
+---------------------------------------------------------------------------------
+-- general purpose test
+map("n", "<leader>p", function()
+	run_shell("test.sh")
 end)
 
 -- find path

@@ -42,6 +42,25 @@ M.open_notes = function()
 	local popup = Popup(defaults.popup_config)
 	popup:show()
 
+	vim.api.nvim_buf_call(popup.bufnr, function()
+		vim.cmd("e " .. path)
+		vim.cmd("set number")
+	end)
+
+	popup:map("n", "q", function()
+		vim.cmd("w")
+		popup:hide()
+		popup:unmount()
+	end)
+end
+
+M.open_global_notes = function()
+	local path = defaults.path .. "/" .. "global_note.md"
+	local opts = defaults.popup_config
+	opts.border.text.top = "Global Notes"
+
+	local popup = Popup(opts)
+	popup:show()
 
 	vim.api.nvim_buf_call(popup.bufnr, function()
 		vim.cmd("e " .. path)
@@ -55,5 +74,6 @@ M.open_notes = function()
 	end)
 end
 
+vim.keymap.set("n", "<leader>j", M.open_global_notes, { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>n", M.open_notes, { noremap = true, silent = true })
 return M

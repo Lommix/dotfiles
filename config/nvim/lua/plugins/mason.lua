@@ -44,9 +44,9 @@ return {
 
 			local signs = {
 				{ name = "DiagnosticSignError", text = icons.diagnostics.Error },
-				{ name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
-				{ name = "DiagnosticSignHint", text = icons.diagnostics.Hint },
-				{ name = "DiagnosticSignInfo", text = icons.diagnostics.Information },
+				{ name = "DiagnosticSignWarn",  text = icons.diagnostics.Warning },
+				{ name = "DiagnosticSignHint",  text = icons.diagnostics.Hint },
+				{ name = "DiagnosticSignInfo",  text = icons.diagnostics.Information },
 			}
 
 			for _, sign in ipairs(signs) do
@@ -86,6 +86,11 @@ return {
 				["tinymist"] = function()
 					print("hello world")
 					require("lspconfig").tinymist.setup({})
+				end,
+				["rust_analyzer"] = function()
+					lsp_config.rust_analyzer.setup(vim.tbl_extend("force", handler_opts, {
+
+					}))
 				end,
 				["lemminx"] = function()
 					lsp_config.lemminx.setup(vim.tbl_extend("force", handler_opts, {

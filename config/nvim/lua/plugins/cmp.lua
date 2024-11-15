@@ -15,10 +15,18 @@ return {
 
 		require("lommix.rel_path")
 
+		local DisableCmp = false
+
+		vim.keymap.set("n", "<leader>ßß", function()
+			print("cmp status: " .. tostring(DisableCmp))
+			DisableCmp = not DisableCmp
+		end, { silent = true })
+
 		cmp.setup({
 			enabled = function()
 				if
-					require("cmp.config.context").in_treesitter_capture("comment") == true
+					DisableCmp
+					or require("cmp.config.context").in_treesitter_capture("comment") == true
 					or require("cmp.config.context").in_syntax_group("Comment")
 					or vim.api.nvim_buf_get_option(0, "buftype") == "prompt"
 				then

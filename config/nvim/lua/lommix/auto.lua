@@ -21,6 +21,15 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 	group = group,
 })
 
+-- auto format all
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+	pattern = { "*" },
+	callback = function()
+		-- vim.lsp.buf.format()
+	end,
+	group = group,
+})
+
 -- auto format xml
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 	pattern = { "*.xml", "*.xsd" },

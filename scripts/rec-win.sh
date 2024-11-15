@@ -1,11 +1,10 @@
 #!/bin/bash
 
 timestamp=$(date +%Y_%m_%d_%S)
-output_file="/home/lommix/Documents/Screenrecs/${timestamp}.mp4"
+output_file="/home/lommix/Screenrecs/${timestamp}.mp4"
 
 wf-recorder -f ${output_file} -g "$(slurp)"
 
-# if -g arg for gif
 arg=$1
 if [ "$arg" == "-g" ]; then
 	output_gif="${timestamp}.gif"

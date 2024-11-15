@@ -5,5 +5,5 @@ if [ -z "$1" ]; then
 	exit 0
 fi
 
-output_file="/home/lommix/Documents/Screenrecs/$1.mp4"
+output_file="/home/lommix/Screenrecs/$1.mp4"
 wf-recorder --geometry="$(slurp)" -f ${output_file}
