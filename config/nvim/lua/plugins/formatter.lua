@@ -4,6 +4,13 @@ return {
 		local util = require("formatter.util")
 		local formatter = require("formatter")
 
+		function AutoIndentBuffer()
+			local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+			vim.cmd("normal! gg=G")
+			vim.api.nvim_win_set_cursor(0, { row, col })
+			vim.cmd("normal! zz")
+		end
+
 		formatter.setup({
 			logging = true,
 			log_level = vim.log.levels.WARN,
@@ -76,7 +83,10 @@ return {
 					require("formatter.filetypes.css").prettier,
 				},
 				scss = {
-					require("formatter.filetypes.css").prettier,
+					function()
+						AutoIndentBuffer()
+						return nil
+					end,
 				},
 				css = {
 					require("formatter.filetypes.css").prettier,
@@ -85,7 +95,7 @@ return {
 					require("formatter.filetypes.sql").sqlfluff,
 				},
 				twig = {
-					require("formatter.filetypes.html").prettier,
+					require("formatter.filetypes.twig").djlint,
 				},
 				smarty = {
 					require("formatter.filetypes.html").prettier,
@@ -101,6 +111,12 @@ return {
 				},
 				go = {
 					require("formatter.filetypes.go").gofumpt,
+				},
+				xml = {
+					function()
+						vim.lsp.buf.format({})
+						return nil
+					end,
 				},
 			},
 		})

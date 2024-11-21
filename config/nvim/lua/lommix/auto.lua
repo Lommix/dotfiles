@@ -21,6 +21,15 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 	group = group,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "scss",
+	callback = function()
+		vim.bo.shiftwidth = 4
+		vim.bo.tabstop = 4
+		vim.bo.softtabstop = 4
+	end,
+})
+
 -- auto format all
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 	pattern = { "*" },
@@ -30,14 +39,32 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 	group = group,
 })
 
--- auto format xml
-vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-	pattern = { "*.xml", "*.xsd" },
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+	pattern = { "*.aseprite" },
 	callback = function()
-		vim.lsp.buf.format()
+		vim.fn.system("aseprite " .. vim.fn.fnameescape(vim.api.nvim_buf_get_name(0)) .. " &")
+		vim.cmd("bdelete")
 	end,
 	group = group,
 })
+
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+	pattern = { "*.png", "*.jpg", "*.jpeg" },
+	callback = function()
+		vim.fn.system("feh --scale-down" .. vim.fn.fnameescape(vim.api.nvim_buf_get_name(0)) .. " &")
+		vim.cmd("bdelete")
+	end,
+	group = group,
+})
+
+-- auto format xml
+-- vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+-- 	pattern = { "*.xml", "*.xsd" },
+-- 	callback = function()
+-- 		vim.lsp.buf.format()
+-- 	end,
+-- 	group = group,
+-- })
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 	pattern = { "*.typ" },
 	command = "setfiletype typst <CR> lua  require'lspconfig'.tinymist.setup{}",

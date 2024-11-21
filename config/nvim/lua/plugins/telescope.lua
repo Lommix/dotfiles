@@ -6,6 +6,26 @@ return {
 			"plenary",
 		},
 		config = function()
+			local function formattedName(_, path)
+				local tail = vim.fs.basename(path)
+
+				local parent = vim.fs.dirname(path)
+				if parent == "." then
+					return tail
+				end
+				return string.format("%s\t\t%s", tail, parent)
+			end
+
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = "TelescopeResults",
+				callback = function(ctx)
+					vim.api.nvim_buf_call(ctx.buf, function()
+						vim.fn.matchadd("TelescopeParent", "\t\t.*$")
+						vim.api.nvim_set_hl(0, "TelescopeParent", { link = "Comment" })
+					end)
+				end,
+			})
+
 			require("telescope").setup({
 				fzf = {
 					fuzzy = false, -- false will only do exact matching
@@ -14,23 +34,8 @@ return {
 					case_mode = "ignore_case", -- or "ignore_case" or "respect_case"
 				},
 				defaults = {
-					path_display = function(opts, path)
-						local parts = {}
-						for part in string.gmatch(path, "[^/]+") do
-							table.insert(parts, part)
-						end
-
-						local new_path = {}
-						for i, part in ipairs(parts) do
-							if i ~= #parts then
-								table.insert(new_path, string.sub(part, 1, 3))
-							else
-								table.insert(new_path, part)
-							end
-						end
-						return table.concat(new_path, "/")
-					end,
-					file_ignore_patterns = { ".png", ".jpg", ".svg", ".import", ".jepg", ".aseprite", ".glb" },
+					path_display = formattedName,
+					file_ignore_patterns = { ".png", ".jpg", ".import", ".jepg", ".aseprite", ".glb", ".bak" },
 				},
 			})
 		end,

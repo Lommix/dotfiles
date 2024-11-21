@@ -1,5 +1,6 @@
 return {
 	"nvim-tree/nvim-web-devicons",
+	"echasnovski/mini.icons",
 	{ "nvim-lua/plenary.nvim", name = "plenary", priority = 9999 },
 	{ "MunifTanjim/nui.nvim", name = "nui", priority = 9999 },
 	{

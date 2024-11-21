@@ -1,9 +1,6 @@
 return {
 	"stevearc/oil.nvim",
 	lazy = false,
-	-- keys = {
-	-- 	{ "<leader>e", ":Oil <CR>" },
-	-- },
 	config = function()
 		local oil = require("oil")
 		oil.setup({

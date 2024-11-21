@@ -118,9 +118,19 @@ vim.api.nvim_create_autocmd("LspAttach", {
 --
 -- 	vim.api.nvim_buf_set_lines(0, current_line - 1, current_line - 1, false, lines)
 -- end)
+
+local function close_any_terminal()
+	for _, buf_id in ipairs(vim.api.nvim_list_bufs()) do
+		if vim.bo[buf_id].buftype == "terminal" then
+			vim.cmd("bwipeout " .. buf_id) -- Close the terminal buffer
+		end
+	end
+end
+
 ---------------------------------------------------------------------------------
 -- run shell script
 local function run_shell(filename)
+	close_any_terminal()
 	local file = vim.fn.findfile(filename, ".;")
 	if file == "" then
 		local header = { "#!/bin/bash" }
