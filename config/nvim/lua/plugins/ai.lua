@@ -20,10 +20,15 @@ return {
 
 			-- -- rewrite text
 			vim.keymap.set("v", "<leader>cr", function()
-				local instruction =
-					"Please rewrite the following text to improve clarity, coherence while keeping the vibe:"
+				local instruction = [[
+					You are an assistant writer. Follow these rules:
+					1.) Please enhance the coherence of the following text and correct any grammar errors without significantly altering the style or context.
+					Only
+					2.) Do not argue or talk back.
+					3.) Only reply with the result.
+					]]
 				local request = {
-					model = "llama3.1:latest",
+					model = "aya-expanse",
 					prompt = instruction .. util.read_visiual_lines(),
 				}
 				gen.prompt(request)
