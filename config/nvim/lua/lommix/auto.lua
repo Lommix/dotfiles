@@ -30,13 +30,20 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- auto format all
-vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-	pattern = { "*" },
+vim.api.nvim_create_autocmd("BufEnter", {
+	pattern = "*.twig",
 	callback = function()
-		-- vim.lsp.buf.format()
+		local ft = require("Comment.ft")
+		ft.set("html", "{#%s#}")
 	end,
-	group = group,
+})
+
+vim.api.nvim_create_autocmd("BufEnter", {
+	pattern = "*.html",
+	callback = function()
+		local ft = require("Comment.ft")
+		ft.set("html", "<!-- %s -->")
+	end,
 })
 
 vim.api.nvim_create_autocmd({ "BufEnter" }, {

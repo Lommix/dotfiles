@@ -57,6 +57,14 @@ return {
 				end,
 				mode = "n",
 			},
+			{
+				"<leader>fv",
+				function()
+					require("telescope.builtin").find_files({
+						cwd = "./vendor",
+					})
+				end,
+			},
 			{ "<leader>fb", "<CMD>Telescope buffers<CR>" },
 			{ "<leader>fh", "<CMD>Telescope help_tags<CR>" },
 			{ "<leader>fc", "<CMD>Telescope colorscheme<CR>" },

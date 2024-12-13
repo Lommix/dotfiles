@@ -11,4 +11,14 @@ fi
 input=$1
 name="prep_$(basename "$input")"
 
-ffmpeg -i $1 -c:v libx264 -profile:v main -level 4.0 -preset medium -vf "scale=trunc(oh*a/2)*2:720,format=yuv420p" -c:a aac -ac 2 -ar 44100 -b:a 128k -movflags +faststart -r 30 -g 60 -maxrate 5M -bufsize 10M -b:v 1M -shortest -f mp4 $name
+bitrate="2M"
+
+if [ -n "$2" ]; then
+	bitrate=$2
+fi
+
+ffmpeg -i $1 -c:v libx264 -profile:v main -level 4.0 \
+-preset medium -vf "scale=trunc(oh*a/2)*2:720,format=yuv420p" \
+-c:a aac -ac 2 -ar 44100 -b:a 128k -movflags +faststart -r 30 \
+-g 60 -maxrate 5M -bufsize 10M -b:v $bitrate -shortest -f mp4 \
+$name

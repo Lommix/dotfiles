@@ -68,7 +68,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(ev)
 		local opts = { buffer = ev.buf }
 
-		vim.keymap.set("n", "<leader>i", ":LspInfo<CR>", opts)
 		vim.keymap.set("n", "<leader>fa", ":Format<CR>", opts)
 		vim.keymap.set("n", "gr", ":IncRename ", opts)
 
@@ -78,7 +77,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("i", "<c-k>", vim.lsp.buf.signature_help, opts)
 
 		vim.keymap.set("n", "<c-n>", function()
-			vim.diagnostic.goto_next({
+			vim.diagnostic.get_next({
 				severity = vim.diagnostic.severity.ERROR,
 			})
 		end, opts)

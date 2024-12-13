@@ -3,15 +3,9 @@ local servers = {
 	"cssmodules_ls",
 	"emmet_ls",
 	"html",
-	"jdtls",
-	"jsonls",
-	"lua_ls",
-	"tflint",
 	"pyright",
-	"yamlls",
 	"bashls",
 	"clangd",
-	"typst_lsp",
 	"sqlls",
 }
 
@@ -44,9 +38,9 @@ return {
 
 			local signs = {
 				{ name = "DiagnosticSignError", text = icons.diagnostics.Error },
-				{ name = "DiagnosticSignWarn",  text = icons.diagnostics.Warning },
-				{ name = "DiagnosticSignHint",  text = icons.diagnostics.Hint },
-				{ name = "DiagnosticSignInfo",  text = icons.diagnostics.Information },
+				{ name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
+				{ name = "DiagnosticSignHint", text = icons.diagnostics.Hint },
+				{ name = "DiagnosticSignInfo", text = icons.diagnostics.Information },
 			}
 
 			for _, sign in ipairs(signs) do
@@ -83,14 +77,11 @@ return {
 				function(server_name)
 					lsp_config[server_name].setup(handler_opts)
 				end,
-				["tinymist"] = function()
-					print("hello world")
-					require("lspconfig").tinymist.setup({})
-				end,
+				-- ["tinymist"] = function()
+				-- 	require("lspconfig").tinymist.setup({})
+				-- end,
 				["rust_analyzer"] = function()
-					lsp_config.rust_analyzer.setup(vim.tbl_extend("force", handler_opts, {
-
-					}))
+					lsp_config.rust_analyzer.setup(vim.tbl_extend("force", handler_opts, {}))
 				end,
 				["lemminx"] = function()
 					lsp_config.lemminx.setup(vim.tbl_extend("force", handler_opts, {
@@ -140,7 +131,7 @@ return {
 				end,
 				["emmet_ls"] = function()
 					lsp_config.emmet_ls.setup({
-						filetypes = { "twig", "html", "templ", "htmldjango", "smarty", "markdown" },
+						filetypes = { "twig", "templ", "htmldjango", "smarty", "markdown" },
 					})
 				end,
 				["lua_ls"] = function()
@@ -168,7 +159,7 @@ return {
 						"folke/neodev.nvim",
 						config = function()
 							require("neodev").setup({
-								override = function(root_dir, library)
+								override = function(_, library)
 									library.enable = true
 									library.plugins = true
 								end,

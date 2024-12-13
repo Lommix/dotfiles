@@ -28,7 +28,7 @@ return {
 					DisableCmp
 					or require("cmp.config.context").in_treesitter_capture("comment") == true
 					or require("cmp.config.context").in_syntax_group("Comment")
-					or vim.api.nvim_buf_get_option(0, "buftype") == "prompt"
+					or vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "prompt"
 				then
 					return false
 				else
@@ -88,6 +88,7 @@ return {
 				}),
 			}),
 			formatting = {
+				expandable_indicator = true,
 				fields = { "kind", "abbr", "menu" },
 				format = function(entry, vim_item)
 					vim_item.kind = icons.kind[vim_item.kind] or "-"
@@ -97,7 +98,6 @@ return {
 						buffer = "[buffer]",
 						path = "[path]",
 					})[entry.source.name]
-
 					return vim_item
 				end,
 			},
