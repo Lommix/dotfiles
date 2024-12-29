@@ -15,10 +15,15 @@ end
 
 require("lommix.options")
 vim.opt.rtp:prepend(lazypath)
-require("lazy").setup("plugins")
+require("lazy").setup("plugins", {
+	change_detection = {
+		notify = false,
+	},
+})
 
 -- custom
 require("lommix.keybinds")
+require("lommix.aseprite")
 require("lommix.notes")
 require("lommix.rel_path")
 require("lommix.auto")

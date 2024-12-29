@@ -22,6 +22,8 @@ map("n", "N", "Nzzzv")
 map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-u", "<C-u>zz")
 
+map("n", "<C-g>", ":cnext<CR>")
+
 -- always global mark
 -- for i = 97, 122 do
 -- 	local lower = string.char(i)
@@ -100,23 +102,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 ---------------------------------------------------------------------------------
--- super usefull yank, execute and paste result for scripts
--- map("n", "<leader>p", function()
--- 	local cmd = vim.fn.getreg('"')
--- 	local output = vim.fn.system(cmd)
---
--- 	output = output:gsub("[\t]+", "") -- Remove tabs
--- 	output = output:gsub("[\x1b]+%[.-m", "") -- Remove ANSI escape sequences
---
--- 	local current_line, current_col = unpack(vim.api.nvim_win_get_cursor(0))
--- 	local lines = {}
---
--- 	for line in output:gmatch("[^\r\n]+") do
--- 		table.insert(lines, line)
--- 	end
---
--- 	vim.api.nvim_buf_set_lines(0, current_line - 1, current_line - 1, false, lines)
--- end)
 
 local function close_any_terminal()
 	for _, buf_id in ipairs(vim.api.nvim_list_bufs()) do
@@ -126,7 +111,6 @@ local function close_any_terminal()
 	end
 end
 
----------------------------------------------------------------------------------
 -- run shell script
 local function run_shell(filename)
 	close_any_terminal()
@@ -163,3 +147,4 @@ map("n", "<leader>fp", function()
 	local pwd = vim.fn.expand("%r")
 	print(pwd)
 end)
+

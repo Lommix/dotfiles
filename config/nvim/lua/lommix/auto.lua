@@ -21,6 +21,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 	group = group,
 })
 
+-- fix scss
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "scss",
 	callback = function()
@@ -30,6 +31,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- fix twig auto commenting
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "*.twig",
 	callback = function()
@@ -38,6 +40,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	end,
 })
 
+-- fix twig auto commenting
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "*.html",
 	callback = function()
@@ -46,6 +49,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	end,
 })
 
+-- fix twig auto commenting
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
 	pattern = { "*.aseprite" },
 	callback = function()
@@ -62,6 +66,14 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		vim.cmd("bdelete")
 	end,
 	group = group,
+})
+
+vim.api.nvim_create_autocmd("TermOpen", {
+	group = group,
+	callback = function()
+		vim.opt.number = false
+		vim.opt.relativenumber = false
+	end,
 })
 
 -- auto format xml

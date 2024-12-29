@@ -118,14 +118,14 @@ return {
 				end,
 				["htmx"] = function()
 					lsp_config.htmx.setup(vim.tbl_extend("force", handler_opts, {
-						filetypes = { "html", "templ", "twig", "htmldjango", "javascript" },
+						filetypes = { "html", "templ", "twig" },
 					}))
 				end,
 				["cssls"] = function()
 					local caps = handler_opts.capabilities
 					caps.textDocument.completion.completionItem.snippetSupport = true
 					lsp_config.cssls.setup(vim.tbl_extend("force", handler_opts, {
-						filetypes = { "css", "scss", "less", "html", "javascript" },
+						filetypes = { "css", "scss", "less", "html" },
 						capabilities = caps,
 					}))
 				end,
