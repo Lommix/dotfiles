@@ -1,42 +1,28 @@
 {
-    "layer": "bottom", // Waybar at top layer
-    "position": "bottom", // Waybar at the bottom of your screen
+    "layer": "top", // Waybar at top layer
+    "position": "top", // Waybar at the bottom of your screen
     "height": 20, // Waybar height
-    // "width": 1366, // Waybar width
-    // Choose the order of the modules
-    "modules-left": ["sway/workspaces", "sway/mode"],
-    "modules-center": ["sway/window"],
-    "modules-right": [
-		"custom/linuxdir",
-		"custom/homedir",
-		"pulseaudio",
+    "modules-left": ["hyprland/workspaces"],
+    "modules-center": [],
+	"start_hidden": false,
+	"modifier-reset": "press",
+	"modules-right": [
+		"backlight",
+		"wireplumber",
 		"network",
 		"cpu",
 		"memory",
+		"battery",
 		"tray",
 		"clock"
 	],
-    "sway/workspaces": {
-        "disable-scroll": true,
+    "hyprland/workspaces": {
         "all-outputs": false,
-    },
-    "sway/mode": {
-        "format": "<span style=\"italic\">{}</span>"
     },
     "tray": {
         "icon-size": 21,
         "spacing": 10
     },
-	"custom/homedir":{
-        "exec": "echo $(df -h ~/ | awk 'NR==2{print $4}')",
-        "interval": 30,
-        "format": "{} H 󰉋",
-	},
-	"custom/linuxdir":{
-        "exec": "echo $(df -h / | awk 'NR==2{print $4}')",
-        "interval": 30,
-        "format": "{} R 󰉋",
-	},
     "clock": {
         "format-alt": "{:%Y-%m-%d}"
     },
@@ -64,6 +50,20 @@
         "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
         "format-disconnected": "Disconnected ⚠"
     },
+	"wireplumber": {
+		"format": "{volume}% {icon}",
+		"format-bluetooth": "󰂰",
+		"nospacing": 1,
+		"tooltip-format": "Volume : {volume}%",
+		"format-muted": "󰝟",
+		"format-icons": {
+			"headphone": "",
+			"default": ["󰖀","󰕾",""]
+		},
+		"on-click": "pavucontrol",
+		"scroll-step": 1
+	},
+
     "pulseaudio": {
         //"scroll-step": 1,
         "format": "{volume}% {icon}",
