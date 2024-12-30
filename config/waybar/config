@@ -4,10 +4,9 @@
     "height": 20, // Waybar height
     "modules-left": ["hyprland/workspaces"],
     "modules-center": [],
-	"start_hidden": false,
+	"start_hidden": true,
 	"modifier-reset": "press",
 	"modules-right": [
-		"backlight",
 		"wireplumber",
 		"network",
 		"cpu",
