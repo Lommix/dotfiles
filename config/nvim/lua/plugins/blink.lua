@@ -27,6 +27,15 @@ return {
 		sources = {
 			default = { "lsp", "path", "luasnip", "snippets", "buffer" },
 		},
+		completion = {
+			documentation = {
+				auto_show = true,
+				auto_show_delay_ms = 100,
+			},
+			ghost_text = {
+				enabled = false,
+			},
+		},
 	},
 	opts_extend = { "sources.default" },
 }

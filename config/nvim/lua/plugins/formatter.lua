@@ -63,6 +63,9 @@ return {
 				typescript = {
 					require("formatter.filetypes.typescript").prettier,
 				},
+				zig = {
+					require("formatter.filetypes.zig").zigfmt,
+				},
 				odin = {
 					function()
 						return {

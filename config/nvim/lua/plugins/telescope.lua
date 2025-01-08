@@ -88,8 +88,8 @@ return {
 				"<leader>fG",
 				function()
 					require("telescope.builtin").live_grep({
-						additional_args = function(args)
-							return vim.list_extend(args, { "--hidden", "--no-ignore" })
+						additional_args = function(opts)
+							return { "--hidden", "--no-ignore" }
 						end,
 					})
 				end,
@@ -101,7 +101,7 @@ return {
 					require("telescope.builtin").live_grep({
 						type_filter = filetype,
 						additional_args = function(args)
-							return vim.list_extend(args, { "--hidden", "--no-ignore" })
+							return { "--hidden", "--no-ignore" }
 						end,
 					})
 				end,
@@ -112,7 +112,7 @@ return {
 				function()
 					require("telescope.builtin").grep_string({
 						additional_args = function(args)
-							return vim.list_extend(args, { "--hidden", "--no-ignore" })
+							return { "--hidden", "--no-ignore" }
 						end,
 					})
 				end,
