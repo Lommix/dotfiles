@@ -71,7 +71,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		local opts = { buffer = ev.buf }
 
 		vim.keymap.set("n", "<leader>fa", ":Format<CR>", opts)
-		vim.keymap.set("n", "gr", ":IncRename ", opts)
+		vim.keymap.set("n", "gr", vim.lsp.buf.rename, opts)
 
 		vim.keymap.set("n", "<C-k>", vim.diagnostic.open_float, opts)
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
