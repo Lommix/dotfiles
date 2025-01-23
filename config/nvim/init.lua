@@ -25,6 +25,5 @@ require("lazy").setup("plugins", {
 require("lommix.keybinds")
 require("lommix.aseprite")
 require("lommix.notes")
-require("lommix.rel_path")
 require("lommix.auto")
 require("lommix.theme")
