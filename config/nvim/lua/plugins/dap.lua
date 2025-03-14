@@ -40,13 +40,13 @@ return {
 				},
 			}
 
-
 			dap.adapters.codelldb = {
 				type = "server",
 				port = "${port}",
 				executable = {
-					command = require("mason-registry").get_package("codelldb"):get_install_path() .. "/extension/adapter/codelldb",
-					args = {"--port", "${port}"},
+					command = require("mason-registry").get_package("codelldb"):get_install_path()
+						.. "/extension/adapter/codelldb",
+					args = { "--port", "${port}" },
 				},
 				name = "lldb",
 			}
@@ -74,6 +74,10 @@ return {
 					args = {},
 				},
 			}
+			-- dap.configurations.zig = {
+			--
+			-- }
+
 			-- dap.configurations.cpp = {
 			-- 	{
 			-- 		name = "Launch",

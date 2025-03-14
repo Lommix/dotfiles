@@ -1,0 +1,260 @@
+BigBlue_TerminalPlus NF
+BigBlue_TerminalPlus NFM
+BigBlue_TerminalPlus Nerd Font
+BigBlue_TerminalPlus Nerd Font Mono
+BigBlue_Terminal_437TT NF
+BigBlue_Terminal_437TT NFM
+BigBlue_Terminal_437TT Nerd Font
+BigBlue_Terminal_437TT Nerd Font Mono
+Cantarell
+CaskaydiaCove Nerd Font Mono,CaskaydiaCove NFM
+CaskaydiaCove Nerd Font Mono,CaskaydiaCove NFM ExtraLight
+CaskaydiaCove Nerd Font Mono,CaskaydiaCove NFM Light
+CaskaydiaCove Nerd Font Mono,CaskaydiaCove NFM SemiBold
+CaskaydiaCove Nerd Font Mono,CaskaydiaCove NFM SemiLight
+CaskaydiaCove Nerd Font Propo,CaskaydiaCove NFP
+CaskaydiaCove Nerd Font Propo,CaskaydiaCove NFP ExtraLight
+CaskaydiaCove Nerd Font Propo,CaskaydiaCove NFP Light
+CaskaydiaCove Nerd Font Propo,CaskaydiaCove NFP SemiBold
+CaskaydiaCove Nerd Font Propo,CaskaydiaCove NFP SemiLight
+CaskaydiaCove Nerd Font,CaskaydiaCove NF
+CaskaydiaCove Nerd Font,CaskaydiaCove NF ExtraLight
+CaskaydiaCove Nerd Font,CaskaydiaCove NF Light
+CaskaydiaCove Nerd Font,CaskaydiaCove NF SemiBold
+CaskaydiaCove Nerd Font,CaskaydiaCove NF SemiLight
+CaskaydiaMono Nerd Font Mono,CaskaydiaMono NFM
+CaskaydiaMono Nerd Font Mono,CaskaydiaMono NFM ExtraLight
+CaskaydiaMono Nerd Font Mono,CaskaydiaMono NFM Light
+CaskaydiaMono Nerd Font Mono,CaskaydiaMono NFM SemiBold
+CaskaydiaMono Nerd Font Mono,CaskaydiaMono NFM SemiLight
+CaskaydiaMono Nerd Font Propo,CaskaydiaMono NFP
+CaskaydiaMono Nerd Font Propo,CaskaydiaMono NFP ExtraLight
+CaskaydiaMono Nerd Font Propo,CaskaydiaMono NFP Light
+CaskaydiaMono Nerd Font Propo,CaskaydiaMono NFP SemiBold
+CaskaydiaMono Nerd Font Propo,CaskaydiaMono NFP SemiLight
+CaskaydiaMono Nerd Font,CaskaydiaMono NF
+CaskaydiaMono Nerd Font,CaskaydiaMono NF ExtraLight
+CaskaydiaMono Nerd Font,CaskaydiaMono NF Light
+CaskaydiaMono Nerd Font,CaskaydiaMono NF SemiBold
+CaskaydiaMono Nerd Font,CaskaydiaMono NF SemiLight
+FreeMono
+FreeSans
+FreeSerif
+Hack NF
+Hack NFM
+Hack Nerd Font
+Hack Nerd Font Mono
+Hasklug Nerd Font
+Hasklug Nerd Font Mono
+Hasklug Nerd Font Mono,Hasklug Nerd Font Mono Black
+Hasklug Nerd Font Mono,Hasklug Nerd Font Mono ExtLt
+Hasklug Nerd Font Mono,Hasklug Nerd Font Mono Light
+Hasklug Nerd Font Mono,Hasklug Nerd Font Mono Med
+Hasklug Nerd Font Mono,Hasklug Nerd Font Mono SemBd
+Hasklug Nerd Font Propo
+Hasklug Nerd Font Propo,Hasklug Nerd Font Propo Black
+Hasklug Nerd Font Propo,Hasklug Nerd Font Propo ExtLt
+Hasklug Nerd Font Propo,Hasklug Nerd Font Propo Light
+Hasklug Nerd Font Propo,Hasklug Nerd Font Propo Med
+Hasklug Nerd Font Propo,Hasklug Nerd Font Propo SemBd
+Hasklug Nerd Font,Hasklug Nerd Font Black
+Hasklug Nerd Font,Hasklug Nerd Font ExtLt
+Hasklug Nerd Font,Hasklug Nerd Font Light
+Hasklug Nerd Font,Hasklug Nerd Font Med
+Hasklug Nerd Font,Hasklug Nerd Font SemBd
+Hurmit NF
+Hurmit NFM
+Hurmit Nerd Font
+Hurmit Nerd Font Mono
+Iosevka Term,Iosevka NF
+Iosevka Term,Iosevka NFM
+Iosevka Term,Iosevka Nerd Font
+Iosevka Term,Iosevka Nerd Font Mono
+Iosevka,Iosevka NF
+Iosevka,Iosevka NFM
+Iosevka,Iosevka Nerd Font
+Iosevka,Iosevka Nerd Font Mono
+JetBrains Mono
+JetBrains Mono NL
+JetBrains Mono NL,JetBrains Mono NL ExtraBold
+JetBrains Mono NL,JetBrains Mono NL ExtraLight
+JetBrains Mono NL,JetBrains Mono NL Light
+JetBrains Mono NL,JetBrains Mono NL Medium
+JetBrains Mono NL,JetBrains Mono NL SemiBold
+JetBrains Mono NL,JetBrains Mono NL Thin
+JetBrains Mono,JetBrains Mono ExtraBold
+JetBrains Mono,JetBrains Mono ExtraLight
+JetBrains Mono,JetBrains Mono Light
+JetBrains Mono,JetBrains Mono Medium
+JetBrains Mono,JetBrains Mono SemiBold
+JetBrains Mono,JetBrains Mono Thin
+Liberation Mono
+Liberation Sans
+Liberation Serif
+Lilex Nerd Font
+Lilex Nerd Font Mono
+Lilex Nerd Font Mono,Lilex Nerd Font Mono ExtraLight
+Lilex Nerd Font Mono,Lilex Nerd Font Mono Medium
+Lilex Nerd Font Mono,Lilex Nerd Font Mono Thin
+Lilex Nerd Font Propo
+Lilex Nerd Font Propo,Lilex Nerd Font Propo ExtraLight
+Lilex Nerd Font Propo,Lilex Nerd Font Propo Medium
+Lilex Nerd Font Propo,Lilex Nerd Font Propo Thin
+Lilex Nerd Font,Lilex Nerd Font ExtraLight
+Lilex Nerd Font,Lilex Nerd Font Medium
+Lilex Nerd Font,Lilex Nerd Font Thin
+LilexExtraThick Nerd Font
+LilexExtraThick Nerd Font Mono
+LilexExtraThick Nerd Font Propo
+MartianMono Nerd Font Mono,MartianMono NFM
+MartianMono Nerd Font Mono,MartianMono NFM Cond
+MartianMono Nerd Font Mono,MartianMono NFM Cond Med
+MartianMono Nerd Font Mono,MartianMono NFM Med
+MartianMono Nerd Font Propo,MartianMono NFP
+MartianMono Nerd Font Propo,MartianMono NFP Cond
+MartianMono Nerd Font Propo,MartianMono NFP Cond Med
+MartianMono Nerd Font Propo,MartianMono NFP Med
+MartianMono Nerd Font,MartianMono NF
+MartianMono Nerd Font,MartianMono NF Cond
+MartianMono Nerd Font,MartianMono NF Cond Med
+MartianMono Nerd Font,MartianMono NF Med
+Monaspace Argon
+Monaspace Argon Var
+Monaspace Argon,Monaspace Argon ExtraBold
+Monaspace Argon,Monaspace Argon ExtraLight
+Monaspace Argon,Monaspace Argon Light
+Monaspace Argon,Monaspace Argon Medium
+Monaspace Argon,Monaspace Argon SemiBold
+Monaspace Argon,Monaspace Argon SemiWide
+Monaspace Argon,Monaspace Argon SemiWide ExtraBold
+Monaspace Argon,Monaspace Argon SemiWide ExtraLight
+Monaspace Argon,Monaspace Argon SemiWide Light
+Monaspace Argon,Monaspace Argon SemiWide Medium
+Monaspace Argon,Monaspace Argon SemiWide SemiBold
+Monaspace Argon,Monaspace Argon Wide
+Monaspace Argon,Monaspace Argon Wide ExtraBold
+Monaspace Argon,Monaspace Argon Wide ExtraLight
+Monaspace Argon,Monaspace Argon Wide Light
+Monaspace Argon,Monaspace Argon Wide Medium
+Monaspace Argon,Monaspace Argon Wide SemiBold
+Monaspace Krypton
+Monaspace Krypton Var
+Monaspace Krypton,Monaspace Krypton ExtraBold
+Monaspace Krypton,Monaspace Krypton ExtraLight
+Monaspace Krypton,Monaspace Krypton Light
+Monaspace Krypton,Monaspace Krypton Medium
+Monaspace Krypton,Monaspace Krypton SemiBold
+Monaspace Krypton,Monaspace Krypton SemiWide
+Monaspace Krypton,Monaspace Krypton SemiWide ExtraBold
+Monaspace Krypton,Monaspace Krypton SemiWide ExtraLight
+Monaspace Krypton,Monaspace Krypton SemiWide Light
+Monaspace Krypton,Monaspace Krypton SemiWide Medium
+Monaspace Krypton,Monaspace Krypton SemiWide SemiBold
+Monaspace Krypton,Monaspace Krypton Wide
+Monaspace Krypton,Monaspace Krypton Wide ExtraBold
+Monaspace Krypton,Monaspace Krypton Wide ExtraLight
+Monaspace Krypton,Monaspace Krypton Wide Light
+Monaspace Krypton,Monaspace Krypton Wide Medium
+Monaspace Krypton,Monaspace Krypton Wide SemiBold
+Monaspace Neon
+Monaspace Neon Var
+Monaspace Neon,Monaspace Neon ExtraBold
+Monaspace Neon,Monaspace Neon ExtraLight
+Monaspace Neon,Monaspace Neon Light
+Monaspace Neon,Monaspace Neon Medium
+Monaspace Neon,Monaspace Neon SemiBold
+Monaspace Neon,Monaspace Neon SemiWide
+Monaspace Neon,Monaspace Neon SemiWide ExtraBold
+Monaspace Neon,Monaspace Neon SemiWide ExtraLight
+Monaspace Neon,Monaspace Neon SemiWide Light
+Monaspace Neon,Monaspace Neon SemiWide Medium
+Monaspace Neon,Monaspace Neon SemiWide SemiBold
+Monaspace Neon,Monaspace Neon Wide
+Monaspace Neon,Monaspace Neon Wide ExtraBold
+Monaspace Neon,Monaspace Neon Wide ExtraLight
+Monaspace Neon,Monaspace Neon Wide Light
+Monaspace Neon,Monaspace Neon Wide Medium
+Monaspace Neon,Monaspace Neon Wide SemiBold
+Monaspace Radon
+Monaspace Radon Var
+Monaspace Radon,Monaspace Radon ExtraBold
+Monaspace Radon,Monaspace Radon ExtraLight
+Monaspace Radon,Monaspace Radon Light
+Monaspace Radon,Monaspace Radon Medium
+Monaspace Radon,Monaspace Radon SemiBold
+Monaspace Radon,Monaspace Radon SemiWide
+Monaspace Radon,Monaspace Radon SemiWide ExtraBold
+Monaspace Radon,Monaspace Radon SemiWide ExtraLight
+Monaspace Radon,Monaspace Radon SemiWide Light
+Monaspace Radon,Monaspace Radon SemiWide Medium
+Monaspace Radon,Monaspace Radon SemiWide SemiBold
+Monaspace Radon,Monaspace Radon Wide
+Monaspace Radon,Monaspace Radon Wide ExtraBold
+Monaspace Radon,Monaspace Radon Wide ExtraLight
+Monaspace Radon,Monaspace Radon Wide Light
+Monaspace Radon,Monaspace Radon Wide Medium
+Monaspace Radon,Monaspace Radon Wide SemiBold
+Monaspace Xenon
+Monaspace Xenon Var
+Monaspace Xenon,Monaspace Xenon ExtraBold
+Monaspace Xenon,Monaspace Xenon ExtraLight
+Monaspace Xenon,Monaspace Xenon Light
+Monaspace Xenon,Monaspace Xenon Medium
+Monaspace Xenon,Monaspace Xenon SemiBold
+Monaspace Xenon,Monaspace Xenon SemiWide
+Monaspace Xenon,Monaspace Xenon SemiWide ExtraBold
+Monaspace Xenon,Monaspace Xenon SemiWide ExtraLight
+Monaspace Xenon,Monaspace Xenon SemiWide Light
+Monaspace Xenon,Monaspace Xenon SemiWide Medium
+Monaspace Xenon,Monaspace Xenon SemiWide SemiBold
+Monaspace Xenon,Monaspace Xenon Wide
+Monaspace Xenon,Monaspace Xenon Wide ExtraBold
+Monaspace Xenon,Monaspace Xenon Wide ExtraLight
+Monaspace Xenon,Monaspace Xenon Wide Light
+Monaspace Xenon,Monaspace Xenon Wide Medium
+Monaspace Xenon,Monaspace Xenon Wide SemiBold
+Mononoki NF
+Mononoki NFM
+Mononoki Nerd Font
+Mononoki Nerd Font Mono
+OpenDyslexic NF
+OpenDyslexic Nerd Font
+OpenDyslexicAlta NF
+OpenDyslexicAlta Nerd Font
+OpenDyslexicMono NF
+OpenDyslexicMono NFM
+OpenDyslexicMono Nerd Font
+OpenDyslexicMono Nerd Font Mono
+ProFont IIx Nerd Font
+ProFont IIx Nerd Font Mono
+ProFont IIx Nerd Font Propo
+ProFontWindows Nerd Font
+ProFontWindows Nerd Font Mono
+ProFontWindows Nerd Font Propo
+SauceCodePro NF
+SauceCodePro NFM
+SauceCodePro Nerd Font
+SauceCodePro Nerd Font Mono
+ShureTechMono NF
+ShureTechMono NFM
+ShureTechMono Nerd Font
+ShureTechMono Nerd Font Mono
+Source Code Pro
+Source Code Pro,Source Code Pro Black
+Source Code Pro,Source Code Pro ExtraLight
+Source Code Pro,Source Code Pro Light
+Source Code Pro,Source Code Pro Medium
+Source Code Pro,Source Code Pro Semibold
+SourceCodeVF
+Ubuntu NF
+Ubuntu NFM
+Ubuntu Nerd Font
+Ubuntu Nerd Font Mono
+UbuntuCondensed NF
+UbuntuCondensed NFM
+UbuntuCondensed Nerd Font
+UbuntuCondensed Nerd Font Mono
+agave NF
+agave NFM
+agave Nerd Font
+agave Nerd Font Mono

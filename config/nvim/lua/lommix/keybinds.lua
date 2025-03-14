@@ -122,7 +122,7 @@ local function run_shell(filename)
 		vim.cmd("e " .. filename)
 		return
 	else
-		vim.cmd("botright 20split term://./" .. file)
+		vim.cmd("14split term://./" .. file)
 		vim.cmd("normal! G")
 	end
 end

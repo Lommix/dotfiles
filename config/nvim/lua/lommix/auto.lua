@@ -31,6 +31,12 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- glsl
+vim.api.nvim_create_autocmd("BufEnter", {
+	pattern = {"*.glsl", "*.vex", "*.frag", "*.vs", "*.fs"},
+	command = "set filetype=glsl",
+})
+
 -- fix twig auto commenting
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "*.twig",

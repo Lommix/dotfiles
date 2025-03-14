@@ -35,7 +35,7 @@ return {
 				},
 				defaults = {
 					path_display = formattedName,
-					file_ignore_patterns = { ".png", ".jpg", ".import", ".jepg", ".aseprite", ".glb", ".bak" },
+					file_ignore_patterns = { ".png", ".jpg", ".import", ".jepg", ".glb", ".bak" },
 				},
 			})
 		end,
