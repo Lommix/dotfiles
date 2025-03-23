@@ -46,7 +46,10 @@ return {
 					require("formatter.filetypes.toml").taplo(),
 				},
 				php = {
-					require("formatter.filetypes.php").php_cs_fixer,
+					function()
+						vim.lsp.buf.format({})
+						return nil
+					end,
 				},
 				markdown = {
 					require("formatter.filetypes.markdown").prettier,

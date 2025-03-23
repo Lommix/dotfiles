@@ -22,7 +22,13 @@ map("n", "N", "Nzzzv")
 map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-u", "<C-u>zz")
 
-map("n", "<C-g>", ":cnext<CR>")
+
+-- quickfix
+map("n", "<C-g>", ":cprevious<CR>")
+map("n", "<C-h>", ":cnext<CR>")
+map("n", "<C-q>", ":copen<CR>")
+
+
 
 -- always global mark
 -- for i = 97, 122 do

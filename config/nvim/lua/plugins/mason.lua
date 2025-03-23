@@ -173,13 +173,13 @@ return {
 				["intelephense"] = function()
 					lsp_config.intelephense.setup({
 						settings = {
-							intelephense = {
-								diagnostics = { enable = true },
-								telemetry = { enable = false },
-								codeLens = {
-									implementations = { enable = true },
-								},
-							},
+							-- intelephense = {
+							-- 	diagnostics = { enable = true },
+							-- 	telemetry = { enable = false },
+							-- 	codeLens = {
+							-- 		implementations = { enable = true },
+							-- 	},
+							-- },
 						},
 					})
 				end,
