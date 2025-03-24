@@ -66,7 +66,7 @@ map("n", "<leader>gp", ":Git push<CR>")
 map("n", "<leader>db", ":DBUIToggle<CR>")
 
 -- MISC
-map("n", "<CR>", "<CR> :noh<CR><CR>")
+-- map("n", "<CR>", "<CR> :noh<CR><CR>")
 map("n", "<leader><leader>b", ":hi normal ctermbg=none guibg=none<CR>")
 
 ---------------------------------------------------------------------------------
