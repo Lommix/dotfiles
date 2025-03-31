@@ -1,8 +1,6 @@
 " Vim color file
 " Author: Lorenz Mielke
 " Colorscheme Name: lommix_ghost
-" based on the colorscheme: sobrio
-" from https://elvessousa.com.br
 
 set background=dark
 highlight clear
@@ -12,21 +10,21 @@ if exists('syntax_on')
 endif
 
 set t_Co=256
-let g:colors_name = 'sobrio_ghost'
+let g:colors_name = 'lommix_ghost'
 
 " Color palette
 " Interface
 let s:accent = '#080808'
 let s:bg = 'NONE'
-let s:darker = '#121212'
+let s:darker = 'NONE'
 let s:darkest = '#000000'
-let s:fold = '#262626'
+let s:fold = 'NONE'
 let s:hover = '#5f5f5f'
 let s:lightest = '#ffffff'
 let s:lineNumber = '#FFFFFF'
-let s:menu = '#121212'
-let s:splits = '#121212'
-let s:visual = '#4e4e4e'
+let s:menu = '#321212'
+let s:splits = '#321212'
+let s:visual = 'NONE'
 
 " Syntax highlight colors
 let s:arg = '#d7af87'
@@ -42,10 +40,10 @@ let s:prop = '#afafaf'
 let s:str = '#87afd7'
 let s:str2 = '#7cdce7'
 let s:title = '#eeeeee'
-let s:type = '#afafaf'
+let s:type = '#afdfaf'
 let s:var = '#cccccc'
-let s:warn = '#fd6389'
-let s:word = '#fd6389'
+let s:warn = '#bd6389'
+let s:word = '#bd6389'
 
 " Text format
 let s:b = 'bold'
@@ -95,7 +93,7 @@ call s:create('ErrorMsg', 231, 204, 'NONE', s:warn, s:lightest)
 call s:create('Float', 141, 'NONE', 'NONE', 'NONE', s:int)
 call s:create('Folded', 242, 235, 'NONE', s:fold, s:muted)
 call s:create('Function', 81, 'NONE', s:b, 'NONE', s:id)
-call s:create('Identifier', 81, 'NONE', s:i, 'NONE', s:id)
+call s:create('Identifier', 81, 'NONE', s:b, 'NONE', s:id)
 call s:create('IncSearch', 16, 11, 'NONE', s:str, s:darkest)
 call s:create('Keyword', 204, 'NONE', s:i, 'NONE', s:word)
 call s:create('Label', 204, 'NONE', 'NONE', 'NONE', s:var)

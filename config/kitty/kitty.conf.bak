@@ -1,12 +1,14 @@
 font_size			25.0
 force_ltr			yes
-background_opacity 0.9
+background_opacity 0.7
+background_blur 0
+background_image none
 
 map ctrl+plus change_font_size all +1.0
 map ctrl+minus change_font_size all -1.0
 
 # BEGIN_KITTY_FONTS
-font_family      family="Lilex Nerd Font"
+font_family      family="MartianMono Nerd Font"
 bold_font        auto
 italic_font      auto
 bold_italic_font auto

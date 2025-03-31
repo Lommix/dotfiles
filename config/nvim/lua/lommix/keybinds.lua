@@ -22,13 +22,10 @@ map("n", "N", "Nzzzv")
 map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-u", "<C-u>zz")
 
-
 -- quickfix
 map("n", "<C-g>", ":cprevious<CR>")
 map("n", "<C-h>", ":cnext<CR>")
 map("n", "<C-q>", ":copen<CR>")
-
-
 
 -- always global mark
 -- for i = 97, 122 do
@@ -132,20 +129,31 @@ local function run_shell(filename)
 		vim.cmd("normal! G")
 	end
 end
+
+-- watch compiler output
+local ev = vim.uv.new_fs_event()
+vim.uv.fs_event_start(ev, ".compile_errors", {}, function()
+	vim.schedule(function()
+		vim.cmd("cfile .compile_errors")
+	end)
+end)
+
 ---------------------------------------------------------------------------------
 -- general purpose build
 map("n", "<leader>b", function()
-	run_shell("build.sh")
+	vim.cmd("make build")
 end)
 ---------------------------------------------------------------------------------
 -- general purpose run
 map("n", "<leader>r", function()
-	run_shell("run.sh")
+	-- run_shell_qfix("run.sh")
+	vim.cmd("make run")
 end)
 ---------------------------------------------------------------------------------
 -- general purpose test
 map("n", "<leader>p", function()
-	run_shell("test.sh")
+	-- run_shell_qfix("test.sh")
+	vim.cmd("make test")
 end)
 
 -- find path
@@ -153,4 +161,3 @@ map("n", "<leader>fp", function()
 	local pwd = vim.fn.expand("%r")
 	print(pwd)
 end)
-
