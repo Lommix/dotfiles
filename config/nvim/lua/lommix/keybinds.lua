@@ -134,7 +134,7 @@ end
 local ev = vim.uv.new_fs_event()
 vim.uv.fs_event_start(ev, ".compile_errors", {}, function()
 	vim.schedule(function()
-		vim.cmd("cfile .compile_errors")
+		vim.cmd("silent! cfile .compile_errors")
 	end)
 end)
 

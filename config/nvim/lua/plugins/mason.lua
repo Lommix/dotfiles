@@ -77,33 +77,6 @@ return {
 				function(server_name)
 					lsp_config[server_name].setup(handler_opts)
 				end,
-				-- ["tinymist"] = function()
-				-- 	require("lspconfig").tinymist.setup({})
-				-- end,
-
-				-- → completion_label_details                           default: true
-				-- → dangerous_comptime_experiments_do_not_enable       default: false
-				-- → enable_argument_placeholders                       default: true
-				-- → enable_autofix                                     default: false
-				-- → enable_build_on_save                               default: false
-				-- → enable_inlay_hints                                 default: true
-				-- → enable_snippets                                    default: true
-				-- → global_cache_path
-				-- → highlight_global_var_declarations                  default: false
-				-- → inlay_hints_exclude_single_argument                default: true
-				-- ↓ inlay_hints_hide_redundant_param_names             default: false
-				--   Hides inlay hints when parameter name matches the identifier (e.g. foo: foo)
-				--   type boolean
-				-- → inlay_hints_hide_redundant_param_names_last_token  default: false
-				-- → inlay_hints_show_builtin                           default: true
-				-- → inlay_hints_show_parameter_name                    default: true
-				-- → inlay_hints_show_struct_literal_field_type         default: true
-				-- → inlay_hints_show_variable_type_hints               default: true
-				-- → prefer_ast_check_as_child_process                  default: true
-				-- → semantic_tokens                                    default: "full"
-				-- → skip_std_references                                default: false
-				-- → warn_style                                         default: false
-
 				["zls"] = function()
 					lsp_config.zls.setup({
 						settings = {
@@ -117,7 +90,15 @@ return {
 					})
 				end,
 				["rust_analyzer"] = function()
-					lsp_config.rust_analyzer.setup(vim.tbl_extend("force", handler_opts, {}))
+					lsp_config.rust_analyzer.setup(vim.tbl_extend("force", handler_opts, {
+						settings = {
+							["rust-analyzer"] = {
+								diagnostics = {
+									enable = false,
+								},
+							},
+						},
+					}))
 				end,
 				["lemminx"] = function()
 					lsp_config.lemminx.setup(vim.tbl_extend("force", handler_opts, {

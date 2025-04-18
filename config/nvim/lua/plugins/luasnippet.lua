@@ -6,15 +6,13 @@ return {
 
 		if vim.fn.isdirectory("~/.vscode/extensions") then
 			local paths = {}
-			local readdir = vim.fn.glob("~/.vscode/extensions/*", true, true)
+			local readdir = vim.fn.glob("~/.vscode-oss/extensions/*", true, true)
 			for _, dir in pairs(readdir) do
 				if vim.fn.isdirectory(dir) then
 					table.insert(paths, dir)
 				end
 			end
-			require("luasnip.loaders.from_vscode").load({
-				paths = { "~/.vscode/extensions/sickle/sickle_ui.code-snippets" },
-			})
+
 			require("luasnip.loaders.from_vscode").load({ paths = paths })
 			require("luasnip.loaders.from_lua").load({ paths = { "~/.config/nvim/snippets/" } })
 

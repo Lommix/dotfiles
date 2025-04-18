@@ -24,7 +24,7 @@ let s:lightest = '#ffffff'
 let s:lineNumber = '#FFFFFF'
 let s:menu = '#321212'
 let s:splits = '#321212'
-let s:visual = 'NONE'
+let s:visual = '#5a3512'
 
 " Syntax highlight colors
 let s:arg = '#d7af87'
