@@ -9,10 +9,10 @@ vim.api.nvim_create_autocmd("BufRead", {
 })
 
 -- auto center cursor
-vim.api.nvim_create_autocmd("CursorMoved", {
-	command = "normal! zz",
-	group = group,
-})
+-- vim.api.nvim_create_autocmd("CursorMoved", {
+-- 	command = "normal! zz",
+-- 	group = group,
+-- })
 
 -- auto trim whitespace
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
