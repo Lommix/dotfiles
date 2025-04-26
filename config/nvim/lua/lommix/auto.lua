@@ -31,9 +31,14 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile", "BufEnter" }, {
+-- 	pattern = { "*" },
+-- 	command = "set syntax=on",
+-- })
+
 -- glsl
 vim.api.nvim_create_autocmd("BufEnter", {
-	pattern = {"*.glsl", "*.vex", "*.frag", "*.vs", "*.fs"},
+	pattern = { "*.glsl", "*.vex", "*.frag", "*.vs", "*.fs" },
 	command = "set filetype=glsl",
 })
 

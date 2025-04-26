@@ -1,3 +1,8 @@
+vim.cmd("syntax enable")
+vim.cmd("set syntax=on")
+
+require("lommix.options")
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -13,7 +18,6 @@ if not vim.loop.fs_stat(lazypath) then
 	end
 end
 
-require("lommix.options")
 vim.opt.rtp:prepend(lazypath)
 require("lazy").setup("plugins", {
 	change_detection = {

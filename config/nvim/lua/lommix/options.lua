@@ -27,8 +27,11 @@ o.relativenumber = true
 o.mouse = a
 o.cursorline = true
 o.wildmenu = true
-opt.foldmethod = "manual"
-opt.foldcolumn = "1"
+o.foldnestmax = 1
+o.foldmethod = "expr"
+o.syntax = "on"
+o.foldexpr = "nvim_treesitter#foldexpr()"
+
 o.wildmode = "longest:full,full"
 o.listchars = "trail:·,nbsp:◇,tab:→ ,extends:▸,precedes:◂"
 o.clipboard = "unnamedplus"
