@@ -7,6 +7,7 @@
 	"start_hidden": true,
 	"modifier-reset": "press",
 	"modules-right": [
+		"custom/vpn",
 		"wireplumber",
 		"network",
 		"cpu",
@@ -48,6 +49,13 @@
         "format-wifi": "{essid} ({signalStrength}%) ",
         "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
         "format-disconnected": "Disconnected ⚠"
+    },
+	"custom/vpn": {
+        "format": "{}",
+        "exec": "~/.config/waybar/vpn-status.sh",
+        "interval": 3,
+        "return-type": "json",
+        "on-click": "~/.config/waybar/vpn-chooser.sh"
     },
 	"wireplumber": {
 		"format": "{volume}% {icon}",

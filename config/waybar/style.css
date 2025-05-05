@@ -51,6 +51,7 @@ window#waybar.hidden {
     background-color: #f38ba8;
 }
 
+#custom-vpn,
 #memory,
 #custom-power,
 #battery,
@@ -67,7 +68,13 @@ window#waybar.hidden {
     color: #181825;
 }
 
+#custom-vpn {
+	font-weight: 900;
+    color: #FFF;
+}
+
 #custom-power {
+    background-color: #f38ba8;
     margin-right: 6px;
 }
 
@@ -78,6 +85,13 @@ window#waybar.hidden {
     font-size: 15px;
     border-radius: 8px 0px 0px 8px;
     color: #1793d1;
+}
+
+#custom-vpn.connected {
+    background-color: green;
+}
+#custom-vpn.disconnected {
+    background-color: darkred;
 }
 
 #memory {
