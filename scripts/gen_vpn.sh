@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# VyprVpn
+# add openvpn to NOPW
+# lommix ALL=(ALL) NOPASSWD: /usr/bin/openvpn
+# DL pub CA:
+# sudo wget https://support.vyprvpn.com/hc/article_attachments/360059510571/ca.vyprvpn.com.crt
+
 input_file="$1"
 output_dir="$HOME/.openvpn"
 
