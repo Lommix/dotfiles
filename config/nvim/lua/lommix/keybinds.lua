@@ -34,6 +34,12 @@ map("n", "<C-q>", ":copen<CR>")
 -- 	map("n", "m" .. lower, "m" .. upper)
 -- 	map("n", "." .. lower, "'" .. upper)
 -- end
+map("n", "<leader>ß", function()
+	vim.cmd([[ highlight Normal guibg=none ]])
+	vim.cmd([[ highlight NormalNC guibg=none ]])
+	vim.cmd([[ highlight SignColumn guibg=none ]])
+	vim.cmd([[ highlight VertSplit guibg=none ]])
+end)
 
 -- split
 map("n", "<leader>sh", "<C-w>s")

@@ -31,10 +31,6 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile", "BufEnter" }, {
--- 	pattern = { "*" },
--- 	command = "set syntax=on",
--- })
 
 -- glsl
 vim.api.nvim_create_autocmd("BufEnter", {
@@ -60,7 +56,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	end,
 })
 
--- fix twig auto commenting
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
 	pattern = { "*.aseprite" },
 	callback = function()
