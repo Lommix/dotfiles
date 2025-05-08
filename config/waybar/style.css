@@ -145,8 +145,22 @@ window#waybar.hidden {
     padding-right: 17px;
 }
 
+.modules-center {
+    color: white;
+    font-size: 18px;
+    background-color: #181825;
+    font-size: 18px;
+    margin: 6px 0;
+    border-radius: 4px;
+    padding: 0 10px;
+}
+
+#custom-weather {
+    color: white;
+    font-size: 18px;
+}
+
 #clock {
-    font-family: JetBrainsMono Nerd Font;
     background-color: #181825;
     color: white;
     font-size: 18px;

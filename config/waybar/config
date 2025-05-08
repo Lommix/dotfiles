@@ -4,7 +4,8 @@
     "height": 20, // Waybar height
     "modules-left": ["hyprland/workspaces"],
     "modules-center": [
-		"clock"
+		"clock",
+		"custom/weather",
 	],
 	//"start_hidden": true,
 	"modifier-reset": "press",
@@ -63,6 +64,10 @@
         "return-type": "json",
         "on-click": "~/.config/waybar/vpn-chooser.sh"
     },
+	"custom/weather": {
+		"exec": "curl 'https://wttr.in/?format=1'",
+		"interval": 3600,
+	},
 	"wireplumber": {
 		"format": "{volume}% {icon}",
 		"format-bluetooth": "󰂰",
