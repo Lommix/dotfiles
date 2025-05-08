@@ -3,8 +3,10 @@
     "position": "top", // Waybar at the bottom of your screen
     "height": 20, // Waybar height
     "modules-left": ["hyprland/workspaces"],
-    "modules-center": [],
-	"start_hidden": true,
+    "modules-center": [
+		"clock"
+	],
+	//"start_hidden": true,
 	"modifier-reset": "press",
 	"modules-right": [
 		"custom/vpn",
@@ -14,17 +16,21 @@
 		"memory",
 		"battery",
 		"tray",
-		"clock"
 	],
     "hyprland/workspaces": {
-        "all-outputs": false,
+		"format": "{name}",
+		"format-icons": {
+			"default": "",
+			"active": "",
+		},
+		"all-outputs": false,
     },
     "tray": {
         "icon-size": 21,
         "spacing": 10
     },
     "clock": {
-        "format-alt": "{:%Y-%m-%d}"
+        "format": "{:%d %h %Y     %H:%M }"
     },
     "cpu": {
         "format": "{usage}% "
