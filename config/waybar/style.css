@@ -3,7 +3,7 @@
     border-radius: 0;
     min-height: 0;
     font-family: Lilex Nerd Font Propo;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 600;
 }
 
@@ -20,7 +20,7 @@ window#waybar.hidden {
     border-radius: 4px;
     background-color: #181825;
     padding: 3px;
-    margin: 4px;
+    margin: 4px 2px;
     font-size: 18px;
     font-weight: bolder;
 }
@@ -40,8 +40,18 @@ window#waybar.hidden {
 .modules-right {
     border-radius: 4px;
     background-color: #181825;
-    padding: 3px;
-    margin: 2px;
+    padding: 3px 5px;
+    margin: 4px 2px;
+}
+
+.modules-center {
+    color: white;
+    font-size: 18px;
+    background-color: #181825;
+    font-size: 18px;
+    margin: 4px 0;
+    border-radius: 4px;
+    padding: 0 10px;
 }
 
 #workspaces button.urgent {
@@ -145,15 +155,6 @@ window#waybar.hidden {
     padding-right: 17px;
 }
 
-.modules-center {
-    color: white;
-    font-size: 18px;
-    background-color: #181825;
-    font-size: 18px;
-    margin: 6px 0;
-    border-radius: 4px;
-    padding: 0 10px;
-}
 
 #custom-weather {
     color: white;
