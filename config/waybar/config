@@ -31,7 +31,7 @@
         "spacing": 10
     },
     "clock": {
-        "format": "{:%d %h %Y     %H:%M }"
+        "format": "{:%d %h %Y - %H:%M}"
     },
     "cpu": {
         "format": "{usage}% "
@@ -65,7 +65,7 @@
         "on-click": "~/.config/waybar/vpn-chooser.sh"
     },
 	"custom/weather": {
-		"exec": "curl 'https://wttr.in/?format=1'",
+		"exec": "curl 'https://wttr.in/?format=%c%C+%t%20(%hH)%20-+%w'",
 		"interval": 3600,
 	},
 	"wireplumber": {

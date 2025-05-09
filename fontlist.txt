@@ -1,3 +1,5 @@
+Adwaita Mono
+Adwaita Sans
 BigBlue_TerminalPlus NF
 BigBlue_TerminalPlus NFM
 BigBlue_TerminalPlus Nerd Font
@@ -37,6 +39,10 @@ CaskaydiaMono Nerd Font,CaskaydiaMono NF ExtraLight
 CaskaydiaMono Nerd Font,CaskaydiaMono NF Light
 CaskaydiaMono Nerd Font,CaskaydiaMono NF SemiBold
 CaskaydiaMono Nerd Font,CaskaydiaMono NF SemiLight
+Font Awesome 6 Brands,Font Awesome 6 Brands Regular
+Font Awesome 6 Free,Font Awesome 6 Free Regular
+Font Awesome 6 Free,Font Awesome 6 Free Solid
+Font Awesome v4 Compatibility,Font Awesome v4 Compatibility Regular
 FreeMono
 FreeSans
 FreeSerif

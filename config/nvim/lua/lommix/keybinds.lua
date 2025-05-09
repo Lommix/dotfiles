@@ -46,7 +46,7 @@ map("n", "<leader>sh", "<C-w>s")
 map("n", "<leader>sv", "<C-w>v")
 map("n", "<leader>se", "<C-w>=")
 map("n", "<leader>q", ":close<CR>")
-map("n", "<leader>o", ":vsplit term:// blitzdenk chat gemini<CR>:startinsert<CR>")
+map("n", "<leader>o", ":vsplit term:// blitzdenk chat openai<CR>:startinsert<CR>")
 
 -- util
 map("n", "<leader>+", "<C-a>")
@@ -122,19 +122,10 @@ local function close_any_terminal()
 end
 
 -- run shell script
-local function run_shell(filename)
+local function run_split(cmd)
 	close_any_terminal()
-	local file = vim.fn.findfile(filename, ".;")
-	if file == "" then
-		local header = { "#!/bin/bash" }
-		vim.fn.writefile(header, filename)
-		vim.fn.system("chmod +x " .. filename)
-		vim.cmd("e " .. filename)
-		return
-	else
-		vim.cmd("14split term://./" .. file)
-		vim.cmd("normal! G")
-	end
+	vim.cmd("14split term://" .. cmd)
+	vim.cmd("normal! G")
 end
 
 -- watch compiler output
@@ -154,7 +145,7 @@ end)
 -- general purpose run
 map("n", "<leader>r", function()
 	-- run_shell_qfix("run.sh")
-	vim.cmd("make run")
+	run_split("make run")
 end)
 ---------------------------------------------------------------------------------
 -- general purpose test
