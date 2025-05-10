@@ -3,7 +3,7 @@
     border-radius: 0;
     min-height: 0;
     font-family: Lilex Nerd Font Propo;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
 }
 
@@ -46,9 +46,7 @@ window#waybar.hidden {
 
 .modules-center {
     color: white;
-    font-size: 18px;
     background-color: #181825;
-    font-size: 18px;
     margin: 4px 0;
     border-radius: 4px;
     padding: 0 10px;
@@ -89,7 +87,6 @@ window#waybar.hidden {
     padding-right: 7px;
     padding-left: 7px;
     margin-left: 5px;
-    font-size: 15px;
     border-radius: 8px 0px 0px 8px;
     color: #1793d1;
 }
@@ -155,16 +152,13 @@ window#waybar.hidden {
     padding-right: 17px;
 }
 
-
 #custom-weather {
     color: white;
-    font-size: 18px;
 }
 
 #clock {
     background-color: #181825;
     color: white;
-    font-size: 18px;
 }
 
 #custom-power {

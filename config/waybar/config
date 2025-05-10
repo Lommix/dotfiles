@@ -66,7 +66,7 @@
     },
 	"custom/weather": {
 		"exec": "curl 'https://wttr.in/?format=%c%C+%t%20(%hH)%20-+%w'",
-		"interval": 3600,
+		"interval": 750,
 	},
 	"wireplumber": {
 		"format": "{volume}% {icon}",
