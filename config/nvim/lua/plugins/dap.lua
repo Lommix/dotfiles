@@ -44,8 +44,7 @@ return {
 				type = "server",
 				port = "${port}",
 				executable = {
-					command = require("mason-registry").get_package("codelldb"):get_install_path()
-						.. "/extension/adapter/codelldb",
+					command = "/home/lommix/.local/share/nvim/mason/packages/codelldb/codelldb",
 					args = { "--port", "${port}" },
 				},
 				name = "lldb",
@@ -74,9 +73,19 @@ return {
 					args = {},
 				},
 			}
-			-- dap.configurations.zig = {
-			--
-			-- }
+
+			dap.configurations.zig = {
+				{
+					name = "Launch",
+					type = "codelldb",
+					request = "launch",
+					program = "zig-out/bin/deep_ocean",
+					cwd = "${workspaceFolder}",
+					stopOnEntry = false,
+					args = {},
+				},
+			}
+
 
 			-- dap.configurations.cpp = {
 			-- 	{
