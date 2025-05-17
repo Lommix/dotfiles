@@ -43,7 +43,7 @@ return {
 			end
 
 			local config = {
-				virtual_lines = true,
+				virtual_lines = false,
 				virtual_text = false,
 				-- virtual_text = {
 				-- 	prefix = icons.ui.Gear,
@@ -161,6 +161,7 @@ return {
 
 			mason.setup({})
 			mason_lspconfig.setup({})
+			vim.lsp.inlay_hint.enable(false)
 
 			-- vim.lsp.setup_handlers(handlers)
 			-- mason_lspconfig.setup_handlers(handlers)
@@ -181,6 +182,8 @@ return {
 						end,
 					},
 				},
+				config = function()
+				end,
 			},
 			{
 				"nvim-lua/lsp-status.nvim",
