@@ -8,14 +8,31 @@ return {
 			config = function()
 				local ts = require("nvim-treesitter.configs")
 
-				local list =
-				{ "tsx", "toml", "xml", "twig", "php", "json", "yaml", "css", "go", "rust", "html", "lua", "gdscript",
-					"dockerfile", "javascript", "markdown", "markdown_inline" }
+				local list = {
+					"tsx",
+					"toml",
+					"xml",
+					"twig",
+					"php",
+					"json",
+					"yaml",
+					"css",
+					"go",
+					"rust",
+					"html",
+					"lua",
+					"gdscript",
+					"dockerfile",
+					"javascript",
+					"markdown",
+					"markdown_inline",
+				}
 
 				ts.setup({
 					sync_install = true,
 					auto_install = true,
 					highlight = { enable = true },
+					indent = { enable = true }, -- this might fuck stuff up
 				})
 
 				vim.filetype.add({ extension = { wgsl = "wgsl" } })
@@ -29,7 +46,7 @@ return {
 				-- 	},
 				-- }
 				-- parser_config.tsx.filetype_to_parsername = { "javascript", "typescript.tsx" }
-			end
-		}
-	}
+			end,
+		},
+	},
 }

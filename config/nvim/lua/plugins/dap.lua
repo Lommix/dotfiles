@@ -62,11 +62,7 @@ return {
 					type = "codelldb",
 					request = "launch",
 					program = function()
-						local dir = vim.fn.getcwd()
-						local base_name = string.lower(vim.fn.fnamemodify(dir, ":t"))
-						local path = dir .. "/target/debug/" .. base_name
-						print(path)
-						return path
+						return "target/debug/" .. vim.g.DEBUGEXE
 					end,
 					cwd = "${workspaceFolder}",
 					stopOnEntry = false,
@@ -79,13 +75,14 @@ return {
 					name = "Launch",
 					type = "codelldb",
 					request = "launch",
-					program = "zig-out/bin/deep_ocean",
+					program = function()
+						return "zig-out/bin/" .. vim.g.DEBUGEXE
+					end,
 					cwd = "${workspaceFolder}",
 					stopOnEntry = false,
 					args = {},
 				},
 			}
-
 
 			-- dap.configurations.cpp = {
 			-- 	{

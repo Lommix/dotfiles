@@ -123,19 +123,40 @@ return {
 				filetypes = { "twig", "templ", "htmldjango", "smarty", "markdown" },
 			})
 
-			lsp_config.intelephense.setup({
+			local get_intelephense_license = function()
+				local path = os.getenv("HOME") .. "/intelephense/licence.txt"
+				local f = assert(io.open(path, "rb"))
+				local content = f:read("*a")
+				f:close()
+				return string.gsub(content, "%s+", "")
+			end
+
+			local key = get_intelephense_license()
+
+			lsp_config.intelephense.setup(vim.tbl_extend("force", handler_opts, {
 				settings = {
+					licenceKey = key,
 					intelephense = {
-						diagnostics = { enable = true },
+						-- diagnostics = { enable = false },
 						telemetry = { enable = false },
-						codeLens = {
-							implementations = { enable = true },
-						},
+						-- codeLens = {
+						-- 	implementations = { enable = true },
+						-- },
 					},
 				},
-			})
+				init_options = {
+					licenceKey = key,
+					intelephense = {
+						-- diagnostics = { enable = false },
+						telemetry = { enable = false },
+						-- codeLens = {
+						-- 	implementations = { enable = true },
+						-- },
+					},
+				},
+			}))
 
-			lsp_config.lua_ls.setup({
+			lsp_config.lua_ls.setup(vim.tbl_extend("force", handler_opts, {
 				settings = {
 					Lua = {
 						completion = {
@@ -146,9 +167,9 @@ return {
 						},
 					},
 				},
-			})
+			}))
 
-			lsp_config.zls.setup({
+			lsp_config.zls.setup(vim.tbl_extend("force", handler_opts, {
 				settings = {
 					force_autofix = true,
 					enable_build_on_save = true,
@@ -157,7 +178,7 @@ return {
 					inlay_hints_hide_redundant_param_names_last_token = true,
 					include_at_in_builtins = true,
 				},
-			})
+			}))
 
 			mason.setup({})
 			mason_lspconfig.setup({})
@@ -182,8 +203,7 @@ return {
 						end,
 					},
 				},
-				config = function()
-				end,
+				config = function() end,
 			},
 			{
 				"nvim-lua/lsp-status.nvim",

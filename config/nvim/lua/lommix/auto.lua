@@ -31,6 +31,11 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- fix make
+vim.api.nvim_create_autocmd("BufEnter", {
+	pattern = { "*" },
+	command = "set makeprg=make",
+})
 
 -- glsl
 vim.api.nvim_create_autocmd("BufEnter", {

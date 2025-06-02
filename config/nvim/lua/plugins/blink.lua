@@ -21,6 +21,7 @@ return {
 			-- ["<Up>"] = { "select_prev", "fallback" },
 			-- ["<Down>"] = { "select_next", "fallback" },
 		},
+		-- signature = { enabled = true },
 		snippets = { preset = "luasnip" },
 		appearance = {
 			use_nvim_cmp_as_default = true,
@@ -28,12 +29,23 @@ return {
 		},
 		sources = {
 			default = { "lsp", "path", "snippets", "buffer" },
+			per_filetype = {
+				sql = { "snippets", "dadbod", "buffer" },
+			},
+			-- add vim-dadbod-completion to your completion providers
+			providers = {
+				dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
+			},
 		},
 		completion = {
 			documentation = {
-				auto_show = true,
-				auto_show_delay_ms = 100,
+				auto_show_delay_ms = 500,
 			},
+			menu = {
+				auto_show = true,
+				auto_show_delay_ms = 500,
+			},
+			accept = { auto_brackets = { enabled = false } },
 			ghost_text = {
 				enabled = false,
 			},

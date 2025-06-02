@@ -16,7 +16,7 @@ o.hlsearch = true
 o.incsearch = true
 o.tabstop = 4
 o.softtabstop = 4
---o.expandtab = true
+o.expandtab = true --
 o.wrap = false
 o.hlsearch = false
 o.shiftwidth = 4
@@ -31,6 +31,7 @@ o.foldnestmax = 1
 o.foldmethod = "expr"
 o.syntax = "on"
 o.foldexpr = "nvim_treesitter#foldexpr()"
+o.makeprg = "make"
 
 o.wildmode = "longest:full,full"
 o.listchars = "trail:·,nbsp:◇,tab:→ ,extends:▸,precedes:◂"

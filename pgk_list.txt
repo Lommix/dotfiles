@@ -1,0 +1,14 @@
+fzf
+dolphin
+fuzzel
+kitty
+rg
+tree
+slurp
+grim
+swappy
+firefox-developer-edition
+ttf-font-awesome
+keepassxc
+thunderbird
+blueman

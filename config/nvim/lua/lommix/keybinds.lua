@@ -46,7 +46,10 @@ map("n", "<leader>sh", "<C-w>s")
 map("n", "<leader>sv", "<C-w>v")
 map("n", "<leader>se", "<C-w>=")
 map("n", "<leader>q", ":close<CR>")
-map("n", "<leader>o", ":vsplit term:// blitzdenk chat openai<CR>:startinsert<CR>")
+map("n", "<leader>o", function()
+	local client = vim.fn.input("Client:", "gemini")
+	vim.cmd("vsplit | terminal blitzdenk chat " .. client)
+end)
 
 -- util
 map("n", "<leader>+", "<C-a>")

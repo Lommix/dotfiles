@@ -12,6 +12,8 @@ return {
 	"jacoborus/tender.vim",
 	"Shatur/neovim-ayu",
 	"navarasu/onedark.nvim",
+    "drewxs/ash.nvim",
+    "scottmckendry/cyberdream.nvim",
 	{
 		"loctvl842/monokai-pro.nvim",
 		config = function()

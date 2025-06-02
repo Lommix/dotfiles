@@ -27,7 +27,7 @@ local plugin = s(
 	"plugin",
 	fmt(
 		[[
-pub fn plugin(world: *Ecs) !void {{
+pub fn plugin(world: *World) !void {{
 	try world.systems.register({});
 }}
 ]],
@@ -40,7 +40,7 @@ local sys = s(
 	"sys",
 	fmt(
 		[[
-fn {}(world: *Ecs) !void {{
+fn {}(world: *World) !void {{
 	{}
 }}
 ]],
