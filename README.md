@@ -1,6 +1,6 @@
-# Dotfiles
+# Dotfile lommix
 
-My linux configs & scripts.
+My personal linux configs & scripts.
 
 ## Reminders
 

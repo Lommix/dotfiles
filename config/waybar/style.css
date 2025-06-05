@@ -65,6 +65,7 @@ window#waybar.hidden {
 #network,
 #clock,
 #cpu,
+#mpd,
 #tray {
     border-radius: 4px;
     margin: 6px 3px;
@@ -104,6 +105,9 @@ window#waybar.hidden {
 
 #battery {
     background-color: #f38ba8;
+}
+#mpd{
+    color: white;
 }
 
 #battery.critical:not(.charging) {
