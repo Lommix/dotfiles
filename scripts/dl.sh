@@ -1,12 +1,14 @@
 #!/bin/bash
 if [ -z "$1" ]; then
-  echo "Usage: $0 <input_file>"
+  echo "Usage: $0 <input_url>"
   exit 1
 fi
 
-input_file="$1"
+output="~/Music/%(title)s.%(ext)s"
 
-while IFS= read -r url;
-do
-    yt-dlp --extract-audio --audio-format mp3 --restrict-filenames --output "%(title)s.%(ext)s" "$url"
-done < "$input_file"
+if [ -n "$2" ]; then
+    mkdir ~/Music/$2 &> /dev/null
+    output="~/Music/$2/%(title)s.%(ext)s"
+fi
+
+yt-dlp --extract-audio --audio-format mp3 --embed-thumbnail --embed-metadata --restrict-filenames --output "$output" "$1"
