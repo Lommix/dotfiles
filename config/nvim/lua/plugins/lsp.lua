@@ -180,6 +180,8 @@ return {
 				},
 			}))
 
+            lsp_config.gdscript.setup({});
+
 			mason.setup({})
 			mason_lspconfig.setup({})
 			vim.lsp.inlay_hint.enable(false)

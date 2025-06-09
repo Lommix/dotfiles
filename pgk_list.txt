@@ -12,3 +12,7 @@ ttf-font-awesome
 keepassxc
 thunderbird
 blueman
+mpd
+rmpc
+mpd
+rmpc
