@@ -11,7 +11,7 @@ fi
 input=$1
 name="prep_$(basename "$input")"
 
-bitrate="2M"
+bitrate="4M"
 
 if [ -n "$2" ]; then
 	bitrate=$2

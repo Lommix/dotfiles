@@ -85,9 +85,10 @@
         },
         "tooltip-format": "MPD (connected)",
         "tooltip-format-disconnected": "MPD (disconnected)",
-        "on-scroll-up": "rmpc prev",
-        "on-scroll-down": "rmpc next",
+        "on-scroll-up": "rmpc volume +5",
+        "on-scroll-down": "rmpc volume -5",
         "on-click": "rmpc togglepause",
+        "on-click-middle": "rmpc next"
     },
 	"wireplumber": {
 		"format": "{volume}% {icon}",

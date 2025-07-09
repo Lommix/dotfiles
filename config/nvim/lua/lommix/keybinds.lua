@@ -47,8 +47,7 @@ map("n", "<leader>sv", "<C-w>v")
 map("n", "<leader>se", "<C-w>=")
 map("n", "<leader>q", ":close<CR>")
 map("n", "<leader>o", function()
-	local client = vim.fn.input("Client:", "gemini")
-	vim.cmd("vsplit | terminal blitzdenk chat " .. client)
+	vim.cmd("vsplit | terminal blitzdenk")
 end)
 
 -- util

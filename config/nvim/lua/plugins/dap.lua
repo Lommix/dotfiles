@@ -10,7 +10,7 @@ return {
 			local dap, dapui = require("dap"), require("dapui")
 
 			vim.fn.sign_define("DapBreakpoint", { text = "🟥", texthl = "", linehl = "", numhl = "" })
-			vim.fn.sign_define("DapStopped", { text = "⭐️", texthl = "", linehl = "", numhl = "" })
+			vim.fn.sign_define("DapStopped", { text = "▶️", texthl = "", linehl = "", numhl = "" })
 
 			dap.listeners.after.event_initialized["dapui_config"] = function()
 				dapui.open()
@@ -104,6 +104,12 @@ return {
 			-- }
 		end,
 		keys = {
+			{
+				"<F1>",
+				function()
+					require("dapui").eval()
+				end,
+			},
 			{ "<F4>", ":DapToggleBreakpoint<CR>" },
 			{ "<F5>", ":DapContinue<CR>" },
 			{ "<F6>", ":DapStepOver<CR>" },

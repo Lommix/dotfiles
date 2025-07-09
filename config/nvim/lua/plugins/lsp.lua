@@ -68,15 +68,15 @@ return {
 
 			vim.diagnostic.config(config)
 
-			lsp_config.rust_analyzer.setup(vim.tbl_extend("force", handler_opts, {
-				settings = {
-					["rust-analyzer"] = {
-						diagnostics = {
-							enable = false,
-						},
-					},
-				},
-			}))
+			-- lsp_config.rust_analyzer.setup(vim.tbl_extend("force", handler_opts, {
+			-- 	settings = {
+			-- 		["rust-analyzer"] = {
+			-- 			diagnostics = {
+			-- 				enable = false,
+			-- 			},
+			-- 		},
+			-- 	},
+			-- }))
 
 			lsp_config.lemminx.setup(vim.tbl_extend("force", handler_opts, {
 				filetypes = { "xml", "xsd", "xsl", "xslt", "svg" },
