@@ -15,11 +15,6 @@ return {
 			["<C-b>"] = { "scroll_documentation_up", "fallback" },
 			["<C-f>"] = { "scroll_documentation_down", "fallback" },
 			["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
-
-			-- ["<Tab>"] = { "snippet_forward", "fallback" },
-			-- ["<S-Tab>"] = { "snippet_backward", "fallback" },
-			-- ["<Up>"] = { "select_prev", "fallback" },
-			-- ["<Down>"] = { "select_next", "fallback" },
 		},
 		-- signature = { enabled = true },
 		snippets = { preset = "luasnip" },
@@ -35,6 +30,13 @@ return {
 			-- add vim-dadbod-completion to your completion providers
 			providers = {
 				dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
+				path = {
+					opts = {
+						get_cwd = function(_)
+							return vim.fn.getcwd()
+						end,
+					},
+				},
 			},
 		},
 		completion = {
