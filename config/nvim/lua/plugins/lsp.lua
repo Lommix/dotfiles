@@ -170,17 +170,21 @@ return {
 			}))
 
 			lsp_config.zls.setup(vim.tbl_extend("force", handler_opts, {
+				-- cmd = { "/hole/lommix/.local/bin/zls" },
 				settings = {
-					force_autofix = true,
-					enable_build_on_save = true,
-					highlight_global_var_declarations = true,
-					dangerous_comptime_experiments_do_not_enable = true,
-					inlay_hints_hide_redundant_param_names_last_token = true,
-					include_at_in_builtins = true,
+					zls = {
+						force_autofix = true,
+						include_at_in_builtins = true,
+					},
+					-- force_autofix = true,
+					-- enable_build_on_save = true,
+					-- highlight_global_var_declarations = true,
+					-- dangerous_comptime_experiments_do_not_enable = true,
+					-- inlay_hints_hide_redundant_param_names_last_token = true,
 				},
 			}))
 
-            lsp_config.gdscript.setup({});
+			lsp_config.gdscript.setup({})
 
 			mason.setup({})
 			mason_lspconfig.setup({})

@@ -1,20 +1,20 @@
 return {
 	"saghen/blink.cmp",
 	dependencies = { "rafamadriz/friendly-snippets", { "L3MON4D3/LuaSnip", version = "v2.*" } },
-	version = "*",
+	version = "1.3.*",
 	---@module 'blink.cmp'
 	---@type blink.cmp.Config
 	opts = {
 		keymap = {
-			preset = "none",
-			["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
-			["<C-e>"] = { "hide" },
-			["<C-y>"] = { "select_and_accept" },
-			["<C-p>"] = { "select_prev", "fallback" },
-			["<C-n>"] = { "select_next", "fallback" },
-			["<C-b>"] = { "scroll_documentation_up", "fallback" },
-			["<C-f>"] = { "scroll_documentation_down", "fallback" },
-			["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
+			-- preset = "none",
+			-- ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+			-- ["<C-e>"] = { "hide" },
+			-- ["<C-y>"] = { "select_and_accept" },
+			-- ["<C-p>"] = { "select_prev", "fallback" },
+			-- ["<C-n>"] = { "select_next", "fallback" },
+			-- ["<C-b>"] = { "scroll_documentation_up", "fallback" },
+			-- ["<C-f>"] = { "scroll_documentation_down", "fallback" },
+			-- ["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
 		},
 		-- signature = { enabled = true },
 		snippets = { preset = "luasnip" },
