@@ -108,10 +108,6 @@ return {
 				filetypes = { "html", "twig", "templ", "htmldjango", "javascript" },
 			}))
 
-			lsp_config.htmx.setup(vim.tbl_extend("force", handler_opts, {
-				filetypes = { "html", "templ", "twig" },
-			}))
-
 			local caps = handler_opts.capabilities
 			caps.textDocument.completion.completionItem.snippetSupport = true
 			lsp_config.cssls.setup(vim.tbl_extend("force", handler_opts, {
@@ -136,22 +132,22 @@ return {
 			lsp_config.intelephense.setup(vim.tbl_extend("force", handler_opts, {
 				settings = {
 					licenceKey = key,
-					intelephense = {
-						-- diagnostics = { enable = false },
-						telemetry = { enable = false },
-						-- codeLens = {
-						-- 	implementations = { enable = true },
-						-- },
+					-- intelephense = {
+					diagnostics = { enable = true },
+					telemetry = { enable = false },
+					codeLens = {
+						implementations = { enable = true },
 					},
+					-- },
 				},
 				init_options = {
 					licenceKey = key,
 					intelephense = {
-						-- diagnostics = { enable = false },
+						diagnostics = { enable = true },
 						telemetry = { enable = false },
-						-- codeLens = {
-						-- 	implementations = { enable = true },
-						-- },
+						codeLens = {
+							implementations = { enable = true },
+						},
 					},
 				},
 			}))
