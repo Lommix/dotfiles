@@ -26,8 +26,14 @@ end
 local plugin = s(
 	"plugin",
 	fmt(
-		[[
-pub fn plugin(world: *World) !void {{
+		[[const std = @import("std");
+const pre = @import("../pre.zig");
+const kn = pre.Knoedel;
+const m = pre.Math;
+
+
+
+pub fn plugin(world: *kn.App) !void {{
 	try world.systems.register({});
 }}
 ]],
