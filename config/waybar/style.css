@@ -3,12 +3,13 @@
     border-radius: 0;
     min-height: 0;
     font-family: Lilex Nerd Font Propo;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
 }
 
 window#waybar {
-    background-color: transparent;
+    /* background-color: transparent; */
+    background-color: #1e1e2e;
 }
 
 window#waybar.hidden {
@@ -16,17 +17,13 @@ window#waybar.hidden {
 }
 
 #workspaces {
-    /* background-color: transparent; */
-    border-radius: 4px;
+    border-radius: 2px;
     background-color: #181825;
-    padding: 3px;
-    margin: 4px 2px;
     font-size: 18px;
     font-weight: bolder;
 }
 
 #workspaces button {
-    margin: 1px;
     border-radius: 3px;
     padding: 0 10px;
     color: #cdd6f4;
@@ -38,18 +35,11 @@ window#waybar.hidden {
 }
 
 .modules-right {
-    border-radius: 4px;
-    background-color: #181825;
-    padding: 3px 5px;
-    margin: 4px 2px;
+    border-radius: 2px;
 }
 
 .modules-center {
     color: white;
-    background-color: #181825;
-    margin: 4px 0;
-    border-radius: 4px;
-    padding: 0 10px;
 }
 
 #workspaces button.urgent {
@@ -68,10 +58,8 @@ window#waybar.hidden {
 #mpd,
 #tray {
     border-radius: 4px;
-    margin: 6px 3px;
-    padding: 2px 12px;
-    background-color: #1e1e2e;
-    color: #181825;
+    margin: 0 1px;
+    padding: 0 12px;
 }
 
 #custom-vpn {
@@ -106,7 +94,7 @@ window#waybar.hidden {
 #battery {
     background-color: #f38ba8;
 }
-#mpd{
+#mpd {
     color: white;
 }
 
@@ -161,7 +149,7 @@ window#waybar.hidden {
 }
 
 #clock {
-    background-color: #181825;
+    /* background-color: #181825; */
     color: white;
 }
 
