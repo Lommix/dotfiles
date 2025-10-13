@@ -28,9 +28,9 @@ o.mouse = a
 o.cursorline = true
 o.wildmenu = true
 o.foldnestmax = 1
-o.foldmethod = "expr"
+o.foldmethod = "syntax"
 o.syntax = "on"
-o.foldexpr = "nvim_treesitter#foldexpr()"
+-- o.foldexpr = "nvim_treesitter#foldexpr()"
 o.makeprg = "make"
 
 o.wildmode = "longest:full,full"

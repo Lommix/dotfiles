@@ -105,7 +105,7 @@ return {
 			}))
 
 			lsp_config.html.setup(vim.tbl_extend("force", handler_opts, {
-				filetypes = { "html", "twig", "templ", "htmldjango", "javascript" },
+				filetypes = { "html", "twig", "templ" },
 			}))
 
 			local caps = handler_opts.capabilities
@@ -181,6 +181,7 @@ return {
 			}))
 
 			lsp_config.gdscript.setup({})
+			lsp_config.ts_ls.setup({})
 
 			mason.setup({})
 			mason_lspconfig.setup({})

@@ -9,10 +9,10 @@ vim.api.nvim_create_autocmd("BufRead", {
 })
 
 -- auto center cursor
--- vim.api.nvim_create_autocmd("CursorMoved", {
--- 	command = "normal! zz",
--- 	group = group,
--- })
+vim.api.nvim_create_autocmd("CursorMoved", {
+	command = "normal! zz",
+	group = group,
+})
 
 -- auto trim whitespace
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
@@ -108,6 +108,11 @@ vim.api.nvim_create_autocmd("TermOpen", {
 -- })
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 	pattern = { "*.typ" },
+	command = "setfiletype typst <CR> lua  require'lspconfig'.tinymist.setup{}",
+})
+
+vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+	pattern = { "*.js" },
 	command = "setfiletype typst <CR> lua  require'lspconfig'.tinymist.setup{}",
 })
 
