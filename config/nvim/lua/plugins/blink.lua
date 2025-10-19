@@ -43,7 +43,7 @@ return {
 		completion = {
 			menu = {
 				auto_show = true,
-				auto_show_delay_ms = 500,
+				auto_show_delay_ms = 0,
 			},
 			accept = { auto_brackets = { enabled = false } },
 			ghost_text = {

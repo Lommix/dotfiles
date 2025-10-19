@@ -81,14 +81,14 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 	group = group,
 })
 
-vim.api.nvim_create_autocmd({ "BufEnter" }, {
-	pattern = { "*.png", "*.jpg", "*.jpeg" },
-	callback = function()
-		vim.fn.system("feh --scale-down" .. vim.fn.fnameescape(vim.api.nvim_buf_get_name(0)) .. " &")
-		vim.cmd("bdelete")
-	end,
-	group = group,
-})
+-- vim.api.nvim_create_autocmd({ "BufEnter" }, {
+-- 	pattern = { "*.png", "*.jpg", "*.jpeg" },
+-- 	callback = function()
+-- 		vim.fn.system("feh --scale-down" .. vim.fn.fnameescape(vim.api.nvim_buf_get_name(0)) .. " &")
+-- 		vim.cmd("bdelete")
+-- 	end,
+-- 	group = group,
+-- })
 
 vim.api.nvim_create_autocmd("TermOpen", {
 	group = group,
@@ -106,15 +106,15 @@ vim.api.nvim_create_autocmd("TermOpen", {
 -- 	end,
 -- 	group = group,
 -- })
-vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-	pattern = { "*.typ" },
-	command = "setfiletype typst <CR> lua  require'lspconfig'.tinymist.setup{}",
-})
-
-vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-	pattern = { "*.js" },
-	command = "setfiletype typst <CR> lua  require'lspconfig'.tinymist.setup{}",
-})
+-- vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+-- 	pattern = { "*.typ" },
+-- 	command = "setfiletype typst <CR> lua  require'lspconfig'.tinymist.setup{}",
+-- })
+--
+-- vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+-- 	pattern = { "*.js" },
+-- 	command = "setfiletype typst <CR> lua  require'lspconfig'.tinymist.setup{}",
+-- })
 
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	pattern = { "*.typ" },

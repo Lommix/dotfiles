@@ -44,7 +44,7 @@ return {
 
 			local config = {
 				virtual_lines = false,
-				virtual_text = false,
+				virtual_text = true,
 				-- virtual_text = {
 				-- 	prefix = icons.ui.Gear,
 				-- 	severity = vim.diagnostic.severity.ERROR,
@@ -78,46 +78,64 @@ return {
 			-- 	},
 			-- }))
 
-			lsp_config.lemminx.setup(vim.tbl_extend("force", handler_opts, {
-				filetypes = { "xml", "xsd", "xsl", "xslt", "svg" },
-				single_file_support = true,
-				settings = {
-					xml = {
-						trace = {
-							server = "verbose",
-						},
-						logs = {
-							client = true,
-						},
-						format = {
-							splitAttributes = "alignWithFirstAttr",
-							joinContentLines = true,
-							preservedNewlines = 1,
-							insertSpaces = true,
-							tabSize = 4,
-						},
-					},
-				},
-			}))
+			-- lsp_config.lemminx.setup(vim.tbl_extend("force", handler_opts, {
+			-- 	filetypes = { "xml", "xsd", "xsl", "xslt", "svg" },
+			-- 	single_file_support = true,
+			-- 	settings = {
+			-- 		xml = {
+			-- 			trace = {
+			-- 				server = "verbose",
+			-- 			},
+			-- 			logs = {
+			-- 				client = true,
+			-- 			},
+			-- 			format = {
+			-- 				splitAttributes = "alignWithFirstAttr",
+			-- 				joinContentLines = true,
+			-- 				preservedNewlines = 1,
+			-- 				insertSpaces = true,
+			-- 				tabSize = 4,
+			-- 			},
+			-- 		},
+			-- 	},
+			-- }))
 
-			lsp_config.wgsl_analyzer.setup(vim.tbl_extend("force", handler_opts, {
+			vim.lsp.config("wgsl_analyzer", {
 				filetypes = { "wgsl" },
-			}))
+			})
+			vim.lsp.enable("wgsl_analyzer")
 
-			lsp_config.html.setup(vim.tbl_extend("force", handler_opts, {
+			vim.lsp.config("html", {
 				filetypes = { "html", "twig", "templ" },
-			}))
+			})
+			vim.lsp.enable("html")
+
+			-- lsp_config.html.setup(vim.tbl_extend("force", handler_opts, {
+			-- 	filetypes = { "html", "twig", "templ" },
+			-- }))
 
 			local caps = handler_opts.capabilities
 			caps.textDocument.completion.completionItem.snippetSupport = true
-			lsp_config.cssls.setup(vim.tbl_extend("force", handler_opts, {
+
+			vim.lsp.config("cssls", {
 				filetypes = { "css", "scss", "less", "html" },
 				capabilities = caps,
-			}))
-
-			lsp_config.emmet_ls.setup({
-				filetypes = { "twig", "templ", "htmldjango", "smarty", "markdown" },
 			})
+			vim.lsp.enable("cssls")
+
+			-- lsp_config.cssls.setup(vim.tbl_extend("force", handler_opts, {
+			-- 	filetypes = { "css", "scss", "less", "html" },
+			-- 	capabilities = caps,
+			-- }))
+
+			vim.lsp.config("emmet_ls", {
+				filetypes = { "twig", "html", "templ", "htmldjango", "smarty", "markdown" },
+			})
+			vim.lsp.enable("emmet_ls")
+
+			-- lsp_config.emmet_ls.setup({
+			-- 	filetypes = { "twig", "templ", "htmldjango", "smarty", "markdown" },
+			-- })
 
 			local get_intelephense_license = function()
 				local path = os.getenv("HOME") .. "/intelephense/licence.txt"
@@ -129,7 +147,7 @@ return {
 
 			local key = get_intelephense_license()
 
-			lsp_config.intelephense.setup(vim.tbl_extend("force", handler_opts, {
+			vim.lsp.config("intelephense", {
 				settings = {
 					licenceKey = key,
 					-- intelephense = {
@@ -150,9 +168,10 @@ return {
 						},
 					},
 				},
-			}))
+			})
+			vim.lsp.enable("intelephense")
 
-			lsp_config.lua_ls.setup(vim.tbl_extend("force", handler_opts, {
+			vim.lsp.config("lua_ls", {
 				settings = {
 					Lua = {
 						completion = {
@@ -163,9 +182,10 @@ return {
 						},
 					},
 				},
-			}))
+			})
+			vim.lsp.enable("lua_ls")
 
-			lsp_config.zls.setup(vim.tbl_extend("force", handler_opts, {
+			vim.lsp.config("zls", {
 				-- cmd = { "/hole/lommix/.local/bin/zls" },
 				settings = {
 					zls = {
@@ -178,13 +198,17 @@ return {
 					-- dangerous_comptime_experiments_do_not_enable = true,
 					-- inlay_hints_hide_redundant_param_names_last_token = true,
 				},
-			}))
+			})
+			vim.lsp.enable("zls")
 
-			lsp_config.gdscript.setup({})
-			lsp_config.ts_ls.setup({})
+			vim.lsp.config("gdscript", {})
+			vim.lsp.enable("gdscript")
+			vim.lsp.config("ts_ls", {})
+			vim.lsp.enable("ts_ls")
 
 			mason.setup({})
 			mason_lspconfig.setup({})
+
 			vim.lsp.inlay_hint.enable(false)
 
 			-- vim.lsp.setup_handlers(handlers)
