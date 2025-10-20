@@ -61,10 +61,9 @@
     },
 	"custom/vpn": {
         "format": "{}",
-        "exec": "~/.config/waybar/vpn-status.sh",
+        "exec": "~/.config/waybar/wg-status.sh",
         "interval": 3,
-        "return-type": "json",
-        "on-click": "~/.config/waybar/vpn-chooser.sh"
+        "return-type": "json"
     },
 	"custom/weather": {
 		"exec": "curl 'https://wttr.in/frankfurt?format=%c+%t%20(%hH)%20-+%w'",
