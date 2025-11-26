@@ -1,25 +1,22 @@
 * {
     font-family: Lilex Nerd Font Propo;
+    font-size: 14px;
 }
 
 window {
     background-color: transparent;
+    border-bottom: 1px solid white;
 }
 
 #workspaces button {
-    border-radius: 3px;
     padding: 0 10px;
     color: #cdd6f4;
-    font-size: 16px;
     font-weight: 600;
+    border-radius: 0;
 }
 #workspaces button.active {
     color: #1e1e2e;
     background-color: #cdd6f4;
-}
-
-.modules-right {
-    border-radius: 2px;
 }
 
 .modules-center {
@@ -41,8 +38,7 @@ window {
 #cpu,
 #mpd,
 #tray {
-    border-radius: 4px;
-    margin: 0 1px;
+    margin: 4px 0;
     padding: 0 12px;
     font-weight: 600;
 }
@@ -134,7 +130,6 @@ window {
 }
 
 tooltip {
-    border-radius: 8px;
     /* padding: 15px; */
     background-color: #131822;
 }

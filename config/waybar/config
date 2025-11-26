@@ -1,6 +1,7 @@
 {
     "layer": "top", // Waybar at top layer
     "position": "top", // Waybar at the bottom of your screen
+    "height": 32,
     "modules-left": [
         "hyprland/workspaces",
         "mpd",
