@@ -142,18 +142,29 @@ end)
 -- general purpose build
 map("n", "<leader>b", function()
 	vim.cmd("make build")
+	if #vim.fn.getqflist() > 0 then
+		vim.cmd("copen")
+	end
 end)
 ---------------------------------------------------------------------------------
 -- general purpose run
 map("n", "<leader>r", function()
+	-- vim.cmd("make run")
+	-- if #vim.fn.getqflist() > 0 then
+	-- 	vim.cmd("copen")
+	-- end
 	-- run_shell_qfix("run.sh")
 	run_split("make run")
 end)
 ---------------------------------------------------------------------------------
 -- general purpose test
 map("n", "<leader>p", function()
-	-- run_shell_qfix("test.sh")
 	vim.cmd("make test")
+	if #vim.fn.getqflist() > 0 then
+		vim.cmd("copen")
+	end
+	-- run_shell_qfix("test.sh")
+	-- vim.cmd("make test")
 end)
 
 -- find path
