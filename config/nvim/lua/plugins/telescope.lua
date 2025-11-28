@@ -27,6 +27,11 @@ return {
 			})
 
 			require("telescope").setup({
+				pickers = {
+					find_files = {
+						previewer = false,
+					},
+				},
 				fzf = {
 					fuzzy = false, -- false will only do exact matching
 					override_generic_sorter = false, -- override the generic sorter

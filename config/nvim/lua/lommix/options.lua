@@ -36,6 +36,7 @@ o.makeprg = "make"
 o.wildmode = "longest:full,full"
 o.listchars = "trail:·,nbsp:◇,tab:→ ,extends:▸,precedes:◂"
 o.clipboard = "unnamedplus"
+o.signcolumn = "auto:1-2"
 o.swapfile = false
 o.undofile = true
 o.nuw = 6
