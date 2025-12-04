@@ -20,7 +20,7 @@ o.expandtab = true --
 o.wrap = false
 o.hlsearch = false
 o.shiftwidth = 4
-o.autoindent = true
+o.autoindent = false
 o.smartindent = true
 o.number = true
 o.relativenumber = true
@@ -48,3 +48,4 @@ opt.list = true
 opt.listchars:append("eol:↴")
 -- opt.iskeyword:remove('-')
 -- opt.iskeyword:remove('_')
+
