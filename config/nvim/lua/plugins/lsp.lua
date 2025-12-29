@@ -49,9 +49,10 @@ return {
 				-- 	prefix = icons.ui.Gear,
 				-- 	severity = vim.diagnostic.severity.ERROR,
 				-- },
-				signs = {
-					active = signs,
-				},
+				-- signs = {
+				-- 	active = signs,
+				-- },
+                signs = false,
 				update_in_insert = true,
 				underline = true,
 				severity_sort = true,

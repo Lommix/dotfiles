@@ -24,7 +24,7 @@ return {
 		},
 		fuzzy = { implementation = "lua" },
 		sources = {
-			default = { "lsp", "path", "snippets", "buffer" },
+			default = { "path", "snippets", "buffer" },
 			per_filetype = {
 				sql = { "snippets", "dadbod", "buffer" },
 			},

@@ -15,6 +15,7 @@ map("n", "<A-k>", "<C-w>k")
 map("n", "<A-l>", "<C-w>l")
 
 -- remaps
+map("n", "<Tab>", "<Nop>") -- disable jump forward in jump list
 map("v", "J", ":m '>+1<CR>gv=gv")
 map("v", "K", ":m '<-2<CR>gv=gv")
 map("n", "n", "nzzzv")
@@ -171,4 +172,37 @@ end)
 map("n", "<leader>fp", function()
 	local pwd = vim.fn.expand("%r")
 	print(pwd)
+end)
+
+-- toggle blink LSP source
+map("n", "<leader>..", function()
+	local blink = require("blink.cmp")
+	local config = require("blink.cmp.config")
+
+	local current_sources = config.sources.default
+	local has_lsp = false
+	local lsp_index = nil
+
+	-- Check if LSP is in the sources
+	for i, source in ipairs(current_sources) do
+		if source == "lsp" then
+			has_lsp = true
+			lsp_index = i
+			break
+		end
+	end
+
+	if has_lsp then
+		-- Remove LSP
+		table.remove(current_sources, lsp_index)
+		print("LSP completion disabled")
+	else
+		-- Add LSP back at the beginning
+		table.insert(current_sources, 1, "lsp")
+		print("LSP completion enabled")
+	end
+
+	-- Update the configuration
+	config.sources.default = current_sources
+	blink.reload()
 end)
