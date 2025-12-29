@@ -18,6 +18,7 @@
 		"cpu",
 		"memory",
 		"battery",
+		"custom/bluetooth-battery",
 		"tray",
 	],
     "hyprland/workspaces": {
@@ -111,4 +112,11 @@
         },
         "on-click": "pavucontrol"
     },
+	"custom/bluetooth-battery": {
+		"format": "{}",
+		"exec": "~/.config/waybar/bluetooth-battery.sh",
+		"interval": 30,
+		"return-type": "json",
+		"on-click": "blueman-manager"
+	},
 }

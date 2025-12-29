@@ -37,7 +37,8 @@ window {
 #clock,
 #cpu,
 #mpd,
-#tray {
+#tray,
+#custom-bluetooth-battery {
     margin: 4px 0;
     padding: 0 12px;
     font-weight: 600;
@@ -96,6 +97,11 @@ window {
 
 #battery.charging {
     background-color: #a6e3a1;
+    color: #181825;
+}
+
+#custom-bluetooth-battery {
+    background-color: #89b4fa;
     color: #181825;
 }
 
