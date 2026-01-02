@@ -48,4 +48,3 @@ opt.list = true
 opt.listchars:append("eol:↴")
 -- opt.iskeyword:remove('-')
 -- opt.iskeyword:remove('_')
-
