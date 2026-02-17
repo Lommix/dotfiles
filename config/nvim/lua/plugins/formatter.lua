@@ -57,9 +57,9 @@ return {
 				json = {
 					require("formatter.filetypes.json").jq,
 				},
-				python = {
-					require("formatter.filetypes.python").black,
-				},
+				-- python = {
+				-- 	require("formatter.filetypes.python").
+				-- },
 				javascript = {
 					require("formatter.filetypes.javascript").prettier,
 				},

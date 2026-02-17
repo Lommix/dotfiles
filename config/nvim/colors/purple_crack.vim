@@ -1,6 +1,6 @@
 " Vim color file
 " Author: Lorenz Mielke
-" Colorscheme Name: lommix_ghost
+" Colorscheme Name: purple_crack
 
 set background=dark
 highlight clear
@@ -10,12 +10,13 @@ if exists('syntax_on')
 endif
 
 set t_Co=256
-let g:colors_name = 'lommix_ghost'
+let g:colors_name = 'purple_crack'
 
 " Color palette
 " Interface
 let s:accent = '#080808'
-let s:bg = 'NONE'
+" let s:bg = 'NONE'
+let s:bg = '#2E2440'
 let s:darker = 'NONE'
 let s:darkest = '#000000'
 let s:fold = 'NONE'
@@ -24,26 +25,26 @@ let s:lightest = '#ffffff'
 let s:lineNumber = '#FFFFFF'
 let s:menu = '#321212'
 let s:splits = '#321212'
-let s:visual = '#5a3512'
+let s:visual = '#6a4512'
 
 " Syntax highlight colors
-let s:arg = '#d7af87'
+let s:arg = '#dFaf47'
 let s:dir = '#d7af87'
-let s:exec = '#2ec27e'
+let s:exec = '#2ed27e'
 let s:file = '#cccccc'
 let s:id = '#ffffff'
-let s:id2 = '#7cdce7'
+let s:id2 = '#5caeff'
 let s:int = '#d7d7ff'
-let s:muted = '#999972'
+let s:muted = '#898972'
 let s:other = '#cfaf00'
 let s:prop = '#afafaf'
-let s:str = '#87afd7'
+let s:str = '#57afd7'
 let s:str2 = '#7cdce7'
 let s:title = '#eeeeee'
-let s:type = '#afdfaf'
+let s:type = '#ba55ba'
 let s:var = '#cccccc'
-let s:warn = '#bd6389'
-let s:word = '#bd6389'
+let s:warn = '#ad6389'
+let s:word = '#ad6389'
 
 " Text format
 let s:b = 'bold'
@@ -75,13 +76,13 @@ function s:link(scope, target)
 endfunction
 
 " Apply colors
-call s:create('Boolean', 141, 'NONE', 'NONE', 'NONE', s:int)
+call s:create('Boolean', 141, 'NONE', s:b, 'NONE', s:int)
 call s:create('Character', 141, 'NONE', 'NONE', 'NONE', s:int)
 call s:create('ColorColumn' , 'NONE', 237, 'NONE', s:accent, 'NONE')
 call s:create('Comment', 242, 'NONE', s:i, 'NONE', s:muted)
 call s:create('Conceal', 204, 'NONE', s:uc, 'NONE', s:other)
 call s:create('Conditional', 204, 'NONE', s:i, 'NONE', s:word)
-call s:create('Constant', 'NONE', 'NONE', 'NONE', 'NONE', s:int)
+call s:create('Constant', 'NONE', 'NONE', s:b, 'NONE', s:int)
 call s:create('Cursor' , 231, 231, 'NONE', s:lightest, s:lightest)
 call s:create('CursorColumn' , 'NONE', 237, 'NONE', s:accent, 'NONE')
 call s:create('CursorLine' , 'NONE', 237, 'NONE', s:darker, 'NONE')
@@ -125,7 +126,7 @@ call s:create('TabLineSel', 231, 204, s:b, s:bg, s:arg)
 call s:create('Tag', 204, 'NONE', s:b, 'NONE', s:word)
 call s:create('Title', 255, 'NONE', s:b, 'NONE', s:other)
 call s:create('Todo', 11, 'NONE', 'NONE', s:other, 'NONE')
-call s:create('Type', 81, 'NONE', s:i, 'NONE', s:type)
+call s:create('Type', 81, 'NONE', s:i, s:b, s:type)
 call s:create('Underlined', 'NONE', 'NONE', s:u, 'NONE', 'NONE')
 call s:create('VertSplit' , 241, 241, 'NONE', s:bg, s:splits)
 call s:create('Visual' , 'NONE', 239, 'NONE', s:visual, 'NONE')

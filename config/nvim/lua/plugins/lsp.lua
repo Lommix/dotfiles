@@ -52,7 +52,7 @@ return {
 				-- signs = {
 				-- 	active = signs,
 				-- },
-                signs = false,
+				signs = false,
 				update_in_insert = true,
 				underline = true,
 				severity_sort = true,
@@ -216,23 +216,7 @@ return {
 			-- mason_lspconfig.setup_handlers(handlers)
 		end,
 		dependencies = {
-			{
-				"neovim/nvim-lspconfig",
-				dependencies = {
-					{
-						"folke/neodev.nvim",
-						config = function()
-							require("neodev").setup({
-								override = function(_, library)
-									library.enable = true
-									library.plugins = true
-								end,
-							})
-						end,
-					},
-				},
-				config = function() end,
-			},
+			"neovim/nvim-lspconfig",
 			{
 				"nvim-lua/lsp-status.nvim",
 				config = function()
