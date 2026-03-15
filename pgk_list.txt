@@ -11,6 +11,10 @@ firefox-developer-edition
 ttf-font-awesome
 keepassxc
 thunderbird
+hyprland
+hypridle
+hyprlock
+hyprpaper
 blueman
 mpd
 rmpc
