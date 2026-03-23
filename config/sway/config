@@ -203,5 +203,5 @@ bar {
 focus_on_window_activation focus
 focus_follows_mouse no
 
-gaps inner 10
-gaps outer 8
+gaps inner 4
+gaps outer 6

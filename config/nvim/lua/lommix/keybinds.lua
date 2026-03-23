@@ -14,7 +14,7 @@ map("n", "<A-j>", "<C-w>j")
 map("n", "<A-k>", "<C-w>k")
 map("n", "<A-l>", "<C-w>l")
 -- remaps
-map("n", "<Tab>", "<Nop>") -- disable jump forward in jump list
+-- map("n", "<Tab>", "<Nop>") -- disable jump forward in jump list
 map("v", "J", ":m '>+1<CR>gv=gv")
 map("v", "K", ":m '<-2<CR>gv=gv")
 map("n", "n", "nzzzv")

@@ -6,11 +6,7 @@ return {
 	{
 		"kylechui/nvim-surround",
 		config = function()
-			require("nvim-surround").setup({
-				keymaps = {
-					["C-q"] = "actions.close",
-				},
-			})
+			require("nvim-surround").setup({ })
 		end,
 	},
 	{
