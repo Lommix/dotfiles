@@ -80,8 +80,8 @@ return {
 				typst = {
 					function()
 						return {
-							exe = "typstfmt",
-							args = { "--config-path", "~/typstfmt.toml" },
+							exe = "typstyle",
+							args = { "-i"},
 						}
 					end,
 				},
