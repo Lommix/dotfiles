@@ -26,6 +26,7 @@ require("lazy").setup("plugins", {
 })
 
 -- custom
+require("lommix.completion")
 require("lommix.keybinds")
 require("lommix.aseprite")
 require("lommix.notes")

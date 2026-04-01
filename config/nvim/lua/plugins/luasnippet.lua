@@ -36,13 +36,6 @@ return {
 				end
 			end, { silent = true })
 
-			--jump back
-			vim.keymap.set({ "i", "s" }, "<c-k>", function()
-				if ls.jumpable(-1) then
-					ls.jump(-1)
-				end
-			end, { silent = true })
-
 			-- choice
 			vim.keymap.set({ "i", "s" }, "<c-l>", function()
 				if ls.choice_active() then

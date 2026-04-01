@@ -173,35 +173,15 @@ map("n", "<leader>fp", function()
 	print(pwd)
 end)
 
--- toggle blink LSP source
+-- toggle LSP completion
+local lsp_completion_enabled = true
 map("n", "<leader>..", function()
-	local blink = require("blink.cmp")
-	local config = require("blink.cmp.config")
-
-	local current_sources = config.sources.default
-	local has_lsp = false
-	local lsp_index = nil
-
-	-- Check if LSP is in the sources
-	for i, source in ipairs(current_sources) do
-		if source == "lsp" then
-			has_lsp = true
-			lsp_index = i
-			break
+	lsp_completion_enabled = not lsp_completion_enabled
+	local clients = vim.lsp.get_clients({ bufnr = 0 })
+	for _, client in ipairs(clients) do
+		if client:supports_method("textDocument/completion") then
+			vim.lsp.completion.enable(lsp_completion_enabled, client.id, 0)
 		end
 	end
-
-	if has_lsp then
-		-- Remove LSP
-		table.remove(current_sources, lsp_index)
-		print("LSP completion disabled")
-	else
-		-- Add LSP back at the beginning
-		table.insert(current_sources, 1, "lsp")
-		print("LSP completion enabled")
-	end
-
-	-- Update the configuration
-	config.sources.default = current_sources
-	blink.reload()
+	print(lsp_completion_enabled and "LSP completion enabled" or "LSP completion disabled")
 end)
