@@ -190,8 +190,8 @@ return {
 				-- cmd = { "/hole/lommix/.local/bin/zls" },
 				settings = {
 					zls = {
-						-- force_autofix = true,
-						-- include_at_in_builtins = true,
+						force_autofix = true,
+						include_at_in_builtins = true,
 					},
 					-- force_autofix = true,
 					-- enable_build_on_save = true,

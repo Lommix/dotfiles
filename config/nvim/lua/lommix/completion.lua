@@ -59,6 +59,20 @@ local kind_hl_map = {
 	[25] = "Type",          -- TypeParameter
 }
 
+--- Clean null bytes and excessive whitespace from LSP completion text
+local function clean_lsp_text(s, max_len)
+	if not s or s == "" then
+		return nil
+	end
+	s = s:gsub("%z", " ")
+	s = s:gsub("%s+", " ")
+	s = s:match("^%s*(.-)%s*$") or s
+	if max_len and #s > max_len then
+		s = s:sub(1, max_len - 3) .. "..."
+	end
+	return s
+end
+
 -- Route LSP snippet expansion through LuaSnip
 vim.snippet.expand = function(body)
 	require("luasnip").lsp_expand(body)
@@ -72,11 +86,27 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			vim.lsp.completion.enable(true, client.id, args.buf, {
 				autotrigger = true,
 				convert = function(item)
+					local result = {}
+
+					local label = item.label or ""
+					local label_detail = vim.tbl_get(item, "labelDetails", "detail") or ""
+					local abbr = clean_lsp_text(label .. label_detail, 80)
+					if abbr then
+						result.abbr = abbr
+					end
+
+					local menu_text = vim.tbl_get(item, "labelDetails", "description") or item.detail or ""
+					local menu = clean_lsp_text(menu_text, 50)
+					if menu then
+						result.menu = menu
+					end
+
 					local hl = kind_hl_map[item.kind]
 					if hl then
-						return { kind_hlgroup = hl }
+						result.kind_hlgroup = hl
 					end
-					return {}
+
+					return result
 				end,
 			})
 		end
