@@ -48,12 +48,5 @@ curl -s -X POST \
 return {
 	curl_get,
 	curl_post,
-	s("uuid", partial(Uuid,32)),
-	s("time", partial(vim.fn.strftime, "%H:%M:%S")),
-	s("date", partial(vim.fn.strftime, "%Y-%m-%d")),
-	s("shrug", { ls.t("¯\\_(ツ)_/¯") }),
-	s("angry", { ls.t("(╯°□°）╯︵ ┻━┻") }),
-	s("happy", { ls.t("ヽ(´▽`)/") }),
-	s("sad", { ls.t("(－‸ლ)") }),
-	s("confused", { ls.t("(｡･ω･｡)") }),
+	s("uuid", partial(Uuid, 32)),
 }
