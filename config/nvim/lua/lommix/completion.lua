@@ -31,6 +31,34 @@ vim.lsp.protocol.CompletionItemKind = {
 	" TypeParam",     -- 25: type parameter/generic
 }
 
+local kind_hl_map = {
+	[1]  = "String",        -- Text
+	[2]  = "Function",      -- Method
+	[3]  = "Function",      -- Function
+	[4]  = "TSConstructor",  -- Constructor
+	[5]  = "Label",         -- Field
+	[6]  = "@variable",     -- Variable
+	[7]  = "Type",          -- Class
+	[8]  = "Type",          -- Interface
+	[9]  = "PreProc",       -- Module
+	[10] = "Label",         -- Property
+	[11] = "Number",        -- Unit
+	[12] = "Number",        -- Value
+	[13] = "Type",          -- Enum
+	[14] = "Keyword",       -- Keyword
+	[15] = "Special",       -- Snippet
+	[16] = nil,             -- Color (preserve built-in)
+	[17] = "Directory",     -- File
+	[18] = "StorageClass",  -- Reference
+	[19] = "Directory",     -- Folder
+	[20] = "Constant",      -- EnumMember
+	[21] = "Constant",      -- Constant
+	[22] = "Type",          -- Struct
+	[23] = "Special",       -- Event
+	[24] = "Operator",      -- Operator
+	[25] = "Type",          -- TypeParameter
+}
+
 -- Route LSP snippet expansion through LuaSnip
 vim.snippet.expand = function(body)
 	require("luasnip").lsp_expand(body)
@@ -41,7 +69,16 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
 		local client = vim.lsp.get_client_by_id(args.data.client_id)
 		if client and client:supports_method("textDocument/completion") then
-			vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
+			vim.lsp.completion.enable(true, client.id, args.buf, {
+				autotrigger = true,
+				convert = function(item)
+					local hl = kind_hl_map[item.kind]
+					if hl then
+						return { kind_hlgroup = hl }
+					end
+					return {}
+				end,
+			})
 		end
 	end,
 })
@@ -83,10 +120,6 @@ vim.api.nvim_create_autocmd("TextChangedI", {
 	end,
 })
 
--- <C-space>: force show completion
 vim.keymap.set("i", "<C-space>", function()
 	vim.lsp.completion.get()
 end)
-
--- <C-y>: accept (already native, but ensure it works)
--- <C-p>/<C-n>: prev/next (already native)
