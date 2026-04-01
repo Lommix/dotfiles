@@ -9,12 +9,6 @@ return {
 			require("nvim-surround").setup({ })
 		end,
 	},
-	{
-		"numToStr/Comment.nvim",
-		config = function()
-			require("Comment").setup()
-		end,
-	},
 	-- {
 	-- 	"folke/ts-comments.nvim",
 	-- 	opts = {},

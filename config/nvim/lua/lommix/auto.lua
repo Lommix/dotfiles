@@ -67,17 +67,15 @@ vim.api.nvim_create_autocmd("BufEnter", {
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "*.twig",
 	callback = function()
-		local ft = require("Comment.ft")
-		ft.set("html", "{#%s#}")
+		vim.bo.commentstring = "{#%s#}"
 	end,
 })
 
--- fix twig auto commenting
+-- fix html auto commenting
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "*.html",
 	callback = function()
-		local ft = require("Comment.ft")
-		ft.set("html", "<!-- %s -->")
+		vim.bo.commentstring = "<!-- %s -->"
 	end,
 })
 
