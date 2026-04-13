@@ -192,12 +192,9 @@ return {
 					zls = {
 						force_autofix = true,
 						include_at_in_builtins = true,
+						enable_build_on_save = true,
+						build_on_save_step = "check",
 					},
-					-- force_autofix = true,
-					-- enable_build_on_save = true,
-					-- highlight_global_var_declarations = true,
-					-- dangerous_comptime_experiments_do_not_enable = true,
-					-- inlay_hints_hide_redundant_param_names_last_token = true,
 				},
 			})
 			vim.lsp.enable("zls")

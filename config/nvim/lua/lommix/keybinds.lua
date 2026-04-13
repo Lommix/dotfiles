@@ -25,7 +25,20 @@ map("n", "N", "Nzzzv")
 -- quickfix
 map("n", "<C-g>", ":cprevious<CR>")
 map("n", "<C-h>", ":cnext<CR>")
-map("n", "<C-q>", ":copen<CR>")
+map("n", "<C-z>", function()
+	local qf_open = false
+	for _, win in ipairs(vim.fn.getwininfo()) do
+		if win.quickfix == 1 then
+			qf_open = true
+			break
+		end
+	end
+	if qf_open then
+		vim.cmd("cclose")
+	else
+		vim.cmd("copen")
+	end
+end)
 
 -- always global mark
 -- for i = 97, 122 do
@@ -47,7 +60,7 @@ map("n", "<leader>sv", "<C-w>v")
 map("n", "<leader>se", "<C-w>=")
 map("n", "<leader>q", ":close<CR>")
 map("n", "<leader>o", function()
-	vim.cmd("vsplit | terminal blitzdenk")
+	vim.cmd("vsplit | terminal blitzcloud")
 end)
 
 -- util
