@@ -19,7 +19,7 @@ load()
 -----------------------------------
 --- save on change
 vim.api.nvim_create_autocmd({ "ColorScheme" }, {
-	callback = function()
+	callback = function(ev)
 		local f, err = io.open(file_path, "w+")
 		if err ~= nil then
 			print(err)
@@ -30,7 +30,7 @@ vim.api.nvim_create_autocmd({ "ColorScheme" }, {
 			print(err)
 			return
 		end
-		f:write(vim.g.colors_name)
+		f:write(ev.match)
 		f:close()
 	end,
 })
