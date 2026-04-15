@@ -9,6 +9,17 @@ local servers = {
 	"sqlls",
 }
 
+vim.lsp.config("*", {
+	capabilities = {
+		textDocument = {
+			foldingRange = {
+				dynamicRegistration = false,
+				lineFoldingOnly = true,
+			},
+		},
+	},
+})
+
 return {
 	{
 		"williamboman/mason-lspconfig.nvim",
@@ -192,8 +203,6 @@ return {
 					zls = {
 						force_autofix = true,
 						include_at_in_builtins = true,
-						enable_build_on_save = true,
-						build_on_save_step = "check",
 					},
 				},
 			})
