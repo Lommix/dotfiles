@@ -245,6 +245,14 @@ vim.api.nvim_create_autocmd("TextChangedI", {
 	end,
 })
 
+-- <CR> never accepts completion; only <C-y> does. Close popup and insert newline.
+vim.keymap.set("i", "<CR>", function()
+	if vim.fn.pumvisible() == 1 then
+		return "<C-e><CR>"
+	end
+	return "<CR>"
+end, { expr = true })
+
 vim.keymap.set("i", "<C-space>", function()
 	if should_skip_completion() then
 		return

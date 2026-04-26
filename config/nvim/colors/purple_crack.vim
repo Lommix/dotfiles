@@ -12,21 +12,22 @@ endif
 set t_Co=256
 let g:colors_name = 'purple_crack'
 
+
 " Color palette
 " Interface
 let s:accent = '#080808'
 " let s:bg = 'NONE'
-let s:bg = '#2E2440'
+let s:bg = '#1E1120'
 let s:darker = 'NONE'
 let s:darkest = '#000000'
 let s:fold = 'NONE'
 let s:hover = '#5f5f5f'
 let s:lightest = '#ffffff'
 let s:lineNumber = '#FFFFFF'
-let s:menu = '#321212'
-let s:splits = '#321212'
-let s:visual = '#6a4512'
+let s:menu = '#1E1120'
+let s:splits = '#1E1120'
 
+let s:visual = '#6a4512'
 " Syntax highlight colors
 let s:arg = '#dFaf47'
 let s:dir = '#d7af87'
