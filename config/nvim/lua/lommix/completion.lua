@@ -2,6 +2,7 @@ vim.o.completeopt = "menuone,noinsert,popup"
 vim.o.pumheight = 12
 vim.o.pumblend = 0
 vim.o.pumborder = "rounded"
+vim.o.winborder = "rounded"
 
 vim.lsp.protocol.CompletionItemKind = {
 	" Text",          -- 1:  plain text
