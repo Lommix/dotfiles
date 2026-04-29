@@ -60,7 +60,7 @@ map("n", "<leader>sv", "<C-w>v")
 map("n", "<leader>se", "<C-w>=")
 map("n", "<leader>q", ":close<CR>")
 map("n", "<leader>o", function()
-	vim.cmd("vsplit | terminal blitzcloud")
+	vim.cmd("vsplit | terminal blitz")
 end)
 
 -- util

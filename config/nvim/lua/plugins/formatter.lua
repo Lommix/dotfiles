@@ -81,7 +81,7 @@ return {
 					function()
 						return {
 							exe = "typstyle",
-							args = { "-i"},
+							args = { "-i" },
 						}
 					end,
 				},

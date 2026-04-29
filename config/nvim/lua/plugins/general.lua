@@ -6,16 +6,9 @@ return {
 	{
 		"kylechui/nvim-surround",
 		config = function()
-			require("nvim-surround").setup({ })
+			require("nvim-surround").setup({})
 		end,
 	},
-	-- {
-	-- 	"folke/ts-comments.nvim",
-	-- 	opts = {},
-	-- 	event = "VeryLazy",
-	-- 	enabled = vim.fn.has("nvim-0.10.0") == 1,
-	-- },
-
 	{
 		"aznhe21/actions-preview.nvim",
 		config = function() end,
