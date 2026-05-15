@@ -118,6 +118,22 @@ local function get_prefix()
 	return prefix, col - #prefix + 1
 end
 
+local function get_completion_user_data(item)
+	local ud = item and item.user_data
+	if type(ud) == "table" then
+		return ud
+	end
+	if type(ud) ~= "string" or ud == "" then
+		return {}
+	end
+
+	local ok, decoded = pcall(vim.json.decode, ud)
+	if not ok or type(decoded) ~= "table" then
+		return {}
+	end
+	return decoded
+end
+
 -- Route LSP snippet expansion through LuaSnip
 vim.snippet.expand = function(body)
 	require("luasnip").lsp_expand(body)
@@ -162,13 +178,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
 vim.api.nvim_create_autocmd("CompleteDone", {
 	callback = function()
 		local item = vim.v.completed_item
-		if not item or not item.user_data then
+		if not item then
 			return
 		end
-		local ud = item.user_data
-		if type(ud) == "string" then
-			ud = vim.json.decode(ud) or {}
-		end
+		local ud = get_completion_user_data(item)
 		if not ud.luasnip then
 			return
 		end
@@ -198,14 +211,89 @@ vim.api.nvim_create_autocmd("CompleteDone", {
 	end,
 })
 
-local function is_path_trigger()
+local function get_path_context()
 	local col = vim.fn.col(".") - 1
 	if col == 0 then
+		return nil
+	end
+
+	local before_cursor = vim.fn.getline("."):sub(1, col)
+	local token_start, token = before_cursor:match("()([^%s\"'`]+)$")
+	if not token or not token:find("/", 1, true) then
+		return nil
+	end
+
+	local slash = token:match("^.*()/")
+	if not slash then
+		return nil
+	end
+
+	local dir = token:sub(1, slash)
+	local prefix = token:sub(slash + 1)
+	return {
+		dir = dir,
+		prefix = prefix,
+		start_col = token_start + slash,
+	}
+end
+
+local function complete_path(ctx)
+	local expanded_dir = vim.fn.expand(ctx.dir)
+	if expanded_dir == "" then
+		return
+	end
+
+	local ok, scanner = pcall(vim.uv.fs_scandir, expanded_dir)
+	if not ok or not scanner then
+		return
+	end
+
+	local items = {}
+	local prefix = ctx.prefix
+	local show_hidden = prefix:sub(1, 1) == "."
+
+	while true do
+		local next_ok, name, typ = pcall(vim.uv.fs_scandir_next, scanner)
+		if not next_ok then
+			return
+		end
+		if not name then
+			break
+		end
+		if (show_hidden or name:sub(1, 1) ~= ".") and name:find(prefix, 1, true) == 1 then
+			local is_dir = typ == "directory"
+			table.insert(items, {
+				word = is_dir and (name .. "/") or name,
+				abbr = name,
+				kind = is_dir and " Folder" or " File",
+				kind_hlgroup = "Directory",
+				menu = ctx.dir,
+				dup = 0,
+			})
+		end
+	end
+
+	if #items == 0 then
+		return
+	end
+
+	table.sort(items, function(a, b)
+		if a.kind ~= b.kind then
+			return a.kind == " Folder"
+		end
+		return a.word < b.word
+	end)
+	vim.fn.complete(ctx.start_col, items)
+end
+
+local function try_complete_path()
+	local ok_ctx, ctx = pcall(get_path_context)
+	if not ok_ctx or not ctx then
 		return false
 	end
-	local before_cursor = vim.fn.getline("."):sub(1, col)
-	return before_cursor:match("[%.~/]/?[%.~/]*/%S*$") ~= nil
-		or before_cursor:match("%S+/%S*$") ~= nil
+
+	pcall(complete_path, ctx)
+	return true
 end
 
 -- Auto-trigger completion only when typing word characters
@@ -222,12 +310,7 @@ vim.api.nvim_create_autocmd("TextChangedI", {
 			return
 		end
 
-		if is_path_trigger() then
-			vim.api.nvim_feedkeys(
-				vim.api.nvim_replace_termcodes("<C-x><C-f>", true, false, true),
-				"n",
-				false
-			)
+		if try_complete_path() then
 			return
 		end
 
@@ -256,6 +339,9 @@ end, { expr = true })
 
 vim.keymap.set("i", "<C-space>", function()
 	if should_skip_completion() then
+		return
+	end
+	if try_complete_path() then
 		return
 	end
 	local prefix, start_col = get_prefix()
