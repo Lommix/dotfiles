@@ -5,72 +5,80 @@ vim.o.pumborder = "rounded"
 vim.o.winborder = "rounded"
 
 vim.lsp.protocol.CompletionItemKind = {
-	" Text",          -- 1:  plain text
-	" Method",        -- 2:  class method
-	"󰊕 Function",     -- 3:  function
-	" Constructor",   -- 4:  constructor
-	" Field",         -- 5:  struct/class field
-	"󰀫 Variable",     -- 6:  variable
-	" Class",         -- 7:  class
-	" Interface",     -- 8:  interface
-	" Module",        -- 9:  module/namespace
-	" Property",      -- 10: property
-	" Unit",          -- 11: unit of measure
-	"󰎠 Value",        -- 12: value literal
-	" Enum",          -- 13: enum type
-	" Keyword",       -- 14: language keyword
-	" Snippet",       -- 15: snippet
-	" Color",         -- 16: color
-	" File",          -- 17: file
-	" Reference",     -- 18: reference
-	" Folder",        -- 19: folder/directory
-	" EnumMember",    -- 20: enum variant
-	"󰏿 Constant",     -- 21: constant
-	" Struct",        -- 22: struct
-	" Event",         -- 23: event
-	" Operator",      -- 24: operator
-	" TypeParam",     -- 25: type parameter/generic
+	" Text", -- 1:  plain text
+	" Method", -- 2:  class method
+	"󰊕 Function", -- 3:  function
+	" Constructor", -- 4:  constructor
+	" Field", -- 5:  struct/class field
+	"󰀫 Variable", -- 6:  variable
+	" Class", -- 7:  class
+	" Interface", -- 8:  interface
+	" Module", -- 9:  module/namespace
+	" Property", -- 10: property
+	" Unit", -- 11: unit of measure
+	"󰎠 Value", -- 12: value literal
+	" Enum", -- 13: enum type
+	" Keyword", -- 14: language keyword
+	" Snippet", -- 15: snippet
+	" Color", -- 16: color
+	" File", -- 17: file
+	" Reference", -- 18: reference
+	" Folder", -- 19: folder/directory
+	" EnumMember", -- 20: enum variant
+	"󰏿 Constant", -- 21: constant
+	" Struct", -- 22: struct
+	" Event", -- 23: event
+	" Operator", -- 24: operator
+	" TypeParam", -- 25: type parameter/generic
 }
 
 local kind_hl_map = {
-	[1]  = "String",        -- Text
-	[2]  = "Function",      -- Method
-	[3]  = "Function",      -- Function
-	[4]  = "TSConstructor",  -- Constructor
-	[5]  = "Label",         -- Field
-	[6]  = "@variable",     -- Variable
-	[7]  = "Type",          -- Class
-	[8]  = "Type",          -- Interface
-	[9]  = "PreProc",       -- Module
-	[10] = "Label",         -- Property
-	[11] = "Number",        -- Unit
-	[12] = "Number",        -- Value
-	[13] = "Type",          -- Enum
-	[14] = "Keyword",       -- Keyword
-	[15] = "Special",       -- Snippet
-	[16] = nil,             -- Color (preserve built-in)
-	[17] = "Directory",     -- File
-	[18] = "StorageClass",  -- Reference
-	[19] = "Directory",     -- Folder
-	[20] = "Constant",      -- EnumMember
-	[21] = "Constant",      -- Constant
-	[22] = "Type",          -- Struct
-	[23] = "Special",       -- Event
-	[24] = "Operator",      -- Operator
-	[25] = "Type",          -- TypeParameter
+	[1] = "String", -- Text
+	[2] = "Function", -- Method
+	[3] = "Function", -- Function
+	[4] = "TSConstructor", -- Constructor
+	[5] = "Label", -- Field
+	[6] = "@variable", -- Variable
+	[7] = "Type", -- Class
+	[8] = "Type", -- Interface
+	[9] = "PreProc", -- Module
+	[10] = "Label", -- Property
+	[11] = "Number", -- Unit
+	[12] = "Number", -- Value
+	[13] = "Type", -- Enum
+	[14] = "Keyword", -- Keyword
+	[15] = "Special", -- Snippet
+	[16] = nil, -- Color (preserve built-in)
+	[17] = "Directory", -- File
+	[18] = "StorageClass", -- Reference
+	[19] = "Directory", -- Folder
+	[20] = "Constant", -- EnumMember
+	[21] = "Constant", -- Constant
+	[22] = "Type", -- Struct
+	[23] = "Special", -- Event
+	[24] = "Operator", -- Operator
+	[25] = "Type", -- TypeParameter
 }
 
 local completion_bt_blocklist = { prompt = true, terminal = true }
 local completion_ft_blocklist = { TelescopePrompt = true }
 
 local function should_skip_completion()
-	return completion_bt_blocklist[vim.bo.buftype]
-		or completion_ft_blocklist[vim.bo.filetype]
+	return completion_bt_blocklist[vim.bo.buftype] or completion_ft_blocklist[vim.bo.filetype]
 end
 
 --- Clean null bytes and excessive whitespace from LSP completion text
 local function clean_lsp_text(s, max_len)
-	if not s or s == "" then
+	if not s or s == vim.NIL then
+		return nil
+	end
+	if type(s) == "table" then
+		s = s.value
+	end
+	if type(s) ~= "string" then
+		return nil
+	end
+	if s == "" then
 		return nil
 	end
 	s = s:gsub("%z", " ")
@@ -149,8 +157,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 				convert = function(item)
 					local result = {}
 
-					local label = item.label or ""
-					local label_detail = vim.tbl_get(item, "labelDetails", "detail") or ""
+					local label = clean_lsp_text(item.label) or ""
+					local label_detail = clean_lsp_text(vim.tbl_get(item, "labelDetails", "detail")) or ""
 					local abbr = clean_lsp_text(label .. label_detail, 80)
 					if abbr then
 						result.abbr = abbr
