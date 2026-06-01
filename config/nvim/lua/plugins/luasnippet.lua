@@ -27,7 +27,9 @@ return {
 
 		ls.config.set_config({
 			history = true,
-			updateevents = "TextChanged,TextChangedI",
+			update_events = "TextChanged,TextChangedI",
+			region_check_events = "CursorMoved,CursorMovedI",
+			delete_check_events = "TextChanged,TextChangedI,InsertLeave",
 			enable_autosnippets = true,
 		})
 
