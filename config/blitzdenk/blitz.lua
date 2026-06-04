@@ -1,6 +1,10 @@
 -- BLITZCLOUD CFG
 blitz.set_compact_edge(200000)
 
+---------------------------------------------------------------------------------------------------
+--- Provider configuration
+---------------------------------------------------------------------------------------------------
+
 local llama = blitz.add_provider({
 	type = "openai",
 	url = "http://127.0.0.1:8118",
@@ -37,8 +41,11 @@ local openai = blitz.add_provider({
 	max_tokens = 32000,
 })
 
------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+--- Default Agent tool set overwrites
+---------------------------------------------------------------------------------------------------
 
+-- main agent/fork
 blitz.set_agent_tools(blitz.AGENT_MAIN, {
 	blitz.TOOL_BASH,
 	blitz.TOOL_CANCEL_BACKGROUND,
@@ -56,6 +63,7 @@ blitz.set_agent_tools(blitz.AGENT_MAIN, {
 	"lua_web_search",
 })
 
+-- subagents
 blitz.set_agent_tools(blitz.AGENT_SUB, {
 	blitz.TOOL_BASH,
 	blitz.TOOL_READ,
@@ -65,6 +73,10 @@ blitz.set_agent_tools(blitz.AGENT_SUB, {
 	"lua_webfetch",
 	"lua_web_search",
 })
+
+---------------------------------------------------------------------------------------------------
+--- Model configuration, simple
+---------------------------------------------------------------------------------------------------
 
 -- local model = "zai-org/glm-5.1"
 -- local model = "google/gemma-4-26b-a4b-it";
@@ -77,21 +89,26 @@ blitz.set_agent_tools(blitz.AGENT_SUB, {
 -- local model = "xiaomimimo/mimo-v2.5-pro"
 -- local model = "qwen/qwen3.5-397b-a17b"
 -- local model = "google/gemma-4-31b-it"
-
-local model = "deepseek/deepseek-v4-flash"
 -- local model = "minimax/minimax-m3"
 -- local model = "xiaomimimo/mimo-v2.5"
+
+local model = "deepseek/deepseek-v4-flash"
+
 blitz.set_model("max", model, novita)
 blitz.set_model("mid", model, novita)
 blitz.set_model("min", model, novita)
 
+-- big money mode
 blitz.bind("<C-b>", function()
 	blitz.set_model("max", "deepseek/deepseek-v4-pro", novita)
 	blitz.set_model("mid", model, novita)
 	blitz.set_model("min", model, novita)
 end)
 
---- GPT mega mode
+---------------------------------------------------------------------------------------------------
+--- GPT config with `patch` tool
+---------------------------------------------------------------------------------------------------
+
 blitz.bind("<C-o>", function()
 	local gpt = "gpt-5.4-mini"
 	blitz.set_model("max", gpt, openai)
@@ -110,6 +127,10 @@ blitz.bind("<C-o>", function()
 	})
 end)
 
+---------------------------------------------------------------------------------------------------
+--- Command queue example: start new session with hidden prompts
+---------------------------------------------------------------------------------------------------
+
 blitz.add_command(":plan", function(rem)
 	blitz.queue.reset_session()
 	blitz.queue.spawn_agent({
@@ -120,7 +141,10 @@ blitz.add_command(":plan", function(rem)
 	blitz.queue.push_chat_entry("user", "[PLAN]: " .. rem)
 end)
 
--- Local mode
+---------------------------------------------------------------------------------------------------
+--- keybind for local model
+---------------------------------------------------------------------------------------------------
+
 blitz.bind("<C-l>", function()
 	local local_model = "gemma-4-12b-it"
 	-- local local_model = "Qwen3.6-35B-A3B"
@@ -129,6 +153,10 @@ blitz.bind("<C-l>", function()
 	blitz.set_model("min", local_model, llama)
 	blitz.set_compact_edge(128000)
 end)
+
+---------------------------------------------------------------------------------------------------
+--- Custom status bar render
+---------------------------------------------------------------------------------------------------
 
 local function fmt(n)
 	local units = { "k", "M", "G" }
@@ -157,8 +185,9 @@ blitz.status_bar_render = function()
 		.. "%"
 end
 
--------------------------------------------------------------------------------------------------
---- Playwright testing mcp
+---------------------------------------------------------------------------------------------------
+--- MCP configuration and activating for current session
+---------------------------------------------------------------------------------------------------
 
 local playmcp = blitz.mcp.add({
 	name = "playwright",
@@ -172,6 +201,7 @@ local playmcp = blitz.mcp.add({
 	tools_prefix = "pw_",
 })
 
+-- session state
 local is_active = false
 
 blitz.add_command(":browser", function()
@@ -183,6 +213,10 @@ blitz.add_command(":browser", function()
 	blitz.mcp.enable(playmcp, blitz.AGENT_MAIN)
 	is_active = true
 end)
+
+---------------------------------------------------------------------------------------------------
+--- Doc linking and prompt overwrites
+---------------------------------------------------------------------------------------------------
 
 blitz.add_doc("zig std", "zig std lib source code", "/usr/lib/zig/std")
 blitz.add_doc("knoedel", "knoedel entity component system (ECS)", "/home/lommix/Projects/zig/knoedel")
@@ -207,11 +241,22 @@ local debug_mode = blitz.add_mode(
 	"#AF8F00",
 	[[
     # Debug mode active
-    You are in debug mode. If you see any Bug or weird behavior in your tool usage or the user prompts immediately stop and inform the user.
+    You are in debug mode. Your goal is to notice any iregular, unexpected result in your tool chain.
+    If you see any Bug or weird behavior in your tool usage or the user prompts immediately stop and inform the user.
+
+    Work on the user request. Break your agent mode as soon as a problem is perceived and give a status report on the error.
 
     ]],
 	"You are in debug mode"
 )
+
+blitz.bind("<C-h>", function()
+	blitz.set_mode(debug_mode)
+end)
+
+-------------------------------------------------------------------------------------------------
+--- Saving and loading Sessions
+-------------------------------------------------------------------------------------------------
 
 blitz.add_command(":save", function()
 	blitz.queue.save_session(".blitz/blitz_save.json")
@@ -222,10 +267,8 @@ blitz.add_command(":load", function()
 end)
 
 -------------------------------------------------------------------------------------------------
---- CUSTOM TOOLS
+--- CUSTOM TOOLS: Lua repl for math
 -------------------------------------------------------------------------------------------------
-
--- example: lua repl tool
 blitz.register_tool({
 	name = "lua_repl",
 	description = "Execute arbitrary Lua code and return the result. Use this tool for any math calculations",
@@ -249,6 +292,9 @@ blitz.register_tool({
 	end,
 })
 
+-------------------------------------------------------------------------------------------------
+--- Web fetch with chromium
+-------------------------------------------------------------------------------------------------
 blitz.register_tool({
 	name = "lua_webfetch",
 	description = "performs a web fetch and returns the content as markdown",
@@ -289,6 +335,9 @@ blitz.register_tool({
 	end,
 })
 
+-------------------------------------------------------------------------------------------------
+--- Web search with searXNG
+-------------------------------------------------------------------------------------------------
 blitz.register_tool({
 	name = "lua_web_search",
 	description = "Search the web via a local SearXNG instance",
