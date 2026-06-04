@@ -1,1 +1,2 @@
+mouse-hide-while-typing = true
 custom-shader = ~/.config/ghostty/shaders/cursor_tail.glsl

@@ -62,7 +62,7 @@ map("n", "<leader>q", ":close<CR>")
 map("n", "<leader>o", function()
 	local fname = vim.fn.expand("%:p")
 	local lineno = vim.fn.line(".")
-	vim.cmd('vsplit | terminal blitz prompt "' .. fname .. ":" .. lineno .. ' "')
+	vim.cmd('vsplit | terminal blitz prompt "' .. fname .. ":" .. lineno .. ' " --log')
 end)
 
 -- util
