@@ -324,15 +324,15 @@ vim.api.nvim_create_autocmd("TextChangedI", {
 
 		local char = vim.fn.getline("."):sub(col, col)
 		if char:match("[%w_%.%:%->]") then
-			-- Inject LuaSnip items first, LSP will merge via prev_matches
-			local prefix, start_col = get_prefix()
-			if #prefix > 0 then
-				local snip_items = get_luasnip_items(prefix)
-				if #snip_items > 0 then
-					vim.fn.complete(start_col, snip_items)
+-- Inject LuaSnip items first, LSP will merge via prev_matches
+				local prefix, start_col = get_prefix()
+				if #prefix > 1 then
+					local snip_items = get_luasnip_items(prefix)
+					if #snip_items > 0 then
+						vim.fn.complete(start_col, snip_items)
+					end
 				end
-			end
-			vim.lsp.completion.get()
+				vim.lsp.completion.get()
 		end
 	end,
 })

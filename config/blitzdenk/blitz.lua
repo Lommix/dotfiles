@@ -4,7 +4,6 @@ blitz.set_compact_edge(200000)
 ---------------------------------------------------------------------------------------------------
 --- Provider configuration
 ---------------------------------------------------------------------------------------------------
-
 local llama = blitz.add_provider({
 	type = "openai",
 	url = "http://127.0.0.1:8118",
@@ -29,7 +28,7 @@ local openrouter = blitz.add_provider({
 	type = "openai",
 	url = "https://openrouter.ai/api/v1",
 	key_envar = "OPENROUTER_API_KEY",
-	reasoning = { effort = "low" },
+	reasoning = { effort = "medium" },
 	temperature = 1,
 	max_tokens = 32000,
 })
@@ -142,6 +141,11 @@ blitz.add_command(":plan", function(rem)
 end)
 
 ---------------------------------------------------------------------------------------------------
+--- Screenshots
+---------------------------------------------------------------------------------------------------
+blitz.bind("<C-s>", function() end)
+
+---------------------------------------------------------------------------------------------------
 --- keybind for local model
 ---------------------------------------------------------------------------------------------------
 
@@ -222,27 +226,37 @@ blitz.add_doc("zig std", "zig std lib source code", "/usr/lib/zig/std")
 blitz.add_doc("knoedel", "knoedel entity component system (ECS)", "/home/lommix/Projects/zig/knoedel")
 blitz.add_doc("lomstd", "lommix extended zig std and util lib", "/home/lommix/Projects/zig/lomstd")
 
-blitz.set_mode_prompt(
-	blitz.MODE_RESEARCH,
+---------------------------------------------------------------------------------------------------
+--- CUSTOM MODES
+---------------------------------------------------------------------------------------------------
+
+local research_mode = blitz.add_mode(
+	"RESEARCH",
+	"#02A3F0",
 	[[
     # Research mode active
 
     you are in READ-ONLY mode. Any file edits, modifications, or system changes are prohibited.
     Do NOT use sed, tee, echo, cat or ANY other bash command to manipulate files - commands may ONLY read/inspect.
     You may only observe, analyze, and research.
-    ]]
+
+    Your current responsibility is to think, read, search, and delegate explore agents to construct a well formed response.
+
+    ]],
+	"You are in research mode. Read Only"
 )
 
----------------------------------------------------------------------------------------------------
---- CUSTOM MODE TEST
----------------------------------------------------------------------------------------------------
+blitz.bind("<C-r>", function()
+	blitz.set_mode(research_mode)
+end)
+
 local debug_mode = blitz.add_mode(
 	"DEBUG",
 	"#AF8F00",
 	[[
     # Debug mode active
     You are in debug mode. Your goal is to notice any iregular, unexpected result in your tool chain.
-    If you see any Bug or weird behavior in your tool usage or the user prompts immediately stop and inform the user.
+    If you see any bug or weird behavior in your tool usage or the user prompts immediately stop and inform the user.
 
     Work on the user request. Break your agent mode as soon as a problem is perceived and give a status report on the error.
 
@@ -252,6 +266,10 @@ local debug_mode = blitz.add_mode(
 
 blitz.bind("<C-h>", function()
 	blitz.set_mode(debug_mode)
+end)
+
+blitz.bind("<C-p>", function()
+	blitz.set_mode(blitz.MODE_EXEC)
 end)
 
 -------------------------------------------------------------------------------------------------
@@ -293,7 +311,8 @@ blitz.register_tool({
 })
 
 -------------------------------------------------------------------------------------------------
---- Web fetch with chromium
+--- Web fetch with chromium,
+--- without protection
 -------------------------------------------------------------------------------------------------
 blitz.register_tool({
 	name = "lua_webfetch",
@@ -309,29 +328,20 @@ blitz.register_tool({
 
 		ctx:set_status("(Fetch) " .. url)
 
-		-- headless chromium with virtual-time-budget for SPA rendering
-		local handle = io.popen(
-			'chromium --headless --disable-gpu --virtual-time-budget=4000 --dump-dom "' .. url .. '" 2>/dev/null'
+		-- headless chromium with virtual-time-budget for SPA rendering.
+		-- convert to pdf -> convert pdf to text.
+		-- It is not efficient. But it works very well
+		local content, ok = ctx:shell(
+			'chromium --headless --disable-gpu --virtual-time-budget=3000 --print-to-pdf=/dev/stdout --no-margins "'
+				.. url
+				.. '" | pdftotext - -'
 		)
-		if not handle then
-			return blitz.err("failed to spawn chromium")
-		end
 
-		local html = handle:read("*a")
-		local ok = handle:close()
-
-		if not ok or html == nil or html == "" then
+		if not ok or content == nil or content == "" then
 			return blitz.err("chromium returned no output")
 		end
 
-		ctx:append_log("Converting to markdown...")
-
-		local ok2, markdown = pcall(blitz.html_to_markdown, html)
-		if not ok2 or not markdown then
-			return blitz.err("failed to convert html to markdown")
-		end
-
-		return blitz.ok(markdown)
+		return blitz.ok(content)
 	end,
 })
 
