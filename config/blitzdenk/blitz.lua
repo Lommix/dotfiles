@@ -140,9 +140,9 @@ blitz.bind("<C-o>", function()
 		blitz.TOOL_BASH,
 		blitz.TOOL_CANCEL_BACKGROUND,
 		blitz.TOOL_READ,
-		-- blitz.TOOL_LIST_TASKS,
-		-- blitz.TOOL_UPDATE_TASK_STATE,
-		-- blitz.TOOL_CREATE_TASK,
+		blitz.TOOL_LIST_TASKS,
+		blitz.TOOL_UPDATE_TASK_STATE,
+		blitz.TOOL_CREATE_TASK,
 		blitz.TOOL_ASK,
 		blitz.TOOL_PATCH,
 	})
@@ -249,6 +249,72 @@ blitz.add_command(":browser", function()
 end)
 
 ---------------------------------------------------------------------------------------------------
+--- Goal mode
+---------------------------------------------------------------------------------------------------
+local goal_finished = false
+blitz.register_tool({
+	name = "goal_completed",
+	description = "Only call this tool, when your goal is completed",
+	args = {
+		goal_message = {
+			type = "string",
+			description = "the final report after finishing the goal",
+			required = true,
+		},
+	},
+	func = function(ctx, call)
+		ctx:set_status("Goaling completed!")
+		blitz.queue.push_chat_entry("user", call.arguments.goal_message)
+		goal_finished = true
+		return blitz.exit_loop("Goaling completed!")
+	end,
+})
+
+blitz.add_command("/goal", function(rem)
+	-- add event listener to session
+	blitz.add_listener(blitz.EVENT_AGENT_COMPLETE, function(agent_id)
+		-- only main agent
+		if blitz.get_main_agent().index ~= agent_id.index then
+			return
+		end
+
+		if goal_finished then
+			return
+		end
+
+		blitz.queue.queue_agent_message(
+			agent_id,
+			"Your goal is unfinished. Validate the current state. If the goal is determined to be finished, call `goal_completed`"
+		)
+	end)
+
+	blitz.set_agent_tools(blitz.AGENT_MAIN, {
+		blitz.TOOL_BASH,
+		blitz.TOOL_CANCEL_BACKGROUND,
+		blitz.TOOL_READ,
+		blitz.TOOL_WRITE,
+		blitz.TOOL_EDIT,
+		blitz.TOOL_LIST_TASKS,
+		blitz.TOOL_UPDATE_TASK_STATE,
+		blitz.TOOL_CREATE_TASK,
+		blitz.TOOL_ASK,
+		blitz.TOOL_AGENT,
+		"lua_repl",
+		"lua_webfetch",
+		"lua_web_search",
+		"goal_completed",
+	})
+
+	goal_finished = false
+	local main_agent_id = blitz.get_main_agent()
+	if main_agent_id ~= nil then
+		blitz.queue.queue_agent_message(main_agent_id, "Complete the goal: " .. rem)
+	else
+		blitz.queue.spawn_agent({ effort = "max", prompt = "Complete the goal: " .. rem })
+	end
+end)
+
+---------------------------------------------------------------------------------------------------
 --- Doc linking and prompt overwrites
 ---------------------------------------------------------------------------------------------------
 blitz.add_doc("Zig-std", "The searchable zig standard library", "/usr/lib/zig/std")
@@ -292,7 +358,7 @@ local debug_mode = blitz.add_mode(
 	"You are in debug mode"
 )
 
-blitz.bind("<C-u>", function()
+blitz.bind("<C-j>", function()
 	blitz.set_mode(debug_mode)
 end)
 
