@@ -1,3 +1,3 @@
-# SUPER BASH RULES
+# BASH RULES
 
-ALWAYS use `rg` (ripgrep) instead of `grep` or `find`
+ALWAYS use `rg` instead of `grep` or `find`
