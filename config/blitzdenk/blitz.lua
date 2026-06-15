@@ -252,13 +252,13 @@ end)
 --- Goal mode
 ---------------------------------------------------------------------------------------------------
 local goal_finished = false
-blitz.register_tool({
+local goal_tool = blitz.register_tool({
 	name = "goal_completed",
 	description = "Only call this tool, when your goal is completed",
 	args = {
 		goal_message = {
 			type = "string",
-			description = "the final report after finishing the goal",
+			description = "Structured goal status report",
 			required = true,
 		},
 	},
@@ -270,9 +270,8 @@ blitz.register_tool({
 	end,
 })
 
-blitz.add_command("/goal", function(rem)
+blitz.add_command("/goal", function(prompt)
 	-- add event listener to session
-
 	blitz.add_listener(blitz.EVENT_AGENT_COMPLETE, function(agent_id)
 		-- only main agent
 		if blitz.get_main_agent().index ~= agent_id.index then
@@ -286,22 +285,28 @@ blitz.add_command("/goal", function(rem)
 		blitz.queue.queue_agent_message(agent_id, [[
 			Your goal is unfinished. Validate the current state. If the goal is determined to be finished, call `goal_completed`
 
-            Original goal reminder: ]] .. rem)
+            Original goal instructions: ]] .. prompt)
 	end)
 
-	blitz.add_tool(blitz.AGENT_MAIN, "goal_completed")
+	--- add the tool to the current set
+	blitz.add_tool(blitz.AGENT_MAIN, goal_tool)
 
 	goal_finished = false
 	local main_agent_id = blitz.get_main_agent()
 
-	blitz.queue.push_chat_entry("user", rem)
+	blitz.queue.push_chat_entry("user", "Goal: " .. prompt)
+
 	if main_agent_id ~= nil then
-		blitz.queue.queue_agent_message(main_agent_id, "Complete the goal: " .. rem)
+		blitz.queue.queue_agent_message(main_agent_id, "Complete the goal: " .. prompt)
 	else
-		blitz.queue.spawn_agent({ effort = "max", prompt = "Complete the goal: " .. rem, tool_budget = 1024 })
+		blitz.queue.spawn_agent({
+			effort = "max",
+			prompt = "Complete the goal: " .. prompt,
+			tool_budget = 1024,
+			level = "write",
+		})
 	end
 end)
-
 ---------------------------------------------------------------------------------------------------
 --- Doc linking and prompt overwrites
 ---------------------------------------------------------------------------------------------------
