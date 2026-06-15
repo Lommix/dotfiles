@@ -272,6 +272,7 @@ blitz.register_tool({
 
 blitz.add_command("/goal", function(rem)
 	-- add event listener to session
+
 	blitz.add_listener(blitz.EVENT_AGENT_COMPLETE, function(agent_id)
 		-- only main agent
 		if blitz.get_main_agent().index ~= agent_id.index then
@@ -282,35 +283,22 @@ blitz.add_command("/goal", function(rem)
 			return
 		end
 
-		blitz.queue.queue_agent_message(
-			agent_id,
-			"Your goal is unfinished. Validate the current state. If the goal is determined to be finished, call `goal_completed`"
-		)
+		blitz.queue.queue_agent_message(agent_id, [[
+			Your goal is unfinished. Validate the current state. If the goal is determined to be finished, call `goal_completed`
+
+            Original goal reminder: ]] .. rem)
 	end)
 
-	blitz.set_agent_tools(blitz.AGENT_MAIN, {
-		blitz.TOOL_BASH,
-		blitz.TOOL_CANCEL_BACKGROUND,
-		blitz.TOOL_READ,
-		blitz.TOOL_WRITE,
-		blitz.TOOL_EDIT,
-		blitz.TOOL_LIST_TASKS,
-		blitz.TOOL_UPDATE_TASK_STATE,
-		blitz.TOOL_CREATE_TASK,
-		blitz.TOOL_ASK,
-		blitz.TOOL_AGENT,
-		"lua_repl",
-		"lua_webfetch",
-		"lua_web_search",
-		"goal_completed",
-	})
+	blitz.add_tool(blitz.AGENT_MAIN, "goal_completed")
 
 	goal_finished = false
 	local main_agent_id = blitz.get_main_agent()
+
+	blitz.queue.push_chat_entry("user", rem)
 	if main_agent_id ~= nil then
 		blitz.queue.queue_agent_message(main_agent_id, "Complete the goal: " .. rem)
 	else
-		blitz.queue.spawn_agent({ effort = "max", prompt = "Complete the goal: " .. rem })
+		blitz.queue.spawn_agent({ effort = "max", prompt = "Complete the goal: " .. rem, tool_budget = 1024 })
 	end
 end)
 
