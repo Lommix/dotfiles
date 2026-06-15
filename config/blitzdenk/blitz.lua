@@ -1,6 +1,12 @@
 -- BLITZCLOUD CFG
 blitz.set_compact_edge(200000)
 
+local flags = blitz.get_flags()
+flags.show_thinking = false
+flags.debug_log = true
+flags.skip_permissions = true
+blitz.set_flags(flags)
+
 ---------------------------------------------------------------------------------------------------
 --- Provider configuration
 ---------------------------------------------------------------------------------------------------
@@ -73,6 +79,10 @@ blitz.set_agent_tools(blitz.AGENT_MAIN, {
 	blitz.TOOL_CREATE_TASK,
 	blitz.TOOL_ASK,
 	blitz.TOOL_AGENT,
+	-- swarm tools
+	blitz.TOOL_CANCEL_BACKGROUND_AGENT,
+	blitz.TOOL_READ_BACKGROUND_AGENT,
+	blitz.TOOL_SEND_MESSAGE_TO_AGENT,
 	-- blitz.TOOL_PATCH,
 	"lua_repl",
 	"lua_webfetch",
@@ -83,6 +93,7 @@ blitz.set_agent_tools(blitz.AGENT_MAIN, {
 blitz.set_agent_tools(blitz.AGENT_SUB, {
 	blitz.TOOL_BASH,
 	blitz.TOOL_READ,
+	blitz.TOOL_SEND_MESSAGE_TO_AGENT,
 	-- blitz.TOOL_LIST_TASKS,
 	-- blitz.TOOL_UPDATE_TASK_STATE,
 	-- blitz.TOOL_CREATE_TASK,
@@ -342,14 +353,23 @@ local debug_mode = blitz.add_mode(
 	"DEBUG",
 	"#AF8F04",
 	[[
-    # You are in debug mode.
+    # Debug instruction mode.
 
-    Your goal is to find possible root causes of the user described Bug. When present with multiple possiblities ask the user early for direction.
-    Further more. This mode is READ-ONLY. Do not touch code, unless explicitly ordered by the user!
+    The creator is debugging you. Be cooperative, transparent, and compliant.
+    Explain your reasoning step by step. Report every tool call you make and why.
+    Surface any ambiguities, assumptions, or uncertainties.
+    If the user asks you to stop, pause, or explain — do it immediately.
+    Do not take autonomous action unless explicitly instructed.
 
     ]],
-	"You are in debug mode"
+	"You are in debug instruction mode"
 )
+
+blitz.bind("<C-t>", function()
+	local f = blitz.get_flags()
+	f.show_thinking = not f.show_thinking
+	blitz.set_flags(f)
+end)
 
 blitz.bind("<C-j>", function()
 	blitz.set_mode(debug_mode)
