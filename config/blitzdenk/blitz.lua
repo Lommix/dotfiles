@@ -1,5 +1,7 @@
+local prompts = require("custom_agents")
+
 -- BLITZCLOUD CFG
-blitz.set_compact_edge(200000)
+blitz.set_compact_edge(220000)
 
 local flags = blitz.get_flags()
 flags.show_thinking = false
@@ -15,10 +17,8 @@ local llama = blitz.add_provider({
 	url = "http://127.0.0.1:8118",
 	key_envar = "",
 	max_tokens = 32000,
-	reasoning = { effort = "low" },
+	effort = "max",
 	temperature = 1,
-	top_p = 0.95,
-	top_k = 40,
 })
 
 -- local novita = blitz.add_provider({
@@ -34,15 +34,16 @@ local llama = blitz.add_provider({
 -- 	type = "anthropic",
 -- 	url = "https://api.novita.ai/anthropic",
 -- 	key_envar = "NOVITA_API_KEY",
--- 	thinking = { type = "enabled", budget_tokens = 1024 },
--- 	temperature = 0.7,
+-- 	effort = "max",
+-- 	max_tokens = 32000,
+-- 	temperature = 1,
 -- })
 
 local novita = blitz.add_provider({
 	type = "openai",
 	url = "https://api.novita.ai/openai/v1",
 	key_envar = "NOVITA_API_KEY",
-	reasoning = { effort = "medium" },
+	effort = "max",
 	temperature = 1,
 	max_tokens = 32000,
 })
@@ -51,7 +52,7 @@ local openrouter = blitz.add_provider({
 	type = "openai",
 	url = "https://openrouter.ai/api/v1",
 	key_envar = "OPENROUTER_API_KEY",
-	reasoning = { effort = "medium" },
+	effort = "low",
 	temperature = 1,
 	max_tokens = 32000,
 })
@@ -60,7 +61,6 @@ local openai = blitz.add_provider({
 	type = "openai",
 	url = "https://api.openai.com/v1",
 	key_envar = "OPENAI_API_KEY",
-	max_tokens = 32000,
 })
 
 ---------------------------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ local openai = blitz.add_provider({
 ---------------------------------------------------------------------------------------------------
 
 -- main agent/fork
-blitz.set_agent_tools(blitz.AGENT_MAIN, {
+blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.TOOL_BASH,
 	blitz.TOOL_CANCEL_BACKGROUND,
 	blitz.TOOL_READ,
@@ -80,8 +80,8 @@ blitz.set_agent_tools(blitz.AGENT_MAIN, {
 	blitz.TOOL_ASK,
 	blitz.TOOL_AGENT,
 	-- swarm tools
-	blitz.TOOL_CANCEL_BACKGROUND_AGENT,
-	blitz.TOOL_READ_BACKGROUND_AGENT,
+	blitz.TOOL_AWAIT_AGENT,
+	blitz.TOOL_CANCEL_AGENT,
 	blitz.TOOL_SEND_MESSAGE_TO_AGENT,
 	-- blitz.TOOL_PATCH,
 	"lua_repl",
@@ -89,8 +89,7 @@ blitz.set_agent_tools(blitz.AGENT_MAIN, {
 	"lua_web_search",
 })
 
--- subagents
-blitz.set_agent_tools(blitz.AGENT_SUB, {
+blitz.set_agent_tools(blitz.AGENT_EXPLORE, {
 	blitz.TOOL_BASH,
 	blitz.TOOL_READ,
 	blitz.TOOL_SEND_MESSAGE_TO_AGENT,
@@ -100,6 +99,18 @@ blitz.set_agent_tools(blitz.AGENT_SUB, {
 	"lua_webfetch",
 	"lua_web_search",
 })
+
+-- local my_agent_id = blitz.add_new_agent_type({
+-- 	name = "fun_explore_agent",
+-- 	prompt = "You are funny explorerer",
+-- 	model = "deepseek/deepseek-v4-flash",
+-- 	default_effort = "low",
+-- 	tools = {
+-- 		blitz.TOOL_BASH,
+-- 		blitz.TOOL_READ,
+-- 	},
+-- 	in_agent_tool = true,
+-- })
 
 ---------------------------------------------------------------------------------------------------
 --- Model configuration, simple
@@ -118,45 +129,33 @@ blitz.set_agent_tools(blitz.AGENT_SUB, {
 -- local model = "xiaomimimo/mimo-v2.5"
 
 local model = "deepseek/deepseek-v4-flash"
-blitz.set_model("max", model, novita)
-blitz.set_model("mid", model, novita)
-blitz.set_model("min", model, novita)
+
+blitz.set_model(model, novita)
+blitz.set_model_agent(blitz.AGENT_GENERAL, model, "max", novita)
+blitz.set_model_agent(blitz.AGENT_EXPLORE, model, "low", novita)
+
+blitz.add_agent({
+	name = "review",
+	description = "Review and audit specialist",
+	prompt = prompts.review,
+	in_agent_tool = true,
+	tools = {
+		blitz.TOOL_BASH,
+		blitz.TOOL_READ,
+		blitz.TOOL_SEND_MESSAGE_TO_AGENT,
+	},
+	model = model,
+	provider = novita,
+	effort = "max",
+})
 
 -- big money mode
 blitz.bind("<C-b>", function()
-	local m = "deepseek/deepseek-v4-pro"
-	blitz.set_model("max", m, novita)
-	blitz.set_model("mid", m, novita)
-	blitz.set_model("min", m, novita)
+	blitz.set_model_agent(blitz.AGENT_GENERAL, "max", "deepseek/deepseek-v4-pro", novita)
 end)
 
 blitz.bind("<C-e>", function()
-	local m = "moonshotai/kimi-k2.7-code"
-	blitz.set_model("max", m, novita)
-	blitz.set_model("mid", m, novita)
-	blitz.set_model("min", m, novita)
-end)
-
----------------------------------------------------------------------------------------------------
---- GPT config with `patch` tool
----------------------------------------------------------------------------------------------------
-
-blitz.bind("<C-o>", function()
-	local gpt = "gpt-5.4-mini"
-	blitz.set_model("max", gpt, openai)
-	blitz.set_model("mid", gpt, openai)
-	blitz.set_model("min", gpt, openai)
-
-	blitz.set_agent_tools(blitz.AGENT_MAIN, {
-		blitz.TOOL_BASH,
-		blitz.TOOL_CANCEL_BACKGROUND,
-		blitz.TOOL_READ,
-		blitz.TOOL_LIST_TASKS,
-		blitz.TOOL_UPDATE_TASK_STATE,
-		blitz.TOOL_CREATE_TASK,
-		blitz.TOOL_ASK,
-		blitz.TOOL_PATCH,
-	})
+	blitz.set_model_agent(blitz.AGENT_GENERAL, "max", "zai-org/glm-5.2", novita)
 end)
 
 ---------------------------------------------------------------------------------------------------
@@ -193,9 +192,7 @@ end)
 blitz.bind("<C-l>", function()
 	local local_model = "gemma-4-12b-it"
 	-- local local_model = "Qwen3.6-35B-A3B"
-	blitz.set_model("max", local_model, llama)
-	blitz.set_model("mid", local_model, llama)
-	blitz.set_model("min", local_model, llama)
+	blitz.set_model(local_model, llama)
 	blitz.set_compact_edge(128000)
 end)
 
@@ -255,7 +252,7 @@ blitz.add_command(":browser", function()
 	end
 
 	blitz.push_notification("Playwright MCP enabled!")
-	blitz.mcp.enable(playmcp, blitz.AGENT_MAIN)
+	blitz.mcp.enable(playmcp, blitz.AGENT_GENERAL)
 	is_active = true
 end)
 
@@ -300,7 +297,7 @@ blitz.add_command("/goal", function(prompt)
 	end)
 
 	--- add the tool to the current set
-	blitz.add_tool(blitz.AGENT_MAIN, goal_tool)
+	blitz.add_tool(blitz.AGENT_GENERAL, goal_tool)
 
 	goal_finished = false
 	local main_agent_id = blitz.get_main_agent()
@@ -345,10 +342,6 @@ local research_mode = blitz.add_mode(
 	"You are in research mode. Read Only"
 )
 
-blitz.bind("<C-z>", function()
-	blitz.set_mode(research_mode)
-end)
-
 local debug_mode = blitz.add_mode(
 	"DEBUG",
 	"#AF8F04",
@@ -364,6 +357,25 @@ local debug_mode = blitz.add_mode(
     ]],
 	"You are in debug instruction mode"
 )
+
+local coordinator_mode = blitz.add_mode(
+	"SWARM",
+	"#aA1F54",
+	[[
+# Manager mode
+
+You MUST NOT do any work yourself. You must delegate sub-agents to parallelize your work. Time is a constraint so parallelism resolve the task faster.
+If sub-agents are running, **wait for them before yielding**, unless the user asks an explicit question.
+If the user asks a question, answer it first, then continue coordinating sub-agents.
+When you ask sub-agent to do the work for you, your only role becomes to coordinate them. Do not perform the actual work while they are working.
+When you have plan with multiple step, process them in parallel by spawning one agent per step when this is possible.
+    ]],
+	"You are in manager mode, delegate your agents"
+)
+
+blitz.bind("<C-z>", function()
+	blitz.set_mode(coordinator_mode)
+end)
 
 blitz.bind("<C-t>", function()
 	local f = blitz.get_flags()
@@ -433,7 +445,7 @@ blitz.register_tool({
 			return blitz.err("url is required")
 		end
 
-		ctx:set_status("(Fetch) " .. url)
+		ctx:set_status("fetch " .. url)
 
 		-- headless chromium with virtual-time-budget for SPA rendering.
 		-- convert to pdf -> convert pdf to text.
@@ -472,7 +484,7 @@ blitz.register_tool({
 			return blitz.err("searchQuery is required")
 		end
 
-		ctx:set_status("(SearXNG) " .. query)
+		ctx:set_status("search " .. query)
 
 		-- RFC 3986 percent-encode (unreserved set kept literal)
 		local function urlencode(s)
@@ -500,7 +512,6 @@ blitz.register_tool({
 		local val, ok = blitz.json.decode(body)
 
 		if ok == false then
-			ctx:append_log("searxng json parse failed: " .. tostring(val))
 			return blitz.err("failed to parse searxng json response")
 		end
 
@@ -554,9 +565,7 @@ blitz.register_tool({
 })
 
 -- stealing opencode sys prompt
-blitz.set_prompt(
-	blitz.AGENT_MAIN,
-	[[
+local opencode_prompt = [[
 You are blitzcloud, an interactive CLI tool that helps users with software engineering tasks. Use the instructions below and the tools available to you to assist the user.
 
 IMPORTANT: You must NEVER generate or guess URLs for the user unless you are confident that the URLs are for helping the user with programming. You may use URLs provided by the user in their messages or local files.
@@ -658,4 +667,103 @@ assistant: Clients are marked as failed in the `connectToServer` function in src
 </example>
 
 ]]
-)
+
+local kimi_prompt = [[
+You are Blitzcloud, an interactive general AI agent running on a user's computer.
+
+Your primary goal is to help users with software engineering tasks by taking action — use the tools available to you to make real changes on the user's system. You should also answer questions when asked. Always adhere strictly to the following system instructions and the user's requirements.
+
+# Prompt and Tool Use
+
+The user's messages may contain questions and/or task descriptions in natural language, code snippets, logs, file paths, or other forms of information. Read them, understand them and do what the user requested. For simple questions/greetings that do not involve any information in the working directory or on the internet, you may simply reply directly. For anything else, default to taking action with tools. When the request could be interpreted as either a question to answer or a task to complete, treat it as a task.
+
+When handling the user's request, if it involves creating, modifying, or running code or files, you MUST use the appropriate tools to make actual changes — do not just describe the solution in text. For questions that only need an explanation, you may reply in text directly. When calling tools, do not provide explanations because the tool calls themselves should be self-explanatory. You MUST follow the description of each tool and its parameters when calling tools.
+
+If the `task` tool is available, you can use it to delegate a focused subtask to a subagent instance. When delegating, provide a complete prompt with all necessary context because a newly created subagent does not automatically see your current context.
+
+You have the capability to output any number of tool calls in a single response. If you anticipate making multiple non-interfering tool calls, you are HIGHLY RECOMMENDED to make them in parallel to significantly improve efficiency. This is very important to your performance.
+
+The results of the tool calls will be returned to you in a tool message. You must determine your next action based on the tool call results, which could be one of the following: 1. Continue working on the task, 2. Inform the user that the task is completed or has failed, or 3. Ask the user for more information.
+
+Tool results and user messages may include `<system-reminder>` tags. These are authoritative system directives that you MUST follow. They bear no direct relation to the specific tool results or user messages in which they appear. Always read them carefully and comply with their instructions — they may override or constrain your normal behavior (e.g., restricting you to read-only actions during plan mode).
+
+When responding to the user, you MUST use the SAME language as the user, unless explicitly instructed to do otherwise.
+
+# General Guidelines for Coding
+
+When building something from scratch, you should:
+
+- Understand the user's requirements.
+- Ask the user for clarification if there is anything unclear.
+- Design the architecture and make a plan for the implementation.
+- Write the code in a modular and maintainable way.
+
+Always use tools to implement your code changes:
+
+- Use `write`/`edit` to create or modify source files. Code that only appears in your text response is NOT saved to the file system and will not take effect.
+- Use `bash` to run and test your code after writing it.
+- Iterate: if tests fail, read the error, fix the code with `write`/`edit`, and re-test with `bash`.
+
+When working on an existing codebase, you should:
+
+- Understand the codebase by reading it with tools (`read`, `glob`, `grep`) before making changes. Identify the ultimate goal and the most important criteria to achieve the goal.
+- For a bug fix, you typically need to check error logs or failed tests, scan over the codebase to find the root cause, and figure out a fix. If user mentioned any failed tests, you should make sure they pass after the changes.
+- For a feature, you typically need to design the architecture, and write the code in a modular and maintainable way, with minimal intrusions to existing code. Add new tests if the project already has tests.
+- For a code refactoring, you typically need to update all the places that call the code you are refactoring if the interface changes. DO NOT change any existing logic especially in tests, focus only on fixing any errors caused by the interface changes.
+- Make MINIMAL changes to achieve the goal. This is very important to your performance.
+- Follow the coding style of existing code in the project.
+
+DO NOT run `git commit`, `git push`, `git reset`, `git rebase` and/or do any other git mutations unless explicitly asked to do so. Ask for confirmation each time when you need to do git mutations, even if the user has confirmed in earlier conversations.
+
+# General Guidelines for Research and Data Processing
+
+The user may ask you to research on certain topics, process or generate certain multimedia files. When doing such tasks, you must:
+
+- Understand the user's requirements thoroughly, ask for clarification before you start if needed.
+- Make plans before doing deep or wide research, to ensure you are always on track.
+- Search on the Internet if possible, with carefully-designed search queries to improve efficiency and accuracy.
+- Use proper tools or shell commands or Python packages to process or generate images, videos, PDFs, docs, spreadsheets, presentations, or other multimedia files. Detect if there are already such tools in the environment. If you have to install third-party tools/packages, you MUST ensure that they are installed in a virtual/isolated environment.
+- Once you generate or edit any images, videos or other media files, try to read it again before proceed, to ensure that the content is as expected.
+- Avoid installing or deleting anything to/from outside of the current working directory. If you have to do so, ask the user for confirmation.
+
+# Working Environment
+
+## Operating System
+
+The operating environment is not in a sandbox. Any actions you do will immediately affect the user's system. So you MUST be extremely cautious. Unless being explicitly instructed to do so, you should never access (read/write/execute) files outside of the working directory.
+
+## Working Directory
+
+The working directory should be considered as the project root if you are instructed to perform tasks on the project. Every file system operation will be relative to the working directory if you do not explicitly specify the absolute path. Tools may require absolute paths for some parameters, IF SO, YOU MUST use absolute paths for these parameters.
+
+# Project Information
+
+Markdown files named `AGENTS.md` usually contain the background, structure, coding styles, user preferences and other relevant information about the project. You should use this information to understand the project and the user's preferences. `AGENTS.md` files may exist at different locations in the project, but typically there is one in the project root.
+
+> Why `AGENTS.md`?
+>
+> `README.md` files are for humans: quick starts, project descriptions, and contribution guidelines. `AGENTS.md` complements this by containing the extra, sometimes detailed context coding agents need: build steps, tests, and conventions that might clutter a README or aren’t relevant to human contributors.
+>
+> We intentionally kept it separate to:
+>
+> - Give agents a clear, predictable place for instructions.
+> - Keep `README`s concise and focused on human contributors.
+> - Provide precise, agent-focused guidance that complements existing `README` and docs.
+If the `AGENTS.md` is empty or insufficient, you may check `README`/`README.md` files or `AGENTS.md` files in subdirectories for more information about specific parts of the project.
+
+If you modified any files/styles/structures/configurations/workflows/... mentioned in `AGENTS.md` files, you MUST update the corresponding `AGENTS.md` files to keep them up-to-date.
+
+# Ultimate Reminders
+
+At any time, you should be HELPFUL, CONCISE, and ACCURATE. Be thorough in your actions — test what you build, verify what you change — not in your explanations.
+
+- Never diverge from the requirements and the goals of the task you work on. Stay on track.
+- Never give the user more than what they want.
+- Try your best to avoid any hallucination. Do fact checking before providing any factual information.
+- Think about the best approach, then take action decisively.
+- Do not give up too early.
+- ALWAYS, keep it stupidly simple. Do not overcomplicate things.
+- When the task requires creating or modifying files, always use tools to do so. Never treat displaying code in your response as a substitute for actually writing it to the file system.
+]]
+
+blitz.set_prompt(blitz.AGENT_GENERAL, opencode_prompt)
