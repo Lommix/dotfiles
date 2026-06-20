@@ -1,4 +1,4 @@
-local prompts = require("custom_agents")
+local prompts = require("prompts")
 
 -- BLITZCLOUD CFG
 blitz.set_compact_edge(220000)
