@@ -1,5 +1,5 @@
+local M = {}
 local prompts = require("prompts")
-
 -- BLITZCLOUD CFG
 blitz.set_compact_edge(220000)
 
@@ -34,7 +34,6 @@ local novita = blitz.add_provider({
 	type = "openai",
 	url = "https://api.novita.ai/openai/v1",
 	key_envar = "NOVITA_API_KEY",
-	effort = "max",
 	temperature = 1,
 	max_tokens = 32000,
 })
@@ -43,7 +42,6 @@ local openrouter = blitz.add_provider({
 	type = "openai",
 	url = "https://openrouter.ai/api/v1",
 	key_envar = "OPENROUTER_API_KEY",
-	effort = "low",
 	temperature = 1,
 	max_tokens = 32000,
 })
@@ -73,30 +71,18 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.TOOL_AWAIT_AGENT,
 	blitz.TOOL_CANCEL_AGENT,
 	blitz.TOOL_SEND_MESSAGE_TO_AGENT,
-	"lua_repl",
-	"lua_webfetch",
-	"lua_web_search",
+	M.lua_repl,
+	M.web_fetch,
+	M.web_search,
 })
 
 blitz.set_agent_tools(blitz.AGENT_EXPLORE, {
 	blitz.TOOL_BASH,
 	blitz.TOOL_READ,
 	blitz.TOOL_SEND_MESSAGE_TO_AGENT,
-	"lua_webfetch",
-	"lua_web_search",
+	M.web_fetch,
+	M.web_search,
 })
-
--- local my_agent_id = blitz.add_new_agent_type({
--- 	name = "fun_explore_agent",
--- 	prompt = "You are funny explorerer",
--- 	model = "deepseek/deepseek-v4-flash",
--- 	default_effort = "low",
--- 	tools = {
--- 		blitz.TOOL_BASH,
--- 		blitz.TOOL_READ,
--- 	},
--- 	in_agent_tool = true,
--- })
 
 ---------------------------------------------------------------------------------------------------
 --- Model configuration, simple
@@ -120,7 +106,7 @@ blitz.set_model(model, novita)
 blitz.set_model_agent(blitz.AGENT_GENERAL, model, "max", novita)
 blitz.set_model_agent(blitz.AGENT_EXPLORE, model, "low", novita)
 
-blitz.add_agent({
+M.review_agent = blitz.add_agent({
 	name = "review",
 	description = "Review and audit specialist",
 	prompt = prompts.review,
@@ -137,11 +123,13 @@ blitz.add_agent({
 
 -- big money mode
 blitz.bind("<C-b>", function()
-	blitz.set_model_agent(blitz.AGENT_GENERAL, "max", "deepseek/deepseek-v4-pro", novita)
+	blitz.push_notification("big mode deepseek")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, "deepseek/deepseek-v4-pro", "high", novita)
 end)
 
 blitz.bind("<C-e>", function()
-	blitz.set_model_agent(blitz.AGENT_GENERAL, "max", "zai-org/glm-5.2", novita)
+	blitz.push_notification("big mode Z")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, "zai-org/glm-5.2", "high", novita)
 end)
 
 ---------------------------------------------------------------------------------------------------
@@ -151,6 +139,7 @@ end)
 blitz.add_command(":plan", function(rem)
 	blitz.queue.reset_session()
 	blitz.queue.spawn_agent({
+		agent_type = blitz.AGENT_GENERAL,
 		prompt = "Before making ANY edits, explain your implementation plan to the user and await his go. This is the request: "
 			.. rem,
 	})
@@ -175,9 +164,13 @@ end)
 ---------------------------------------------------------------------------------------------------
 
 blitz.bind("<C-l>", function()
-	local local_model = "gemma-4-12b-it"
-	-- local local_model = "Qwen3.6-35B-A3B"
+	-- local local_model = "gemma-4-12b-it"
+	local local_model = "Qwen3.6-35B-A3B"
 	blitz.set_model(local_model, llama)
+	blitz.set_model_agent(blitz.AGENT_GENERAL, local_model, "max", llama)
+	blitz.set_model_agent(blitz.AGENT_EXPLORE, local_model, "low", llama)
+	blitz.set_model_agent(M.swarm_agent, local_model, "low", llama)
+	blitz.set_model_agent(M.review_agent, local_model, "low", llama)
 	blitz.set_compact_edge(128000)
 end)
 
@@ -239,6 +232,35 @@ blitz.add_command(":browser", function()
 	blitz.push_notification("Playwright MCP enabled!")
 	blitz.mcp.enable(playmcp, blitz.AGENT_GENERAL)
 	is_active = true
+end)
+
+---------------------------------------------------------------------------------------------------
+--- Swarm mode
+---------------------------------------------------------------------------------------------------
+-- no tools, only sub agents
+
+M.swarm_agent = blitz.add_agent({
+	name = "swarm",
+	description = "mega swarm mode",
+	prompt = prompts.swarm_prompt,
+	in_agent_tool = false,
+	tools = {
+		blitz.TOOL_AGENT,
+		blitz.TOOL_AWAIT_AGENT,
+		blitz.TOOL_SEND_MESSAGE_TO_AGENT,
+	},
+	model = model,
+	provider = novita,
+	effort = "max",
+})
+
+blitz.add_command("/swarm", function(rem)
+	blitz.queue.reset_session()
+	blitz.queue.spawn_agent({
+		agent_type = M.swarm_agent,
+		prompt = rem,
+	})
+	blitz.queue.push_chat_entry("user", rem)
 end)
 
 ---------------------------------------------------------------------------------------------------
@@ -308,23 +330,7 @@ blitz.add_doc("lomstd", "Utility library for zig", "/home/lommix/Projects/zig/kn
 ---------------------------------------------------------------------------------------------------
 --- CUSTOM MODES
 ---------------------------------------------------------------------------------------------------
-local research_mode = blitz.add_mode(
-	"RESEARCH",
-	"#02A3F0",
-	[[
-    # Research mode active
-
-    you are in READ-ONLY mode. Any file edits, modifications, or system changes are prohibited.
-    Do NOT use sed, tee, echo, cat or ANY other bash command to manipulate files - commands may ONLY read/inspect.
-    You may only observe, analyze, and research.
-
-    Your current responsibility is to think, read, search, and delegate explore agents to construct a well formed response.
-
-    ]],
-	"You are in research mode. Read Only"
-)
-
-local debug_mode = blitz.add_mode(
+M.debug_mode = blitz.add_mode(
 	"DEBUG",
 	"#AF8F04",
 	[[
@@ -340,24 +346,6 @@ local debug_mode = blitz.add_mode(
 	"You are in debug instruction mode"
 )
 
-local coordinator_mode = blitz.add_mode(
-	"SWARM",
-	"#aA1F54",
-	[[
-    # Manager mode
-    You MUST NOT do any work yourself. You must delegate sub-agents to parallelize your work. Time is a constraint so parallelism resolve the task faster.
-    If sub-agents are running, **wait for them before yielding**, unless the user asks an explicit question.
-    If the user asks a question, answer it first, then continue coordinating sub-agents.
-    When you ask sub-agent to do the work for you, your only role becomes to coordinate them. Do not perform the actual work while they are working.
-    When you have plan with multiple step, process them in parallel by spawning one agent per step when this is possible.
-    ]],
-	"You are in manager mode, delegate your agents"
-)
-
-blitz.bind("<C-z>", function()
-	blitz.set_mode(coordinator_mode)
-end)
-
 blitz.bind("<C-t>", function()
 	local f = blitz.get_flags()
 	f.show_thinking = not f.show_thinking
@@ -365,7 +353,7 @@ blitz.bind("<C-t>", function()
 end)
 
 blitz.bind("<C-j>", function()
-	blitz.set_mode(debug_mode)
+	blitz.set_mode(M.debug_mode)
 end)
 
 blitz.bind("<C-h>", function()
@@ -387,7 +375,7 @@ end)
 -------------------------------------------------------------------------------------------------
 --- CUSTOM TOOLS: Lua repl for math
 -------------------------------------------------------------------------------------------------
-blitz.register_tool({
+M.lua_repl = blitz.register_tool({
 	name = "lua_repl",
 	description = "Execute arbitrary Lua code and return the result. Use this tool for any math calculations",
 	args = {
@@ -414,7 +402,7 @@ blitz.register_tool({
 --- Web fetch with chromium,
 --- without protection
 -------------------------------------------------------------------------------------------------
-blitz.register_tool({
+M.web_fetch = blitz.register_tool({
 	name = "lua_webfetch",
 	description = "performs a web fetch and returns the content as markdown",
 	args = {
@@ -452,7 +440,7 @@ blitz.register_tool({
 -------------------------------------------------------------------------------------------------
 --- Web search with searXNG
 -------------------------------------------------------------------------------------------------
-blitz.register_tool({
+M.web_search = blitz.register_tool({
 	name = "lua_web_search",
 	description = "Search the web via a local SearXNG instance",
 	args = {
@@ -544,5 +532,3 @@ blitz.register_tool({
 		return blitz.ok(table.concat(lines, "\n"))
 	end,
 })
-
-blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
