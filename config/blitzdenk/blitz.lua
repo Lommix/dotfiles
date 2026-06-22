@@ -2,7 +2,6 @@ local M = {}
 local prompts = require("prompts")
 local tools = require("tools")
 
--- BLITZCLOUD CFG
 blitz.set_compact_edge(220000)
 
 local flags = blitz.get_flags()
@@ -316,9 +315,15 @@ blitz.add_command("/goal", function(prompt)
 		blitz.queue.queue_agent_message(main_agent_id, "Complete the goal: " .. prompt)
 	else
 		blitz.queue.spawn_agent({
-			prompt = "Complete the goal: " .. prompt,
+			prompt = [[
+            Complete the following goal. While doing so keep track of your progress in a specialist file 'goal.md'.
+            Write done your current progression and what you already did. When solving a hard bug, write done what you tried.
+            You need to protocol your progress at all times, so that another user might take over and continue.
+
+            Goal instruction:
+
+            ]] .. prompt,
 			tool_budget = 1024,
-			level = "write",
 		})
 	end
 end)
