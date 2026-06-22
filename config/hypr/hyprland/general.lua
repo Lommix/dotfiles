@@ -30,8 +30,7 @@ hl.device({
 hl.device({
   name = "wacom-intuos-m-pen",
   output = "DP-3",
-  relative_input = false,
-  region_size = { 3840, 2160 },
+  relative_input = true,
 })
 
 hl.config({
