@@ -72,13 +72,14 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.TOOL_AWAIT_AGENT,
 	blitz.TOOL_CANCEL_AGENT,
 	blitz.TOOL_SEND_MESSAGE_TO_AGENT,
+	blitz.TOOL_RIPGREP,
 	tools.lua_repl,
 	tools.web_fetch,
 	tools.web_search,
 })
 
 blitz.set_agent_tools(blitz.AGENT_EXPLORE, {
-	blitz.TOOL_BASH,
+	blitz.TOOL_RIPGREP,
 	blitz.TOOL_READ,
 	blitz.TOOL_SEND_MESSAGE_TO_AGENT,
 	tools.web_fetch,
@@ -299,6 +300,7 @@ blitz.add_command("/goal", function(prompt)
 
 		blitz.queue.queue_agent_message(agent_id, [[
 			Your goal is unfinished. Validate the current state. If the goal is determined to be finished, call `goal_completed`
+            Check your protocol file 'goal.md' and continue where you left of.
 
             Original goal instructions: ]] .. prompt)
 	end)
@@ -317,7 +319,7 @@ blitz.add_command("/goal", function(prompt)
 		blitz.queue.spawn_agent({
 			prompt = [[
             Complete the following goal. While doing so keep track of your progress in a specialist file 'goal.md'.
-            Write done your current progression and what you already did. When solving a hard bug, write done what you tried.
+            Write done your current progression and what you already did. When solving a complex bug, write down what you tried.
             You need to protocol your progress at all times, so that another user might take over and continue.
 
             Goal instruction:
