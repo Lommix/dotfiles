@@ -64,9 +64,9 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.TOOL_READ,
 	blitz.TOOL_WRITE,
 	blitz.TOOL_EDIT,
-	blitz.TOOL_LIST_TASKS,
-	blitz.TOOL_UPDATE_TASK_STATE,
-	blitz.TOOL_CREATE_TASK,
+	-- blitz.TOOL_LIST_TASKS,
+	-- blitz.TOOL_UPDATE_TASK_STATE,
+	-- blitz.TOOL_CREATE_TASK,
 	blitz.TOOL_ASK,
 	blitz.TOOL_AGENT,
 	blitz.TOOL_AWAIT_AGENT,
@@ -286,6 +286,11 @@ local goal_tool = blitz.register_tool({
 	end,
 })
 
+blitz.add_listener(blitz.EVENT_AGENT_STARTED, function(agent_id)
+	-- blitz.push_notification("hello world " .. tostring(agent_id))
+    -- blitz.queue.queue_agent_message(agent_id, "stop and tell a joke")
+end)
+
 blitz.add_command("/goal", function(prompt)
 	-- add event listener to session
 	blitz.add_listener(blitz.EVENT_AGENT_COMPLETE, function(agent_id)
@@ -321,6 +326,8 @@ blitz.add_command("/goal", function(prompt)
             Complete the following goal. While doing so keep track of your progress in a specialist file 'goal.md'.
             Write done your current progression and what you already did. When solving a complex bug, write down what you tried.
             You need to protocol your progress at all times, so that another user might take over and continue.
+
+            After any change immediately update your progress. Step by step!
 
             Goal instruction:
 
