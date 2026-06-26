@@ -13,20 +13,19 @@ blitz.set_flags(flags)
 ---------------------------------------------------------------------------------------------------
 --- Provider configuration
 ---------------------------------------------------------------------------------------------------
-local llama = blitz.add_provider({
-	type = "openai",
-	url = "http://127.0.0.1:8118",
-	key_envar = "",
-	max_tokens = 32000,
-	effort = "max",
-	temperature = 1,
-})
-
+-- local llama = blitz.add_provider({
+-- 	type = "openai",
+-- 	url = "http://127.0.0.1:8118",
+-- 	key_envar = "",
+-- 	max_tokens = 32000,
+-- 	effort = "max",
+-- 	temperature = 1,
+-- })
+--
 -- local novita = blitz.add_provider({
 -- 	type = "anthropic",
 -- 	url = "https://api.novita.ai/anthropic",
 -- 	key_envar = "NOVITA_API_KEY",
--- 	effort = "max",
 -- 	max_tokens = 32000,
 -- 	temperature = 1,
 -- })
@@ -39,19 +38,19 @@ local novita = blitz.add_provider({
 	max_tokens = 32000,
 })
 
-local openrouter = blitz.add_provider({
-	type = "openai",
-	url = "https://openrouter.ai/api/v1",
-	key_envar = "OPENROUTER_API_KEY",
-	temperature = 1,
-	max_tokens = 32000,
-})
-
-local openai = blitz.add_provider({
-	type = "openai",
-	url = "https://api.openai.com/v1",
-	key_envar = "OPENAI_API_KEY",
-})
+-- local openrouter = blitz.add_provider({
+-- 	type = "openai",
+-- 	url = "https://openrouter.ai/api/v1",
+-- 	key_envar = "OPENROUTER_API_KEY",
+-- 	temperature = 1,
+-- 	max_tokens = 32000,
+-- })
+--
+-- local openai = blitz.add_provider({
+-- 	type = "openai",
+-- 	url = "https://api.openai.com/v1",
+-- 	key_envar = "OPENAI_API_KEY",
+-- })
 
 ---------------------------------------------------------------------------------------------------
 --- Default Agent tool set overwrites
@@ -59,31 +58,57 @@ local openai = blitz.add_provider({
 
 -- main agent/fork
 blitz.set_agent_tools(blitz.AGENT_GENERAL, {
-	blitz.TOOL_BASH,
-	blitz.TOOL_CANCEL_BACKGROUND,
-	blitz.TOOL_READ,
-	blitz.TOOL_WRITE,
-	blitz.TOOL_EDIT,
-	-- blitz.TOOL_LIST_TASKS,
-	-- blitz.TOOL_UPDATE_TASK_STATE,
-	-- blitz.TOOL_CREATE_TASK,
-	blitz.TOOL_ASK,
-	blitz.TOOL_AGENT,
-	blitz.TOOL_AWAIT_AGENT,
-	blitz.TOOL_CANCEL_AGENT,
-	blitz.TOOL_SEND_MESSAGE_TO_AGENT,
-	blitz.TOOL_RIPGREP,
-	tools.lua_repl,
+	blitz.tools.BASH,
+	blitz.tools.CANCEL_BACKGROUND,
+	blitz.tools.READ,
+	blitz.tools.WRITE,
+	blitz.tools.EDIT,
+	-- blitz.tools.LIST_TASKS,
+	-- blitz.tools.UPDATE_TASK_STATE,
+	-- blitz.tools.CREATE_TASK,
+	blitz.tools.ASK,
+	blitz.tools.AGENT,
+	blitz.tools.AWAIT_AGENT,
+	blitz.tools.CANCEL_AGENT,
+	blitz.tools.SEND_MESSAGE_TO_AGENT,
+	blitz.tools.RIPGREP,
+	blitz.tools.LOADSKILL,
+	blitz.tools.START_LSP,
+	blitz.tools.START_MCP,
+	-- tools.web_fetch,
+	-- tools.web_search,
+})
+
+blitz.set_agent_tools(blitz.AGENT_EXPLORE, {
+	blitz.tools.RIPGREP,
+	blitz.tools.READ,
+	blitz.tools.SEND_MESSAGE_TO_AGENT,
+	blitz.tools.LOADSKILL,
 	tools.web_fetch,
 	tools.web_search,
 })
 
-blitz.set_agent_tools(blitz.AGENT_EXPLORE, {
-	blitz.TOOL_RIPGREP,
-	blitz.TOOL_READ,
-	blitz.TOOL_SEND_MESSAGE_TO_AGENT,
-	tools.web_fetch,
-	tools.web_search,
+---------------------------------------------------------------------------------------------------
+--- MCP/LSP configuration
+---------------------------------------------------------------------------------------------------
+blitz.mcp.add({
+	name = "playwright",
+	command = "npx",
+	args = {
+		"-y",
+		"@playwright/mcp@latest",
+		"--browser=chromium",
+		"--executable-path=/usr/bin/chromium",
+	},
+	tools_prefix = "pw_",
+})
+
+blitz.lsp.add({
+	name = "zig",
+	command = "zls",
+	root = ".",
+	language_id = "zig",
+	args = {},
 })
 
 ---------------------------------------------------------------------------------------------------
@@ -114,9 +139,9 @@ M.review_agent = blitz.add_agent({
 	prompt = prompts.review,
 	in_agent_tool = true,
 	tools = {
-		blitz.TOOL_BASH,
-		blitz.TOOL_READ,
-		blitz.TOOL_SEND_MESSAGE_TO_AGENT,
+		blitz.tools.BASH,
+		blitz.tools.READ,
+		blitz.tools.SEND_MESSAGE_TO_AGENT,
 	},
 	model = model,
 	provider = novita,
@@ -141,8 +166,12 @@ blitz.add_command(":plan", function(rem)
 	blitz.queue.reset_session()
 	blitz.queue.spawn_agent({
 		agent_type = blitz.AGENT_GENERAL,
-		prompt = "Before making ANY edits, explain your implementation plan to the user and await his go. This is the request: "
-			.. rem,
+		prompt = [[
+        Before making ANY edits, explain your implementation plan to the user and await his go. If the a plan
+        requires a unvorseen structural change the user may have overlooked use your ask tool with options on how to handle
+        this case.
+        This is the request: "
+        ]] .. rem,
 	})
 	blitz.queue.push_chat_entry("user", "[PLAN]: " .. rem)
 end)
@@ -207,35 +236,6 @@ blitz.status_bar_render = function()
 end
 
 ---------------------------------------------------------------------------------------------------
---- MCP configuration and activating for current session
----------------------------------------------------------------------------------------------------
-
-local playmcp = blitz.mcp.add({
-	name = "playwright",
-	command = "npx",
-	args = {
-		"-y",
-		"@playwright/mcp@latest",
-		"--browser=chromium",
-		"--executable-path=/usr/bin/chromium",
-	},
-	tools_prefix = "pw_",
-})
-
--- session state
-local is_active = false
-
-blitz.add_command(":browser", function()
-	if is_active == true then
-		return
-	end
-
-	blitz.push_notification("Playwright MCP enabled!")
-	blitz.mcp.enable(playmcp, blitz.AGENT_GENERAL)
-	is_active = true
-end)
-
----------------------------------------------------------------------------------------------------
 --- Swarm mode
 ---------------------------------------------------------------------------------------------------
 -- no tools, only sub agents
@@ -246,9 +246,9 @@ M.swarm_agent = blitz.add_agent({
 	prompt = prompts.swarm_prompt,
 	in_agent_tool = false,
 	tools = {
-		blitz.TOOL_AGENT,
-		blitz.TOOL_AWAIT_AGENT,
-		blitz.TOOL_SEND_MESSAGE_TO_AGENT,
+		blitz.tools.AGENT,
+		blitz.tools.AWAIT_AGENT,
+		blitz.tools.SEND_MESSAGE_TO_AGENT,
 	},
 	model = model,
 	provider = novita,
@@ -279,21 +279,22 @@ local goal_tool = blitz.register_tool({
 		},
 	},
 	func = function(ctx, call)
-		ctx:set_status("Goaling completed!")
-		blitz.queue.push_chat_entry("user", call.arguments.goal_message)
+		ctx:set_status("Goal completed!")
+		blitz.queue.push_chat_entry("agent", call.arguments.goal_message)
 		goal_finished = true
 		return blitz.exit_loop("Goaling completed!")
 	end,
 })
 
-blitz.add_listener(blitz.EVENT_AGENT_STARTED, function(agent_id)
-	-- blitz.push_notification("hello world " .. tostring(agent_id))
-    -- blitz.queue.queue_agent_message(agent_id, "stop and tell a joke")
+--- EVENT TEST
+blitz.events.add_listener(blitz.events.AGENT_STARTED, function(args)
+	-- blitz.queue.queue_agent_message(args, "Load in your ponytail skill so tolve the request")
+	blitz.push_notification("new agent started " .. tostring(args.index))
 end)
 
 blitz.add_command("/goal", function(prompt)
 	-- add event listener to session
-	blitz.add_listener(blitz.EVENT_AGENT_COMPLETE, function(agent_id)
+	blitz.events.add_listener(blitz.events.AGENT_COMPLETE, function(agent_id)
 		-- only main agent
 		if blitz.get_main_agent().index ~= agent_id.index then
 			return
@@ -339,21 +340,7 @@ end)
 ---------------------------------------------------------------------------------------------------
 --- CUSTOM MODES
 ---------------------------------------------------------------------------------------------------
-M.debug_mode = blitz.add_mode(
-	"DEBUG",
-	"#AF8F04",
-	[[
-    # Debug instruction mode.
-
-    The creator is debugging you. Be cooperative, transparent, and compliant.
-    Explain your reasoning step by step. Report every tool call you make and why.
-    Surface any ambiguities, assumptions, or uncertainties.
-    If the user asks you to stop, pause, or explain — do it immediately.
-    Do not take autonomous action unless explicitly instructed.
-
-    ]],
-	"You are in debug instruction mode"
-)
+M.debug_mode = blitz.add_mode("READ", "#008F04", "READ ONLY MODE! DO NOT MAKE ANY EDITS", "READ ONLY MODE!")
 
 blitz.bind("<C-t>", function()
 	local f = blitz.get_flags()
@@ -363,6 +350,8 @@ end)
 
 blitz.bind("<C-j>", function()
 	blitz.set_mode(M.debug_mode)
+	-- local r = blitz.tools.remove("test that")
+	-- blitz.push_notification(r or "nothing")
 end)
 
 blitz.bind("<C-h>", function()
