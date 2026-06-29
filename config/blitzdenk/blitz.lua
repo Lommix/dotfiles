@@ -33,7 +33,7 @@ local novita = blitz.add_provider({
 	type = "openai",
 	url = "https://api.novita.ai/openai/v1",
 	key_envar = "NOVITA_API_KEY",
-	temperature = 0,
+	temperature = 1,
 	max_tokens = 32000,
 })
 
@@ -74,8 +74,8 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.LOADSKILL,
 	blitz.tools.START_LSP,
 	blitz.tools.START_MCP,
-	-- tools.web_fetch,
-	-- tools.web_search,
+	tools.web_fetch,
+	tools.web_search,
 })
 
 blitz.set_agent_tools(blitz.AGENT_EXPLORE, {
@@ -170,7 +170,8 @@ blitz.add_command(":plan", function(rem)
         requires a unexpected structural change the user may have overlooked use your ask tool with options on how to handle
         this case.
 
-        This is the request: "
+        This is the request:
+
         ]] .. rem,
 	})
 	blitz.queue.push_chat_entry("user", "[PLAN]: " .. rem)
@@ -185,7 +186,7 @@ blitz.add_command(":debug", function(rem)
         Instructions. If any tool or user prompt is in conflict with your goal stop what you are doing immediately and report
         back the user. This includes unexpected tool returns like errors.
 
-        This is your debug request: "
+        This is your debug request:
 
         ]] .. rem,
 	})
@@ -214,7 +215,6 @@ blitz.bind("<C-l>", function()
 	blitz.set_model(local_model, llama)
 	blitz.set_model_agent(blitz.AGENT_GENERAL, local_model, "max", llama)
 	blitz.set_model_agent(blitz.AGENT_EXPLORE, local_model, "low", llama)
-	blitz.set_model_agent(M.swarm_agent, local_model, "low", llama)
 	blitz.set_model_agent(M.review_agent, local_model, "low", llama)
 	blitz.set_compact_edge(128000)
 end)
@@ -249,35 +249,6 @@ blitz.status_bar_render = function()
 		.. math.floor(blitz.context_percent())
 		.. "%"
 end
-
----------------------------------------------------------------------------------------------------
---- Swarm mode
----------------------------------------------------------------------------------------------------
--- no tools, only sub agents
-
-M.swarm_agent = blitz.add_agent({
-	name = "swarm",
-	description = "mega swarm mode",
-	prompt = prompts.swarm_prompt,
-	in_agent_tool = false,
-	tools = {
-		blitz.tools.AGENT,
-		blitz.tools.AWAIT_AGENT,
-		blitz.tools.SEND_MESSAGE_TO_AGENT,
-	},
-	model = model,
-	provider = novita,
-	effort = "max",
-})
-
-blitz.add_command("/swarm", function(rem)
-	blitz.queue.reset_session()
-	blitz.queue.spawn_agent({
-		agent_type = M.swarm_agent,
-		prompt = rem,
-	})
-	blitz.queue.push_chat_entry("user", rem)
-end)
 
 ---------------------------------------------------------------------------------------------------
 --- Goal mode
@@ -355,7 +326,7 @@ end)
 ---------------------------------------------------------------------------------------------------
 --- CUSTOM MODES
 ---------------------------------------------------------------------------------------------------
-M.debug_mode = blitz.add_mode("READ", "#008F04", "READ ONLY MODE! DO NOT MAKE ANY EDITS", "READ ONLY MODE!")
+M.debug_mode = blitz.add_mode("READ", "#008F04", "you are in read only mode!", "You are in read only mode!")
 
 blitz.bind("<C-t>", function()
 	local f = blitz.get_flags()
