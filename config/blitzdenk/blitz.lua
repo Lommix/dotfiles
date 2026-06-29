@@ -2,8 +2,7 @@ local M = {}
 local prompts = require("prompts")
 local tools = require("tools")
 
-blitz.set_compact_edge(220000)
-
+blitz.set_compact_edge(200000)
 local flags = blitz.get_flags()
 flags.show_thinking = false
 flags.debug_log = true
@@ -13,14 +12,14 @@ blitz.set_flags(flags)
 ---------------------------------------------------------------------------------------------------
 --- Provider configuration
 ---------------------------------------------------------------------------------------------------
--- local llama = blitz.add_provider({
--- 	type = "openai",
--- 	url = "http://127.0.0.1:8118",
--- 	key_envar = "",
--- 	max_tokens = 32000,
--- 	effort = "max",
--- 	temperature = 1,
--- })
+local llama = blitz.add_provider({
+	type = "openai",
+	url = "http://127.0.0.1:8118",
+	key_envar = "",
+	max_tokens = 32000,
+	effort = "max",
+	temperature = 1,
+})
 --
 -- local novita = blitz.add_provider({
 -- 	type = "anthropic",
@@ -34,23 +33,23 @@ local novita = blitz.add_provider({
 	type = "openai",
 	url = "https://api.novita.ai/openai/v1",
 	key_envar = "NOVITA_API_KEY",
+	temperature = 0,
+	max_tokens = 32000,
+})
+
+local openrouter = blitz.add_provider({
+	type = "openai",
+	url = "https://openrouter.ai/api/v1",
+	key_envar = "OPENROUTER_API_KEY",
 	temperature = 1,
 	max_tokens = 32000,
 })
 
--- local openrouter = blitz.add_provider({
--- 	type = "openai",
--- 	url = "https://openrouter.ai/api/v1",
--- 	key_envar = "OPENROUTER_API_KEY",
--- 	temperature = 1,
--- 	max_tokens = 32000,
--- })
---
--- local openai = blitz.add_provider({
--- 	type = "openai",
--- 	url = "https://api.openai.com/v1",
--- 	key_envar = "OPENAI_API_KEY",
--- })
+local openai = blitz.add_provider({
+	type = "openai",
+	url = "https://api.openai.com/v1",
+	key_envar = "OPENAI_API_KEY",
+})
 
 ---------------------------------------------------------------------------------------------------
 --- Default Agent tool set overwrites
@@ -168,14 +167,30 @@ blitz.add_command(":plan", function(rem)
 		agent_type = blitz.AGENT_GENERAL,
 		prompt = [[
         Before making ANY edits, explain your implementation plan to the user and await his go. If the a plan
-        requires a unvorseen structural change the user may have overlooked use your ask tool with options on how to handle
+        requires a unexpected structural change the user may have overlooked use your ask tool with options on how to handle
         this case.
+
         This is the request: "
         ]] .. rem,
 	})
 	blitz.queue.push_chat_entry("user", "[PLAN]: " .. rem)
 end)
 
+blitz.add_command(":debug", function(rem)
+	blitz.queue.reset_session()
+	blitz.queue.spawn_agent({
+		agent_type = blitz.AGENT_GENERAL,
+		prompt = [[
+        You and your harness are now in debug mode! You are looking at your own codebase. The user is debugging you. Follow
+        Instructions. If any tool or user prompt is in conflict with your goal stop what you are doing immediately and report
+        back the user. This includes unexpected tool returns like errors.
+
+        This is your debug request: "
+
+        ]] .. rem,
+	})
+	blitz.queue.push_chat_entry("user", "[DEBUG]: " .. rem)
+end)
 ---------------------------------------------------------------------------------------------------
 --- Screenshots
 ---------------------------------------------------------------------------------------------------
