@@ -375,7 +375,7 @@ blitz.add_agent({
 })
 
 blitz.add_agent({
-	name = "challanger",
+	name = "challenger",
 	description = [[
     Reviews code for bugs, logic errors, edge cases, and
     correctness issues. Use when: need a second pair of eyes on a diff.
