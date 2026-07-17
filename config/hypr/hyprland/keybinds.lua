@@ -52,8 +52,8 @@ hl.bind("SUPER + k", hl.dsp.focus({ direction = "up" }))
 hl.bind("SUPER + CONTROL + h", hl.dsp.group.prev())
 hl.bind("SUPER + CONTROL + l", hl.dsp.group.next())
 
-hl.bind("SUPER + Minus", hl.dsp.layout("splitratio -0.02"), { non_consuming = true })
-hl.bind("SUPER + Plus", hl.dsp.layout("splitratio +0.02"), { non_consuming = true })
+hl.bind("SUPER + Minus", hl.dsp.layout("splitratio -0.02"))
+hl.bind("SUPER + Plus", hl.dsp.layout("splitratio +0.02"))
 
 for i = 1, 10 do
   local key = i % 10
