@@ -23,7 +23,7 @@ local llama = blitz.add_provider({
 --
 -- local novita = blitz.add_provider({
 -- 	type = "anthropic",
--- 	url = "https://api.novita.ai/anthropic",
+-- 	url = "https://api.novita.ai/anthropic/v1",
 -- 	key_envar = "NOVITA_API_KEY",
 -- 	max_tokens = 32000,
 -- 	temperature = 1,
@@ -45,10 +45,19 @@ local openrouter = blitz.add_provider({
 	max_tokens = 32000,
 })
 
+local xai = blitz.add_provider({
+	type = "response",
+	url = "https://api.x.ai/v1",
+	key_envar = "XAI_API_KEY",
+	temperature = 1,
+	max_tokens = 32000,
+})
+
 local openai = blitz.add_provider({
-	type = "openai",
+	type = "response",
 	url = "https://api.openai.com/v1",
 	key_envar = "OPENAI_API_KEY",
+	max_tokens = 32000,
 })
 
 ---------------------------------------------------------------------------------------------------
@@ -62,9 +71,9 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.READ,
 	blitz.tools.WRITE,
 	blitz.tools.EDIT,
-	-- blitz.tools.LIST_TASKS,
-	-- blitz.tools.UPDATE_TASK_STATE,
-	-- blitz.tools.CREATE_TASK,
+	-- blitz.tools.LIST_TODOS,
+	-- blitz.tools.UPDATE_TODO_STATE,
+	-- blitz.tools.CREATE_TODO,
 	blitz.tools.ASK,
 	blitz.tools.AGENT,
 	blitz.tools.AWAIT_AGENT,
@@ -78,14 +87,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	tools.web_search,
 })
 
-blitz.set_agent_tools(blitz.AGENT_EXPLORE, {
-	blitz.tools.RIPGREP,
-	blitz.tools.READ,
-	blitz.tools.SEND_MESSAGE_TO_AGENT,
-	blitz.tools.LOADSKILL,
-	tools.web_fetch,
-	tools.web_search,
-})
+-- blitz.set_prompt(blitz.AGENT_GENERAL, prompts.deepseek)
 
 ---------------------------------------------------------------------------------------------------
 --- MCP/LSP configuration
@@ -125,43 +127,34 @@ blitz.lsp.add({
 -- local model = "qwen/qwen3.5-397b-a17b"
 -- local model = "google/gemma-4-31b-it"
 -- local model = "xiaomimimo/mimo-v2.5"
+-- local model = "tencent/hy3"
+local default_model = "deepseek/deepseek-v4-flash"
 
-local model = "deepseek/deepseek-v4-flash"
+--- Price per 1M tokens
+local model_costs = {
+	["deepseek/deepseek-v4-flash"] = { input = 0.14, output = 0.28, cache = 0.028 },
+	["deepseek/deepseek-v4-pro"] = { input = 1.6, output = 3.2, cache = 0.135 },
+	["moonshotai/kimi-k3"] = { input = 3, output = 15, cache = 0.3 },
+}
 
-blitz.set_model(model, novita)
-blitz.set_model_agent(blitz.AGENT_GENERAL, model, "max", novita)
-blitz.set_model_agent(blitz.AGENT_EXPLORE, model, "low", novita)
-
-M.review_agent = blitz.add_agent({
-	name = "review",
-	description = "Review and audit specialist",
-	prompt = prompts.review,
-	in_agent_tool = true,
-	tools = {
-		blitz.tools.BASH,
-		blitz.tools.READ,
-		blitz.tools.SEND_MESSAGE_TO_AGENT,
-	},
-	model = model,
-	provider = novita,
-	effort = "max",
-})
+blitz.set_model(default_model, novita)
+blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "max", novita)
 
 -- big money mode
 blitz.bind("<C-b>", function()
-	blitz.push_notification("big mode deepseek")
+	blitz.push_notification("big seek mode")
 	blitz.set_model_agent(blitz.AGENT_GENERAL, "deepseek/deepseek-v4-pro", "high", novita)
 end)
 
 blitz.bind("<C-e>", function()
-	blitz.push_notification("big mode Z")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, "zai-org/glm-5.2", "high", novita)
+	blitz.push_notification("big Kimi mode")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, "moonshotai/kimi-k3", "high", novita)
 end)
 
 ---------------------------------------------------------------------------------------------------
 --- Command queue example: start new session with hidden prompts
 ---------------------------------------------------------------------------------------------------
-blitz.add_command(":plan", function(rem)
+blitz.add_command("/plan", function(rem)
 	blitz.queue.reset_session()
 	blitz.queue.spawn_agent({
 		agent_type = blitz.AGENT_GENERAL,
@@ -177,7 +170,7 @@ blitz.add_command(":plan", function(rem)
 	blitz.queue.push_chat_entry("user", "[PLAN]: " .. rem)
 end)
 
-blitz.add_command(":debug", function(rem)
+blitz.add_command("/debug", function(rem)
 	blitz.queue.reset_session()
 	blitz.queue.spawn_agent({
 		agent_type = blitz.AGENT_GENERAL,
@@ -214,7 +207,6 @@ blitz.bind("<C-l>", function()
 	local local_model = "Qwen3.6-35B-A3B"
 	blitz.set_model(local_model, llama)
 	blitz.set_model_agent(blitz.AGENT_GENERAL, local_model, "max", llama)
-	blitz.set_model_agent(blitz.AGENT_EXPLORE, local_model, "low", llama)
 	blitz.set_model_agent(M.review_agent, local_model, "low", llama)
 	blitz.set_compact_edge(128000)
 end)
@@ -237,8 +229,19 @@ local function fmt(n)
 end
 
 blitz.status_bar_render = function()
-	local use = blitz.token_usage()
+	local total_cost = 0.0
 
+	for _, en in ipairs(blitz.token_usage_by_model()) do
+		local c = model_costs[en.model]
+		if c then
+			total_cost = total_cost
+				+ (en.cache / 1000000) * c.cache
+				+ (en.output / 1000000) * c.output
+				+ (en.input / 1000000) * c.input
+		end
+	end
+
+	local use = blitz.token_usage()
 	return "Cache:"
 		.. fmt(use.cache)
 		.. " | In:"
@@ -248,6 +251,9 @@ blitz.status_bar_render = function()
 		.. " | Ctx:"
 		.. math.floor(blitz.context_percent())
 		.. "%"
+		.. " | Cost:"
+		.. string.format("%.2f", total_cost)
+		.. "$"
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -271,12 +277,6 @@ local goal_tool = blitz.register_tool({
 		return blitz.exit_loop("Goaling completed!")
 	end,
 })
-
---- EVENT TEST
-blitz.events.add_listener(blitz.events.AGENT_STARTED, function(args)
-	-- blitz.queue.queue_agent_message(args, "Load in your ponytail skill so tolve the request")
-	blitz.push_notification("new agent started " .. tostring(args.index))
-end)
 
 blitz.add_command("/goal", function(prompt)
 	-- add event listener to session
@@ -312,9 +312,7 @@ blitz.add_command("/goal", function(prompt)
 			prompt = [[
             Complete the following goal. While doing so keep track of your progress in a specialist file 'goal.md'.
             Write done your current progression and what you already did. When solving a complex bug, write down what you tried.
-            You need to protocol your progress at all times, so that another user might take over and continue.
-
-            After any change immediately update your progress. Step by step!
+            You need to protocol your progress at all times between steps, so that another agent might take over and continue.
 
             Goal instruction:
 
@@ -336,8 +334,6 @@ end)
 
 blitz.bind("<C-j>", function()
 	blitz.set_mode(M.debug_mode)
-	-- local r = blitz.tools.remove("test that")
-	-- blitz.push_notification(r or "nothing")
 end)
 
 blitz.bind("<C-h>", function()
@@ -348,10 +344,49 @@ end)
 --- Saving and loading Sessions
 -------------------------------------------------------------------------------------------------
 
-blitz.add_command(":save", function()
+blitz.add_command("/save", function()
 	blitz.queue.save_session(".blitz/blitz_save.json")
 end)
 
-blitz.add_command(":load", function()
+blitz.add_command("/load", function()
 	blitz.queue.load_session(".blitz/blitz_save.json")
 end)
+
+-------------------------------------------------------------------------------------------------
+--- Sub agents
+-------------------------------------------------------------------------------------------------
+blitz.add_agent({
+	name = "researcher",
+	description = [[
+    Research and exploration agent. Use when task requires: deep codebase exploration
+    across many files, searching for patterns or definitions, web research for libraries/
+    docs/solutions, or gathering context from multiple sources before making a decision.
+    ]],
+	prompt = prompts.explore,
+	effort = "low",
+	model = default_model,
+	provider = novita,
+	tools = {
+		blitz.tools.RIPGREP,
+		blitz.tools.READ,
+		tools.web_fetch,
+		tools.web_search,
+	},
+})
+
+blitz.add_agent({
+	name = "challanger",
+	description = [[
+    Reviews code for bugs, logic errors, edge cases, and
+    correctness issues. Use when: need a second pair of eyes on a diff.
+    ]],
+	prompt = prompts.review,
+	effort = "high",
+	model = default_model,
+	provider = novita,
+	tools = {
+		blitz.tools.RIPGREP,
+		blitz.tools.READ,
+		blitz.tools.BASH,
+	},
+})

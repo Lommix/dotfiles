@@ -11,7 +11,6 @@ M.lua_repl = blitz.register_tool({
 	func = function(ctx, call)
 		ctx:set_status("(Lua) `" .. call.arguments.code .. "`")
 
-
 		local fn, err = load(call.arguments.code)
 		if not fn then
 			return blitz.err(err)
@@ -49,11 +48,10 @@ M.web_fetch = blitz.register_tool({
 		-- It is not efficient, nor secure, but it works very well and is easy
 		local content, ok = blitz.shell(
 			"chromium --headless=new --disable-gpu --no-sandbox "
-				.. "--disable-blink-features=AutomationControlled "
-				.. "--window-size=1920,1080 "
-				.. "--virtual-time-budget=5000 "
-				.. '--print-to-pdf=/dev/stdout --no-margins "'
+				.. "--virtual-time-budget=3000 "
+				.. "--print-to-pdf=/dev/stdout --no-margins "
 				.. url
+				.. " 2>/dev/null"
 				.. '" | pdftotext - -'
 		)
 

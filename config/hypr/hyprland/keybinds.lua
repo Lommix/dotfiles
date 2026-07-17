@@ -27,10 +27,11 @@ hl.bind("SUPER + SHIFT + X", hl.dsp.exit())
 hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd([[grim -g "$(slurp)" - | swappy -f -]]))
 hl.bind("SUPER + SHIFT + C", hl.dsp.exec_cmd("~/.local/bin/colorpicker.sh"))
 
-hl.bind("SHIFT + mouse_up", hl.dsp.exec_cmd("wlrctl pointer click"))
-hl.bind("SHIFT + mouse_down", hl.dsp.exec_cmd("wlrctl pointer click"))
-hl.bind("CONTROL + mouse_up", hl.dsp.exec_cmd("wlrctl pointer click right"))
-hl.bind("CONTROL + mouse_down", hl.dsp.exec_cmd("wlrctl pointer click right"))
+-- poe
+-- hl.bind("SHIFT + mouse_up", hl.dsp.exec_cmd("wlrctl pointer click"))
+-- hl.bind("SHIFT + mouse_down", hl.dsp.exec_cmd("wlrctl pointer click"))
+-- hl.bind("CONTROL + mouse_up", hl.dsp.exec_cmd("wlrctl pointer click right"))
+-- hl.bind("CONTROL + mouse_down", hl.dsp.exec_cmd("wlrctl pointer click right"))
 
 hl.bind("SUPER + SHIFT + T", hl.dsp.group.toggle())
 hl.bind("SUPER + SHIFT + L", hl.dsp.group.lock_active({ action = "toggle" }))
