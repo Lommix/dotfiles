@@ -52,7 +52,7 @@ M.web_fetch = blitz.register_tool({
 				.. "--print-to-pdf=/dev/stdout --no-margins "
 				.. url
 				.. " 2>/dev/null"
-				.. '" | pdftotext - -'
+				.. " | pdftotext - -"
 		)
 
 		if not ok or content == nil or content == "" then
