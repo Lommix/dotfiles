@@ -75,10 +75,10 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	-- blitz.tools.UPDATE_TODO_STATE,
 	-- blitz.tools.CREATE_TODO,
 	blitz.tools.ASK,
-	blitz.tools.AGENT,
-	blitz.tools.AWAIT_AGENT,
-	blitz.tools.CANCEL_AGENT,
-	blitz.tools.SEND_MESSAGE_TO_AGENT,
+	-- blitz.tools.AGENT,
+	-- blitz.tools.AWAIT_AGENT,
+	-- blitz.tools.CANCEL_AGENT,
+	-- blitz.tools.SEND_MESSAGE_TO_AGENT,
 	blitz.tools.RIPGREP,
 	blitz.tools.LOADSKILL,
 	blitz.tools.START_LSP,
@@ -135,6 +135,7 @@ local model_costs = {
 	["deepseek/deepseek-v4-flash"] = { input = 0.14, output = 0.28, cache = 0.028 },
 	["deepseek/deepseek-v4-pro"] = { input = 1.6, output = 3.2, cache = 0.135 },
 	["moonshotai/kimi-k3"] = { input = 3, output = 15, cache = 0.3 },
+	["grok-4.5"] = { input = 2, output = 6, cache = 0.5 },
 }
 
 blitz.set_model(default_model, novita)
@@ -149,6 +150,11 @@ end)
 blitz.bind("<C-e>", function()
 	blitz.push_notification("big Kimi mode")
 	blitz.set_model_agent(blitz.AGENT_GENERAL, "moonshotai/kimi-k3", "high", novita)
+end)
+
+blitz.bind("<C-g>", function()
+	blitz.push_notification("big Grok mode")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, "grok-4.5", "high", xai)
 end)
 
 ---------------------------------------------------------------------------------------------------
@@ -363,7 +369,7 @@ blitz.add_agent({
     docs/solutions, or gathering context from multiple sources before making a decision.
     ]],
 	prompt = prompts.explore,
-	effort = "low",
+	effort = "medium",
 	model = default_model,
 	provider = novita,
 	tools = {
