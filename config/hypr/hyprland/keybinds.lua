@@ -12,6 +12,9 @@ hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO
 
 hl.bind("SUPER + B", hl.dsp.exec_cmd("killall -SIGUSR1 waybar"))
 
+-- toggle ASR (asr_mic.py --ptt must be running)
+hl.bind("SUPER + X", hl.dsp.exec_cmd("pkill -USR1 -f 'asr_mic.py --ptt'"))
+
 hl.bind("SUPER + Return", hl.dsp.exec_cmd(term))
 hl.bind("SUPER + D", hl.dsp.exec_cmd(launcher))
 hl.bind("SUPER + E", hl.dsp.exec_cmd(files))
