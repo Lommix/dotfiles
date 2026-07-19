@@ -2,33 +2,31 @@
     "layer": "top", // Waybar at top layer
     "position": "top", // Waybar at the bottom of your screen
     "height": 32,
-    "modules-left": [
-        "hyprland/workspaces",
-        "mpd",
-    ],
-    "modules-center": [
-		"clock",
-	],
-	//"start_hidden": true,
-	"modifier-reset": "press",
-	"modules-right": [
-		"custom/vpn",
-		"wireplumber",
-		"network",
-		"cpu",
-		"memory",
-		"battery",
-		"custom/bluetooth-battery",
-		"tray",
-	],
-    "hyprland/workspaces": {
-		"format": "{name}",
-		"format-icons": {
-			"default": "",
-			"active": "",
-		},
-		"all-outputs": false,
-    },
+"modules-left": [
+	        "ext/workspaces",
+	        "mpd",
+	    ],
+	    "modules-center": [
+			"clock",
+		],
+		//"start_hidden": true,
+		"modifier-reset": "press",
+		"modules-right": [
+			"custom/vpn",
+			"wireplumber",
+			"network",
+			"cpu",
+			"memory",
+			"battery",
+			"custom/bluetooth-battery",
+			"tray",
+		],
+	    "ext/workspaces": {
+			"format": "{name}",
+			"on-click": "activate",
+			"sort-by-id": true,
+			"all-outputs": false,
+	    },
     "tray": {
         "icon-size": 21,
         "spacing": 10
