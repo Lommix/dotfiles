@@ -21,12 +21,12 @@
 			"custom/bluetooth-battery",
 			"tray",
 		],
-	    "ext/workspaces": {
-			"format": "{name}",
-			"on-click": "activate",
-			"sort-by-id": true,
-			"all-outputs": false,
-	    },
+		    "ext/workspaces": {
+				"format": "{name}",
+				"on-click": "activate",
+				"sort-by-name": true,
+				"all-outputs": false,
+		    },
     "tray": {
         "icon-size": 21,
         "spacing": 10
