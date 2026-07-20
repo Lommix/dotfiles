@@ -15,6 +15,9 @@ hl.bind("SUPER + B", hl.dsp.exec_cmd("killall -SIGUSR1 waybar"))
 -- toggle ASR (asr_mic.py --ptt must be running)
 hl.bind("SUPER + X", hl.dsp.exec_cmd("pkill -USR1 -f 'asr_mic.py --ptt'"))
 
+-- zen: disable all monitors except biggest
+hl.bind("SUPER + Z", hl.dsp.exec_cmd("~/.local/bin/zen-mode.sh"))
+
 hl.bind("SUPER + Return", hl.dsp.exec_cmd(term))
 hl.bind("SUPER + D", hl.dsp.exec_cmd(launcher))
 hl.bind("SUPER + E", hl.dsp.exec_cmd(files))
