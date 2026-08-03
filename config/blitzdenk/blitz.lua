@@ -45,6 +45,14 @@ local openrouter = blitz.add_provider({
 	max_tokens = 32000,
 })
 
+local requesty = blitz.add_provider({
+	type = "response",
+	url = "https://router.requesty.ai/v1",
+	key_envar = "REQUESTY_API_KEY",
+	temperature = 1,
+	max_tokens = 32000,
+})
+
 local xai = blitz.add_provider({
 	type = "response",
 	url = "https://api.x.ai/v1",
@@ -79,7 +87,8 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	-- blitz.tools.AWAIT_AGENT,
 	-- blitz.tools.CANCEL_AGENT,
 	-- blitz.tools.SEND_MESSAGE_TO_AGENT,
-	blitz.tools.RIPGREP,
+	blitz.tools.GLOB,
+	blitz.tools.GREP,
 	blitz.tools.LOADSKILL,
 	blitz.tools.START_LSP,
 	blitz.tools.START_MCP,
@@ -128,14 +137,18 @@ blitz.lsp.add({
 -- local model = "google/gemma-4-31b-it"
 -- local model = "xiaomimimo/mimo-v2.5"
 -- local model = "tencent/hy3"
-local default_model = "deepseek/deepseek-v4-flash"
+local default_model = "deepseek/deepseek-v4-flash-0731"
 
 --- Price per 1M tokens
 local model_costs = {
+	["stepfun/step-3.7-flash"] = { input = 0.2, output = 1.15, cache = 0.04 },
+	["deepseek/deepseek-v4-flash-0731"] = { input = 0.14, output = 0.28, cache = 0.028 },
 	["deepseek/deepseek-v4-flash"] = { input = 0.14, output = 0.28, cache = 0.028 },
 	["deepseek/deepseek-v4-pro"] = { input = 1.6, output = 3.2, cache = 0.135 },
 	["moonshotai/kimi-k3"] = { input = 3, output = 15, cache = 0.3 },
+	["sference/kimi-k3"] = { input = 2.25, output = 11.25, cache = 0.3 },
 	["grok-4.5"] = { input = 2, output = 6, cache = 0.5 },
+	["sference/glm-5.2"] = { input = 1.5, output = 4.5, cache = 0.38 },
 }
 
 blitz.set_model(default_model, novita)
@@ -143,13 +156,13 @@ blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "max", novita)
 
 -- big money mode
 blitz.bind("<C-b>", function()
-	blitz.push_notification("big seek mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, "deepseek/deepseek-v4-pro", "high", novita)
+	blitz.push_notification("big Z mode")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, "sference/glm-5.2", "high", requesty)
 end)
 
 blitz.bind("<C-e>", function()
 	blitz.push_notification("big Kimi mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, "moonshotai/kimi-k3", "high", novita)
+	blitz.set_model_agent(blitz.AGENT_GENERAL, "sference/kimi-k3", "high", requesty)
 end)
 
 blitz.bind("<C-g>", function()
@@ -373,7 +386,8 @@ blitz.add_agent({
 	model = default_model,
 	provider = novita,
 	tools = {
-		blitz.tools.RIPGREP,
+		blitz.tools.GLOB,
+		blitz.tools.GREP,
 		blitz.tools.READ,
 		tools.web_fetch,
 		tools.web_search,
@@ -385,13 +399,15 @@ blitz.add_agent({
 	description = [[
     Reviews code for bugs, logic errors, edge cases, and
     correctness issues. Use when: need a second pair of eyes on a diff.
+    Use ponytail review.
     ]],
 	prompt = prompts.review,
 	effort = "high",
 	model = default_model,
 	provider = novita,
 	tools = {
-		blitz.tools.RIPGREP,
+		blitz.tools.GLOB,
+		blitz.tools.GREP,
 		blitz.tools.READ,
 		blitz.tools.BASH,
 	},

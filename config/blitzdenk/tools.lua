@@ -42,18 +42,7 @@ M.web_fetch = blitz.register_tool({
 		end
 
 		ctx:set_status("fetch " .. url)
-
-		-- headless chromium with virtual-time-budget for SPA rendering.
-		-- convert to pdf -> convert pdf to text.
-		-- It is not efficient, nor secure, but it works very well and is easy
-		local content, ok = blitz.shell(
-			"chromium --headless=new --disable-gpu --no-sandbox "
-				.. "--virtual-time-budget=3000 "
-				.. "--print-to-pdf=/dev/stdout --no-margins "
-				.. url
-				.. " 2>/dev/null"
-				.. " | pdftotext - -"
-		)
+		local content, ok = blitz.shell("yomi read " .. url)
 
 		if not ok or content == nil or content == "" then
 			return blitz.err("chromium returned no output")
@@ -64,11 +53,11 @@ M.web_fetch = blitz.register_tool({
 })
 
 -------------------------------------------------------------------------------------------------
---- Web search with searXNG
+--- Web search with Brave
 -------------------------------------------------------------------------------------------------
 M.web_search = blitz.register_tool({
 	name = "lua_web_search",
-	description = "Search the web via a local SearXNG instance",
+	description = "Search the web with Brave. Supports Brave query operators such as site: and filetype:.",
 	args = {
 		searchQuery = { type = "string", description = "the search query", required = true },
 		max_results = { type = "number", description = "maximum results to return (default 10, max 20)" },
@@ -79,7 +68,23 @@ M.web_search = blitz.register_tool({
 			return blitz.err("searchQuery is required")
 		end
 
+		local api_key = os.getenv("BRAVE_API_KEY")
+		if type(api_key) ~= "string" or api_key == "" then
+			return blitz.err("BRAVE_API_KEY is not set")
+		end
+		if api_key:find("[%c]") then
+			return blitz.err("BRAVE_API_KEY contains invalid control characters")
+		end
+
 		ctx:set_status("search " .. query)
+
+		local max = tonumber(call.arguments.max_results) or 10
+		if max < 1 then
+			max = 1
+		end
+		if max > 20 then
+			max = 20
+		end
 
 		-- RFC 3986 percent-encode (unreserved set kept literal)
 		local function urlencode(s)
@@ -91,37 +96,39 @@ M.web_search = blitz.register_tool({
 			return (s:gsub("([^%w%-_%.~])", rep))
 		end
 
-		local api = "http://127.0.0.1:8080/search?q={s}&format=json"
-		local serach_url = (api:gsub("{s}", function()
-			return urlencode(query)
-		end))
+		local search_url = "https://api.search.brave.com/res/v1/web/search?q="
+			.. urlencode(query)
+			.. "&count="
+			.. max
+			.. "&result_filter=web&text_decorations=false&extra_snippets=true"
 
-		local body, ok = blitz.shell("curl -sS --max-time 15 '" .. serach_url .. "'")
+		local body, ok = blitz.shell(
+			"curl -sS --max-time 15 -H 'Accept: application/json' -H \"X-Subscription-Token: $BRAVE_API_KEY\" '"
+				.. search_url
+				.. "'"
+		)
 		if not ok then
-			return blitz.err("searxng request failed (curl exit non-zero)")
+			return blitz.err("brave request failed (curl exit non-zero)")
 		end
 		if type(body) ~= "string" or body == "" then
-			return blitz.err("searxng returned empty body")
+			return blitz.err("Brave Search returned an empty response")
 		end
 
 		local val, ok = blitz.json.decode(body)
-
 		if ok == false then
-			return blitz.err("failed to parse searxng json response")
+			return blitz.err("failed to parse brave json response")
+		end
+		if type(val) == "table" and type(val.error) == "table" then
+			return blitz.err(
+				"Brave Search failed: " .. tostring(val.error.detail or val.error.message or "unknown API error")
+			)
 		end
 
-		local results = type(val) == "table" and val.results or nil
+		local results = type(val) == "table" and type(val.web) == "table" and val.web.results or nil
 		if type(results) ~= "table" or #results == 0 then
 			return blitz.ok("No results for: " .. query)
 		end
 
-		local max = tonumber(call.arguments.max_results) or 10
-		if max < 1 then
-			max = 1
-		end
-		if max > 20 then
-			max = 20
-		end
 		if max > #results then
 			max = #results
 		end
@@ -144,14 +151,21 @@ M.web_search = blitz.register_tool({
 			if title == "" then
 				title = "(no title)"
 			end
-			local url = r.url or ""
-			local snippet = clean(r.content)
+			local snippet = clean(r.description)
 			if #snippet > 500 then
 				snippet = snippet:sub(1, 500) .. "..."
 			end
 			lines[#lines + 1] = string.format("[%d] %s", idx, title)
-			lines[#lines + 1] = "    " .. url
+			lines[#lines + 1] = "    " .. tostring(r.url or "")
 			lines[#lines + 1] = "    " .. snippet
+			if type(r.extra_snippets) == "table" then
+				for _, extra in ipairs(r.extra_snippets) do
+					extra = clean(extra)
+					if extra ~= "" then
+						lines[#lines + 1] = "    More: " .. extra
+					end
+				end
+			end
 			lines[#lines + 1] = ""
 		end
 
