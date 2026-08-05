@@ -2,7 +2,7 @@ local M = {}
 local prompts = require("prompts")
 local tools = require("tools")
 
-blitz.set_compact_edge(200000)
+blitz.set_compact_edge(250000)
 local flags = blitz.get_flags()
 flags.show_thinking = false
 flags.debug_log = true
@@ -75,7 +75,8 @@ local openai = blitz.add_provider({
 -- main agent/fork
 blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.BASH,
-	blitz.tools.CANCEL_BACKGROUND,
+	blitz.tools.CANCEL_PROCESS,
+	blitz.tools.READ_PROCESS,
 	blitz.tools.READ,
 	blitz.tools.WRITE,
 	blitz.tools.EDIT,
@@ -96,7 +97,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	tools.web_search,
 })
 
--- blitz.set_prompt(blitz.AGENT_GENERAL, prompts.deepseek)
+-- blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
 
 ---------------------------------------------------------------------------------------------------
 --- MCP/LSP configuration
@@ -151,6 +152,7 @@ local model_costs = {
 	["sference/glm-5.2"] = { input = 1.5, output = 4.5, cache = 0.38 },
 }
 
+default_model = "stepfun/step-3.7-flash"
 blitz.set_model(default_model, novita)
 blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "max", novita)
 
@@ -168,6 +170,7 @@ end)
 blitz.bind("<C-g>", function()
 	blitz.push_notification("big Grok mode")
 	blitz.set_model_agent(blitz.AGENT_GENERAL, "grok-4.5", "high", xai)
+	blitz.add_tool(blitz.AGENT_GENERAL, blitz.tools.VIEW_IMAGE)
 end)
 
 ---------------------------------------------------------------------------------------------------
