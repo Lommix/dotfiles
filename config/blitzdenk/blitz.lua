@@ -101,7 +101,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	tools.web_fetch,
 	tools.web_search,
 	tools.ocr,
-    tools.lua_repl,
+	tools.lua_repl,
 })
 
 blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
@@ -284,71 +284,6 @@ blitz.status_bar_render = function()
 		.. "$"
 end
 
----------------------------------------------------------------------------------------------------
---- Goal mode
----------------------------------------------------------------------------------------------------
-local goal_finished = false
-local goal_tool = blitz.register_tool({
-	name = "goal_completed",
-	description = "Only call this tool, when your goal is completed",
-	args = {
-		goal_message = {
-			type = "string",
-			description = "Structured goal status report",
-			required = true,
-		},
-	},
-	func = function(ctx, call)
-		ctx:set_status("Goal completed!")
-		blitz.queue.push_chat_entry("agent", call.arguments.goal_message)
-		goal_finished = true
-		return blitz.exit_loop("Goaling completed!")
-	end,
-})
-
-blitz.add_command("/goal", function(prompt)
-	-- add event listener to session
-	blitz.events.add_listener(blitz.events.AGENT_COMPLETE, function(agent_id)
-		-- only main agent
-		if blitz.get_main_agent().index ~= agent_id.index then
-			return
-		end
-
-		if goal_finished then
-			return
-		end
-
-		blitz.queue.queue_agent_message(agent_id, [[
-			Your goal is unfinished. Validate the current state. If the goal is determined to be finished, call `goal_completed`
-            Check your protocol file 'goal.md' and continue where you left of.
-
-            Original goal instructions: ]] .. prompt)
-	end)
-
-	--- add the tool to the current set
-	blitz.add_tool(blitz.AGENT_GENERAL, goal_tool)
-
-	goal_finished = false
-	local main_agent_id = blitz.get_main_agent()
-
-	blitz.queue.push_chat_entry("user", "Goal: " .. prompt)
-
-	if main_agent_id ~= nil then
-		blitz.queue.queue_agent_message(main_agent_id, "Complete the goal: " .. prompt)
-	else
-		blitz.queue.spawn_agent({
-			prompt = [[
-            Complete the following goal. While doing so keep track of your progress in a specialist file 'goal.md'.
-            Write done your current progression and what you already did. When solving a complex bug, write down what you tried.
-            You need to protocol your progress at all times between steps, so that another agent might take over and continue.
-
-            Goal instruction:
-
-            ]] .. prompt,
-			tool_budget = 1024,
-		})
-	end
-end)
 ---------------------------------------------------------------------------------------------------
 --- CUSTOM MODES
 ---------------------------------------------------------------------------------------------------
