@@ -2,10 +2,10 @@ local M = {}
 
 M.ocr = blitz.register_tool({
 	name = "lua_view_image",
-	description = "View any image and get a detailed OCR description back. Provide a prompt for a more detailed report",
+	description = "View any image and get a detailed OCR description back. Provide an optional prompt for a more detailed report",
 	args = {
 		path = { type = "string", description = "the image path or url", required = true },
-		prompt = { type = "string", description = "optional question" },
+		prompt = { type = "string", description = "optional prompt" },
 	},
 	func = function(ctx, call)
 		local ocr_url = "http://127.0.0.1:8119/v1/chat/completions"
@@ -20,7 +20,7 @@ M.ocr = blitz.register_tool({
 			prompt = "OCR"
 		end
 
-		ctx:set_status("viewing " .. path)
+		ctx:set_status("view image `" .. path .. "`")
 
 		local image_url = path
 		if not path:match("^https?://") then

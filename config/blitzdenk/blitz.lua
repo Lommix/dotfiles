@@ -101,6 +101,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	tools.web_fetch,
 	tools.web_search,
 	tools.ocr,
+    tools.lua_repl,
 })
 
 blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
