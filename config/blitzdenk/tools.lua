@@ -1,4 +1,82 @@
 local M = {}
+
+M.ocr = blitz.register_tool({
+	name = "lua_view_image",
+	description = "View any image and get a detailed OCR description back. Provide a prompt for a more detailed report",
+	args = {
+		path = { type = "string", description = "the image path or url", required = true },
+		prompt = { type = "string", description = "optional question" },
+	},
+	func = function(ctx, call)
+		local ocr_url = "http://127.0.0.1:8119/v1/chat/completions"
+		local model = "ggml-org/GLM-OCR-GGUF:Q8_0"
+
+		local path = call.arguments.path
+		if type(path) ~= "string" or path == "" then
+			return blitz.err("path is required")
+		end
+		local prompt = call.arguments.prompt
+		if type(prompt) ~= "string" or prompt == "" then
+			prompt = "OCR"
+		end
+
+		ctx:set_status("viewing " .. path)
+
+		local image_url = path
+		if not path:match("^https?://") then
+			local b64, ok = blitz.shell("base64 -w0 '" .. path .. "'")
+			if not ok or b64 == nil or b64 == "" then
+				return blitz.err("failed to read image: " .. path)
+			end
+			image_url = "data:image/png;base64," .. (b64:gsub("%s+", ""))
+		end
+
+		local payload, ok = blitz.json.encode({
+			model = model,
+			messages = {
+				{
+					role = "user",
+					content = {
+						{ type = "text", text = prompt },
+						{ type = "image_url", image_url = { url = image_url } },
+					},
+				},
+			},
+		})
+		if ok == false then
+			return blitz.err("failed to build ocr request")
+		end
+
+		local tmp = os.tmpname()
+		local f = assert(io.open(tmp, "w"))
+		f:write(payload)
+		f:close()
+
+		local body, ok =
+			blitz.shell("curl -sS --max-time 30 -H 'Content-Type: application/json' -d @" .. tmp .. " " .. ocr_url)
+		os.remove(tmp)
+		if not ok then
+			return blitz.err("ocr request failed (curl exit non-zero)")
+		end
+
+		local val, ok = blitz.json.decode(body)
+		if ok == false then
+			return blitz.err("failed to parse ocr json response")
+		end
+
+		local text = val
+			and val.choices
+			and val.choices[1]
+			and val.choices[1].message
+			and val.choices[1].message.content
+		if type(text) ~= "string" or text == "" then
+			return blitz.err("OCR returned empty content")
+		end
+
+		return blitz.ok(text)
+	end,
+})
+
 -------------------------------------------------------------------------------------------------
 --- CUSTOM TOOLS: Lua repl for math
 -------------------------------------------------------------------------------------------------

@@ -9,6 +9,10 @@ flags.debug_log = true
 flags.skip_permissions = true
 blitz.set_flags(flags)
 
+local theme = blitz.get_theme()
+theme.bg = "#181824"
+blitz.set_theme(theme)
+
 ---------------------------------------------------------------------------------------------------
 --- Provider configuration
 ---------------------------------------------------------------------------------------------------
@@ -46,7 +50,7 @@ local openrouter = blitz.add_provider({
 })
 
 local requesty = blitz.add_provider({
-	type = "response",
+	type = "openai",
 	url = "https://router.requesty.ai/v1",
 	key_envar = "REQUESTY_API_KEY",
 	temperature = 1,
@@ -80,6 +84,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.READ,
 	blitz.tools.WRITE,
 	blitz.tools.EDIT,
+	-- blitz.tools.VIEW_IMAGE,
 	-- blitz.tools.LIST_TODOS,
 	-- blitz.tools.UPDATE_TODO_STATE,
 	-- blitz.tools.CREATE_TODO,
@@ -95,9 +100,10 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.START_MCP,
 	tools.web_fetch,
 	tools.web_search,
+	tools.ocr,
 })
 
--- blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
+blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
 
 ---------------------------------------------------------------------------------------------------
 --- MCP/LSP configuration
@@ -152,7 +158,6 @@ local model_costs = {
 	["sference/glm-5.2"] = { input = 1.5, output = 4.5, cache = 0.38 },
 }
 
-default_model = "stepfun/step-3.7-flash"
 blitz.set_model(default_model, novita)
 blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "max", novita)
 
@@ -385,7 +390,7 @@ blitz.add_agent({
     docs/solutions, or gathering context from multiple sources before making a decision.
     ]],
 	prompt = prompts.explore,
-	effort = "medium",
+	effort = "low",
 	model = default_model,
 	provider = novita,
 	tools = {
@@ -402,10 +407,9 @@ blitz.add_agent({
 	description = [[
     Reviews code for bugs, logic errors, edge cases, and
     correctness issues. Use when: need a second pair of eyes on a diff.
-    Use ponytail review.
     ]],
 	prompt = prompts.review,
-	effort = "high",
+	effort = "max",
 	model = default_model,
 	provider = novita,
 	tools = {
