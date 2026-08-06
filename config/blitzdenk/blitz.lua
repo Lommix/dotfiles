@@ -349,6 +349,7 @@ blitz.add_agent({
 	model = default_model,
 	provider = novita,
 	tools = {
+		tools.ocr,
 		blitz.tools.GLOB,
 		blitz.tools.GREP,
 		blitz.tools.READ,
