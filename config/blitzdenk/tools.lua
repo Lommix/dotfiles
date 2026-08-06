@@ -1,81 +1,121 @@
 local M = {}
 
-M.ocr = blitz.register_tool({
-	name = "lua_view_image",
-	description = "View any image and get a detailed OCR description back. Provide an optional prompt for a more detailed report",
-	args = {
-		path = { type = "string", description = "the image path or url", required = true },
-		prompt = { type = "string", description = "optional prompt" },
-	},
-	func = function(ctx, call)
-		local ocr_url = "http://127.0.0.1:8119/v1/chat/completions"
-		local model = "ggml-org/GLM-OCR-GGUF:Q8_0"
+--- @param vision_support boolean
+--- @return string
+M.ocr = function(vision_support)
+	return blitz.register_tool({
+		name = "lua_view_image",
+		description = "View any image and get a detailed OCR description back. Provide an optional prompt for a more detailed report",
+		args = {
+			path = { type = "string", description = "the image path or url", required = true },
+			prompt = { type = "string", description = "optional prompt" },
+		},
+		func = function(ctx, call)
+			local ocr_url = "http://127.0.0.1:8119/v1/chat/completions"
+			local model = "ggml-org/GLM-OCR-GGUF:Q8_0"
 
-		local path = call.arguments.path
-		if type(path) ~= "string" or path == "" then
-			return blitz.err("path is required")
-		end
-		local prompt = call.arguments.prompt
-		if type(prompt) ~= "string" or prompt == "" then
-			prompt = "OCR"
-		end
-
-		ctx:set_status("view image `" .. path .. "`")
-
-		local image_url = path
-		if not path:match("^https?://") then
-			local b64, ok = blitz.shell("base64 -w0 '" .. path .. "'")
-			if not ok or b64 == nil or b64 == "" then
-				return blitz.err("failed to read image: " .. path)
+			local path = call.arguments.path
+			if type(path) ~= "string" or path == "" then
+				error("path is required")
 			end
-			image_url = "data:image/png;base64," .. (b64:gsub("%s+", ""))
-		end
+			local prompt = call.arguments.prompt
+			if type(prompt) ~= "string" or prompt == "" then
+				prompt = "OCR"
+			end
 
-		local payload, ok = blitz.json.encode({
-			model = model,
-			messages = {
-				{
-					role = "user",
-					content = {
-						{ type = "text", text = prompt },
-						{ type = "image_url", image_url = { url = image_url } },
+			ctx:set_status("view image `" .. path .. "`")
+
+			local local_path = path:match("^file://(.*)$") or path
+
+			local function media_type_of(p)
+				if p:match("%.jpe?g$") then
+					return "image/jpeg"
+				elseif p:match("%.webp$") then
+					return "image/webp"
+				elseif p:match("%.gif$") then
+					return "image/gif"
+				end
+				return "image/png"
+			end
+
+			local function base64_file(p)
+				local b64, ok = blitz.shell("base64 -w0 '" .. p .. "'")
+				if not ok or b64 == nil or b64 == "" then
+					error("failed to read image: " .. path)
+				end
+				return (b64:gsub("%s+", ""))
+			end
+
+			if vision_support then
+				if path:match("^https?://") then
+					local tmp = os.tmpname()
+					local _, ok = blitz.shell("curl -sS --max-time 30 -o " .. tmp .. " '" .. path .. "'")
+					if not ok then
+						os.remove(tmp)
+						error("failed to fetch image: " .. path)
+					end
+					local img = { media_type = media_type_of(path), data = base64_file(tmp) }
+					os.remove(tmp)
+					return { img = img }
+				end
+				return { img = { media_type = media_type_of(local_path), data = base64_file(local_path) } }
+			end
+
+			local image_url = path
+			if not path:match("^https?://") then
+				local b64, ok = blitz.shell("base64 -w0 '" .. local_path .. "'")
+				if not ok or b64 == nil or b64 == "" then
+					error("failed to read image: " .. path)
+				end
+				image_url = "data:image/png;base64," .. (b64:gsub("%s+", ""))
+			end
+
+			local payload, ok = blitz.json.encode({
+				model = model,
+				messages = {
+					{
+						role = "user",
+						content = {
+							{ type = "text", text = prompt },
+							{ type = "image_url", image_url = { url = image_url } },
+						},
 					},
 				},
-			},
-		})
-		if ok == false then
-			return blitz.err("failed to build ocr request")
-		end
+			})
+			if ok == false then
+				error("failed to build ocr request")
+			end
 
-		local tmp = os.tmpname()
-		local f = assert(io.open(tmp, "w"))
-		f:write(payload)
-		f:close()
+			local tmp = os.tmpname()
+			local f = assert(io.open(tmp, "w"))
+			f:write(payload)
+			f:close()
 
-		local body, ok =
-			blitz.shell("curl -sS --max-time 30 -H 'Content-Type: application/json' -d @" .. tmp .. " " .. ocr_url)
-		os.remove(tmp)
-		if not ok then
-			return blitz.err("ocr request failed (curl exit non-zero)")
-		end
+			local body, ok =
+				blitz.shell("curl -sS --max-time 30 -H 'Content-Type: application/json' -d @" .. tmp .. " " .. ocr_url)
+			os.remove(tmp)
+			if not ok then
+				error("ocr request failed (curl exit non-zero)")
+			end
 
-		local val, ok = blitz.json.decode(body)
-		if ok == false then
-			return blitz.err("failed to parse ocr json response")
-		end
+			local val, ok = blitz.json.decode(body)
+			if ok == false then
+				error("failed to parse ocr json response")
+			end
 
-		local text = val
-			and val.choices
-			and val.choices[1]
-			and val.choices[1].message
-			and val.choices[1].message.content
-		if type(text) ~= "string" or text == "" then
-			return blitz.err("OCR returned empty content")
-		end
+			local text = val
+				and val.choices
+				and val.choices[1]
+				and val.choices[1].message
+				and val.choices[1].message.content
+			if type(text) ~= "string" or text == "" then
+				error("OCR returned empty content")
+			end
 
-		return blitz.ok(text)
-	end,
-})
+			return { msg = text }
+		end,
+	})
+end
 
 -------------------------------------------------------------------------------------------------
 --- CUSTOM TOOLS: Lua repl for math
@@ -91,15 +131,15 @@ M.lua_repl = blitz.register_tool({
 
 		local fn, err = load(call.arguments.code)
 		if not fn then
-			return blitz.err(err)
+			error(err)
 		end
 
 		local ok, result = pcall(fn)
 		if not ok then
-			return blitz.err(tostring(result))
+			error(tostring(result))
 		end
 
-		return blitz.ok(tostring(result or "nil"))
+		return { msg = tostring(result or "nil") }
 	end,
 })
 
@@ -116,17 +156,17 @@ M.web_fetch = blitz.register_tool({
 	func = function(ctx, call)
 		local url = call.arguments.url
 		if type(url) ~= "string" or url == "" then
-			return blitz.err("url is required")
+			error("url is required")
 		end
 
 		ctx:set_status("fetch " .. url)
 		local content, ok = blitz.shell("yomi read " .. url)
 
 		if not ok or content == nil or content == "" then
-			return blitz.err("chromium returned no output")
+			error("chromium returned no output")
 		end
 
-		return blitz.ok(content)
+		return { msg = content }
 	end,
 })
 
@@ -143,15 +183,15 @@ M.web_search = blitz.register_tool({
 	func = function(ctx, call)
 		local query = call.arguments.searchQuery
 		if type(query) ~= "string" or query == "" then
-			return blitz.err("searchQuery is required")
+			error("searchQuery is required")
 		end
 
 		local api_key = os.getenv("BRAVE_API_KEY")
 		if type(api_key) ~= "string" or api_key == "" then
-			return blitz.err("BRAVE_API_KEY is not set")
+			error("BRAVE_API_KEY is not set")
 		end
 		if api_key:find("[%c]") then
-			return blitz.err("BRAVE_API_KEY contains invalid control characters")
+			error("BRAVE_API_KEY contains invalid control characters")
 		end
 
 		ctx:set_status("search " .. query)
@@ -186,25 +226,23 @@ M.web_search = blitz.register_tool({
 				.. "'"
 		)
 		if not ok then
-			return blitz.err("brave request failed (curl exit non-zero)")
+			error("brave request failed (curl exit non-zero)")
 		end
 		if type(body) ~= "string" or body == "" then
-			return blitz.err("Brave Search returned an empty response")
+			error("Brave Search returned an empty response")
 		end
 
 		local val, ok = blitz.json.decode(body)
 		if ok == false then
-			return blitz.err("failed to parse brave json response")
+			error("failed to parse brave json response")
 		end
 		if type(val) == "table" and type(val.error) == "table" then
-			return blitz.err(
-				"Brave Search failed: " .. tostring(val.error.detail or val.error.message or "unknown API error")
-			)
+			error("Brave Search failed: " .. tostring(val.error.detail or val.error.message or "unknown API error"))
 		end
 
 		local results = type(val) == "table" and type(val.web) == "table" and val.web.results or nil
 		if type(results) ~= "table" or #results == 0 then
-			return blitz.ok("No results for: " .. query)
+			return { msg = "No results for: " .. query }
 		end
 
 		if max > #results then
@@ -247,7 +285,7 @@ M.web_search = blitz.register_tool({
 			lines[#lines + 1] = ""
 		end
 
-		return blitz.ok(table.concat(lines, "\n"))
+		return { msg = table.concat(lines, "\n") }
 	end,
 })
 

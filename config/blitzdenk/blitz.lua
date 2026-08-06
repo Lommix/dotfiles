@@ -100,7 +100,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.START_MCP,
 	tools.web_fetch,
 	tools.web_search,
-	tools.ocr,
+	tools.ocr(false),
 	tools.lua_repl,
 })
 
@@ -146,6 +146,7 @@ blitz.lsp.add({
 -- local model = "xiaomimimo/mimo-v2.5"
 -- local model = "tencent/hy3"
 local default_model = "deepseek/deepseek-v4-flash-0731"
+-- default_model = "stepfun/step-3.7-flash"
 
 --- Price per 1M tokens
 local model_costs = {
@@ -176,7 +177,6 @@ end)
 blitz.bind("<C-g>", function()
 	blitz.push_notification("big Grok mode")
 	blitz.set_model_agent(blitz.AGENT_GENERAL, "grok-4.5", "high", xai)
-	blitz.add_tool(blitz.AGENT_GENERAL, blitz.tools.VIEW_IMAGE)
 end)
 
 ---------------------------------------------------------------------------------------------------
@@ -349,7 +349,7 @@ blitz.add_agent({
 	model = default_model,
 	provider = novita,
 	tools = {
-		tools.ocr,
+		tools.ocr(false),
 		blitz.tools.GLOB,
 		blitz.tools.GREP,
 		blitz.tools.READ,
