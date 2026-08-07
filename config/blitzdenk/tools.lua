@@ -6,7 +6,7 @@ local M = {}
 M.gen_image = blitz.register_tool({
 	name = "lua_gen_image",
 	description = [[
-    Generate an image from prompt. Prompting best practices:
+    Generate an image from prompt. Returned format is webp! Prompting best practices:
     Structure prompt as scene/backdrop -> subject -> details -> constraints.
     Include intended use (ad, UI mock, infographic) to set the mode and polish level.
     Use camera/composition language for photorealism.
@@ -20,7 +20,7 @@ M.gen_image = blitz.register_tool({
     If the prompt is already detailed, normalize it instead of expanding it.
     ]],
 	args = {
-		path = { type = "string", description = "where to save", required = true },
+		path = { type = "string", description = "where to save the webp image", required = true },
 		prompt = { type = "string", description = "the generation prompt", required = true },
 		size = { type = "string", description = "image size as WxH, e.g. 512x512 (default 512x512)" },
 	},
@@ -174,11 +174,25 @@ M.ocr = function(vision_support)
 			end
 
 			local function base64_file(p)
+				if p:match("%.webp$") then
+					local tmp_png = os.tmpname() .. ".png"
+					local _, ok2 = blitz.shell("ffmpeg -y -i '" .. p .. "' '" .. tmp_png .. "' 2>/dev/null")
+					if not ok2 then
+						os.remove(tmp_png)
+						error("failed to convert webp to png: " .. p)
+					end
+					local b64, ok = blitz.shell("base64 -w0 '" .. tmp_png .. "'")
+					os.remove(tmp_png)
+					if not ok or b64 == nil or b64 == "" then
+						error("failed to read image: " .. p)
+					end
+					return (b64:gsub("%s+", "")), "image/png"
+				end
 				local b64, ok = blitz.shell("base64 -w0 '" .. p .. "'")
 				if not ok or b64 == nil or b64 == "" then
-					error("failed to read image: " .. path)
+					error("failed to read image: " .. p)
 				end
-				return (b64:gsub("%s+", ""))
+				return (b64:gsub("%s+", "")), media_type_of(p)
 			end
 
 			if vision_support then
@@ -189,20 +203,19 @@ M.ocr = function(vision_support)
 						os.remove(tmp)
 						error("failed to fetch image: " .. path)
 					end
-					local img = { media_type = media_type_of(path), data = base64_file(tmp) }
+					local data, mtype = base64_file(tmp)
+					local img = { media_type = mtype, data = data }
 					os.remove(tmp)
 					return { img = img }
 				end
-				return { img = { media_type = media_type_of(local_path), data = base64_file(local_path) } }
+				local data, mtype = base64_file(local_path)
+				return { img = { media_type = mtype, data = data } }
 			end
 
 			local image_url = path
 			if not path:match("^https?://") then
-				local b64, ok = blitz.shell("base64 -w0 '" .. local_path .. "'")
-				if not ok or b64 == nil or b64 == "" then
-					error("failed to read image: " .. path)
-				end
-				image_url = "data:image/png;base64," .. (b64:gsub("%s+", ""))
+				local data, mtype = base64_file(local_path)
+				image_url = "data:" .. mtype .. ";base64," .. data
 			end
 
 			local payload, ok = blitz.json.encode({
