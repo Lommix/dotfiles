@@ -292,8 +292,7 @@ M.lua_repl = blitz.register_tool({
 })
 
 -------------------------------------------------------------------------------------------------
---- Web fetch with chromium,
---- without protection
+--- Web fetch with yomi
 -------------------------------------------------------------------------------------------------
 M.web_fetch = blitz.register_tool({
 	name = "lua_webfetch",
@@ -319,7 +318,7 @@ M.web_fetch = blitz.register_tool({
 })
 
 -------------------------------------------------------------------------------------------------
---- Web search with Brave
+--- Web search with Brave API
 -------------------------------------------------------------------------------------------------
 M.web_search = blitz.register_tool({
 	name = "lua_web_search",

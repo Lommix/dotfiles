@@ -10,7 +10,22 @@ flags.skip_permissions = true
 blitz.set_flags(flags)
 
 local theme = blitz.get_theme()
-theme.bg = "#181824"
+theme.bg = "#1a1b26"
+theme.overlay_dark = "#16161e"
+theme.overlay = "#2f334d"
+theme.muted = "#565f89"
+theme.text = "#c0caf5"
+theme.ok = "#9ece6a"
+theme.info = "#7aa2f7"
+theme.warn = "#e0af68"
+theme.err = "#f7768e"
+theme.err_text = "#1a1b26"
+theme.diff_surface = "#292e42"
+theme.diff_add = "#9ece6a"
+theme.diff_remove = "#f7768e"
+theme.role_user = "#7aa2f7"
+theme.role_agent = "#bb9af7"
+theme.role_system = "#f7768e"
 blitz.set_theme(theme)
 
 ---------------------------------------------------------------------------------------------------
@@ -37,7 +52,7 @@ local novita = blitz.add_provider({
 	type = "openai",
 	url = "https://api.novita.ai/openai/v1",
 	key_envar = "NOVITA_API_KEY",
-	temperature = 1,
+	temperature = 0.7,
 	max_tokens = 32000,
 })
 
@@ -82,8 +97,9 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.CANCEL_PROCESS,
 	blitz.tools.READ_PROCESS,
 	blitz.tools.READ,
-	blitz.tools.WRITE,
-	blitz.tools.EDIT,
+	blitz.tools.PATCH,
+	-- blitz.tools.WRITE,
+	-- blitz.tools.EDIT,
 	-- blitz.tools.VIEW_IMAGE,
 	-- blitz.tools.LIST_TODOS,
 	-- blitz.tools.UPDATE_TODO_STATE,
@@ -92,7 +108,6 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.AGENT,
 	blitz.tools.AWAIT_AGENT,
 	blitz.tools.CANCEL_AGENT,
-	blitz.tools.SEND_MESSAGE_TO_AGENT,
 	blitz.tools.GLOB,
 	blitz.tools.GREP,
 	blitz.tools.LOADSKILL,
@@ -102,10 +117,10 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	tools.web_search,
 	tools.ocr(false),
 	tools.lua_repl,
-    tools.gen_image,
+	tools.gen_image,
 })
 
-blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
+-- blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
 
 ---------------------------------------------------------------------------------------------------
 --- MCP/LSP configuration
@@ -147,11 +162,11 @@ blitz.lsp.add({
 -- local model = "xiaomimimo/mimo-v2.5"
 -- local model = "tencent/hy3"
 local default_model = "deepseek/deepseek-v4-flash-0731"
--- default_model = "stepfun/step-3.7-flash"
 
 --- Price per 1M tokens
 local model_costs = {
 	["stepfun/step-3.7-flash"] = { input = 0.2, output = 1.15, cache = 0.04 },
+	["deepinfra/deepseek-v4-flash-0731"] = { input = 0.09, output = 0.18, cache = 0.018 },
 	["deepseek/deepseek-v4-flash-0731"] = { input = 0.14, output = 0.28, cache = 0.028 },
 	["deepseek/deepseek-v4-flash"] = { input = 0.14, output = 0.28, cache = 0.028 },
 	["deepseek/deepseek-v4-pro"] = { input = 1.6, output = 3.2, cache = 0.135 },
@@ -214,6 +229,47 @@ blitz.add_command("/debug", function(rem)
 	})
 	blitz.queue.push_chat_entry("user", "[DEBUG]: " .. rem)
 end)
+
+blitz.add_command("/team", function(rem)
+	blitz.queue.reset_session()
+	blitz.queue.spawn_agent({
+		agent_type = blitz.AGENT_GENERAL,
+		prompt = [[
+        Congratulation! You were just prompted to the team lead agent. You no longer read or write code. Your new job is to
+        orchistrate a team of Agents to complete the task. You may start up to 3 agents at the same time. They are your new eyes and hands.
+
+        You follow this pattern:
+
+        explore -> plan -> build -> review -> update -> review
+
+        Each review step must be aware of the original intend of the task.
+
+        This is the task:
+
+        ]] .. rem,
+	})
+	blitz.set_mode_prompt_sparse(blitz.MODE_EXEC, "You are the team lead agent")
+	blitz.queue.push_chat_entry("user", "[TEAM]: " .. rem)
+end)
+
+blitz.add_command("/review", function()
+	local main_id = blitz.get_main_agent()
+
+	local prompt =
+		"Start two challanger agents reviewing the current diff, one for correctness one for edge cases. Communicate the original task and intend of the change. Confirm their findings and fix critical issues."
+
+	if main_id == nil then
+		blitz.queue.reset_session()
+		blitz.queue.spawn_agent({
+			agent_type = blitz.AGENT_GENERAL,
+			prompt = prompt,
+		})
+	else
+		blitz.queue.queue_agent_message(main_id, prompt)
+	end
+	blitz.queue.push_chat_entry("user", "[starting review]")
+end)
+
 ---------------------------------------------------------------------------------------------------
 --- Screenshots
 ---------------------------------------------------------------------------------------------------
@@ -331,6 +387,7 @@ blitz.add_agent({
 	model = default_model,
 	provider = novita,
 	tools = {
+		blitz.tools.LOADSKILL,
 		blitz.tools.GLOB,
 		blitz.tools.GREP,
 		blitz.tools.READ,
@@ -351,6 +408,7 @@ blitz.add_agent({
 	provider = novita,
 	tools = {
 		tools.ocr(false),
+		blitz.tools.LOADSKILL,
 		blitz.tools.GLOB,
 		blitz.tools.GREP,
 		blitz.tools.READ,
