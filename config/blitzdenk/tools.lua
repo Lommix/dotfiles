@@ -1,5 +1,140 @@
 local M = {}
 
+-------------------------------------------------------------------------------------------------
+--- Image generation tool
+-------------------------------------------------------------------------------------------------
+M.gen_image = blitz.register_tool({
+	name = "lua_gen_image",
+	description = [[
+    Generate an image from prompt. Prompting best practices:
+    Structure prompt as scene/backdrop -> subject -> details -> constraints.
+    Include intended use (ad, UI mock, infographic) to set the mode and polish level.
+    Use camera/composition language for photorealism.
+    Only use SVG/vector stand-ins when the user explicitly asked for vector output or a non-image placeholder.
+    Quote exact text and specify typography + placement.
+    For tricky words, spell them letter-by-letter and require verbatim rendering.
+    For multi-image inputs, reference images by index and describe how they should be used.
+    For edits, repeat invariants every iteration to reduce drift.
+    Iterate with single-change follow-ups.
+    If the prompt is generic, add only the extra detail that will materially help.
+    If the prompt is already detailed, normalize it instead of expanding it.
+    ]],
+	args = {
+		path = { type = "string", description = "where to save", required = true },
+		prompt = { type = "string", description = "the generation prompt", required = true },
+		size = { type = "string", description = "image size as WxH, e.g. 512x512 (default 512x512)" },
+	},
+	func = function(ctx, call)
+		local path = call.arguments.path
+		if type(path) ~= "string" or path == "" then
+			error("path is required")
+		end
+		local prompt = call.arguments.prompt
+		if type(prompt) ~= "string" or prompt == "" then
+			error("prompt is required")
+		end
+		local size = call.arguments.size
+		if type(size) ~= "string" or size == "" then
+			size = "512*512"
+		else
+			size = size:gsub("x", "*")
+		end
+
+		local api_key = os.getenv("NOVITA_API_KEY")
+		if type(api_key) ~= "string" or api_key == "" then
+			error("NOVITA_API_KEY is not set")
+		end
+		if api_key:find("[%c]") then
+			error("NOVITA_API_KEY contains invalid control characters")
+		end
+
+		ctx:set_status("gen image `" .. prompt .. "`")
+
+		local payload, ok = blitz.json.encode({
+			seed = 101,
+			size = size,
+			prompt = prompt,
+			output_format = "webp",
+			enable_base64_output = false,
+		})
+		if ok == false then
+			error("failed to build image request")
+		end
+
+		local tmp = os.tmpname()
+		local f = assert(io.open(tmp, "w"))
+		f:write(payload)
+		f:close()
+
+		local body, ok = blitz.shell(
+			"curl -sS --max-time 30 -X POST 'https://api.novita.ai/v3/async/z-image-turbo'"
+				.. " -H 'Content-Type: application/json'"
+				.. ' -H "Authorization: Bearer $NOVITA_API_KEY"'
+				.. " -d @"
+				.. tmp
+		)
+		os.remove(tmp)
+		if not ok then
+			error("image request failed (curl exit non-zero)")
+		end
+
+		local val, ok = blitz.json.decode(body)
+		if ok == false then
+			error("failed to parse image json response")
+		end
+
+		local task_id = val.task_id or (val.task and val.task.task_id) or (val.data and val.data.task_id)
+		if type(task_id) ~= "string" or task_id == "" then
+			error("novita did not return a task_id: " .. tostring(body))
+		end
+
+		ctx:set_status("novita task " .. task_id .. " pending")
+
+		local result_url = "https://api.novita.ai/v3/async/task-result?task_id=" .. task_id
+		local image_url
+		for _ = 1, 60 do
+			os.execute("sleep 2")
+			local res, ok =
+				blitz.shell('curl -sS --max-time 30 -H "Authorization: Bearer $NOVITA_API_KEY" \'' .. result_url .. "'")
+			if not ok then
+				error("task-result request failed (curl exit non-zero)")
+			end
+			local r, ok = blitz.json.decode(res)
+			if ok == false then
+				error("failed to parse task-result json response")
+			end
+			local status = r.task and r.task.status or ""
+			if status == "TASK_STATUS_SUCCEED" then
+				local imgs = r.images
+				if type(imgs) == "table" and imgs[1] and imgs[1].image_url then
+					image_url = imgs[1].image_url
+					break
+				end
+				error("novita task succeeded but no image url found: " .. tostring(res))
+			elseif status == "TASK_STATUS_FAILED" then
+				local reason = r.task and r.task.reason or "unknown"
+				error("novita task failed: " .. tostring(reason))
+			end
+		end
+
+		if not image_url then
+			error("novita task timed out: " .. task_id)
+		end
+
+		ctx:set_status("downloading image to `" .. path .. "`")
+
+		local _, ok = blitz.shell("curl -sS --max-time 30 -o '" .. path .. "' '" .. image_url .. "'")
+		if not ok then
+			error("failed to download image to: " .. path)
+		end
+
+		return { msg = "image saved to " .. path }
+	end,
+})
+
+-------------------------------------------------------------------------------------------------
+--- Vision support tool. Using local OCR endpoint
+-------------------------------------------------------------------------------------------------
 --- @param vision_support boolean
 --- @return string
 M.ocr = function(vision_support)

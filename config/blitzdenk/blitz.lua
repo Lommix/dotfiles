@@ -89,10 +89,10 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	-- blitz.tools.UPDATE_TODO_STATE,
 	-- blitz.tools.CREATE_TODO,
 	blitz.tools.ASK,
-	-- blitz.tools.AGENT,
-	-- blitz.tools.AWAIT_AGENT,
-	-- blitz.tools.CANCEL_AGENT,
-	-- blitz.tools.SEND_MESSAGE_TO_AGENT,
+	blitz.tools.AGENT,
+	blitz.tools.AWAIT_AGENT,
+	blitz.tools.CANCEL_AGENT,
+	blitz.tools.SEND_MESSAGE_TO_AGENT,
 	blitz.tools.GLOB,
 	blitz.tools.GREP,
 	blitz.tools.LOADSKILL,
@@ -102,6 +102,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	tools.web_search,
 	tools.ocr(false),
 	tools.lua_repl,
+    tools.gen_image,
 })
 
 blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
