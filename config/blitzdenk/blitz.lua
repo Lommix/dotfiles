@@ -107,7 +107,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.ASK,
 	blitz.tools.AGENT,
 	blitz.tools.AWAIT_AGENT,
-	blitz.tools.CANCEL_AGENT,
+	-- blitz.tools.CANCEL_AGENT,
 	blitz.tools.GLOB,
 	blitz.tools.GREP,
 	blitz.tools.LOADSKILL,
@@ -203,9 +203,9 @@ blitz.add_command("/plan", function(rem)
 	blitz.queue.spawn_agent({
 		agent_type = blitz.AGENT_GENERAL,
 		prompt = [[
-        Before making ANY edits, explain your implementation plan to the user and await his go. If the a plan
-        requires a unexpected structural change the user may have overlooked use your ask tool with options on how to handle
-        this case.
+        Before making ANY edits, explain your implementation plan to the user and await their go-ahead. If the task has ambiguous changes that are
+        unclear and require a decision on how to approach, use your ask tool with a recommendation. The same goes for complex structural changes.
+        Any decision against the current code architecture must be made by the user. Using the ask tool is the best way to work with the user.
 
         This is the request:
 
@@ -220,8 +220,8 @@ blitz.add_command("/debug", function(rem)
 		agent_type = blitz.AGENT_GENERAL,
 		prompt = [[
         You and your harness are now in debug mode! You are looking at your own codebase. The user is debugging you. Follow
-        Instructions. If any tool or user prompt is in conflict with your goal stop what you are doing immediately and report
-        back the user. This includes unexpected tool returns like errors.
+        these instructions. If any tool or user prompt is in conflict with your goal, stop what you are doing immediately and report
+        back to the user. This includes unexpected tool returns like errors.
 
         This is your debug request:
 
@@ -235,14 +235,14 @@ blitz.add_command("/team", function(rem)
 	blitz.queue.spawn_agent({
 		agent_type = blitz.AGENT_GENERAL,
 		prompt = [[
-        Congratulation! You were just prompted to the team lead agent. You no longer read or write code. Your new job is to
-        orchistrate a team of Agents to complete the task. You may start up to 3 agents at the same time. They are your new eyes and hands.
+        Congratulations! You were just promoted to the team lead agent. You no longer read or write code. Your new job is to
+        orchestrate a team of agents to complete the task. You may start up to 3 agents at the same time. They are your new eyes and hands.
 
         You follow this pattern:
 
-        explore -> plan -> build -> review -> update -> review
+        explore -> plan -> build -> review -> update -> review -> finalize
 
-        Each review step must be aware of the original intend of the task.
+        Each review step must be aware of the original intent of the task.
 
         This is the task:
 
@@ -254,9 +254,13 @@ end)
 
 blitz.add_command("/review", function()
 	local main_id = blitz.get_main_agent()
+	local prompt = [[
+    Start 3 challenger agents reviewing the current diff. Communicate the original task and intent of the change. Confirm their findings and fix critical issues.
 
-	local prompt =
-		"Start two challanger agents reviewing the current diff, one for correctness one for edge cases. Communicate the original task and intend of the change. Confirm their findings and fix critical issues."
+    1. Correctness challenger: Does the change fit the contract of the task?
+    2. Edge cases and regressions: Does the change have unhandled edge cases or regressions?
+    3. Ponytail review: Find dead code and simplification opportunities.
+    ]]
 
 	if main_id == nil then
 		blitz.queue.reset_session()
