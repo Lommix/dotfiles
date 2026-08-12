@@ -198,6 +198,9 @@ end)
 ---------------------------------------------------------------------------------------------------
 --- Command queue example: start new session with hidden prompts
 ---------------------------------------------------------------------------------------------------
+blitz.add_command("/compact", function(rem)
+    blitz.queue.compact()
+end)
 blitz.add_command("/plan", function(rem)
 	blitz.queue.reset_session()
 	blitz.queue.spawn_agent({
