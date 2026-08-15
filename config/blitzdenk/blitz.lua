@@ -169,7 +169,7 @@ local model_costs = {
 	["deepinfra/deepseek-v4-flash-0731"] = { input = 0.09, output = 0.18, cache = 0.018 },
 	["deepseek/deepseek-v4-flash-0731"] = { input = 0.14, output = 0.28, cache = 0.028 },
 	["deepseek/deepseek-v4-flash"] = { input = 0.14, output = 0.28, cache = 0.028 },
-	["deepseek/deepseek-v4-pro"] = { input = 1.6, output = 3.2, cache = 0.135 },
+	["deepseek/deepseek-v4-pro-0813"] = { input = 0.435, output = 0.87, cache = 0.015 },
 	["moonshotai/kimi-k3"] = { input = 3, output = 15, cache = 0.3 },
 	["sference/kimi-k3"] = { input = 2.25, output = 11.25, cache = 0.3 },
 	["grok-4.5"] = { input = 2, output = 6, cache = 0.5 },
@@ -181,8 +181,8 @@ blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "max", novita)
 
 -- big money mode
 blitz.bind("<C-b>", function()
-	blitz.push_notification("big Z mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, "sference/glm-5.2", "high", requesty)
+	blitz.push_notification("big D mode")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, "deepseek/deepseek-v4-pro-0813", "high", requesty)
 end)
 
 blitz.bind("<C-e>", function()
@@ -206,15 +206,40 @@ blitz.add_command("/plan", function(rem)
 	blitz.queue.spawn_agent({
 		agent_type = blitz.AGENT_GENERAL,
 		prompt = [[
-        Before making ANY edits, explain your implementation plan to the user and await their go-ahead. If the task has ambiguous changes that are
-        unclear and require a decision on how to approach, use your ask tool with a recommendation. The same goes for complex structural changes.
-        Any decision against the current code architecture must be made by the user. Using the ask tool is the best way to work with the user.
+        You are in collaborative explore-plan mode. Do NOT make any edits and do NOT present a final plan yet.
+        Interview the user relentlessly about every aspect of the task until you reach a shared understanding,
+        walking down each branch of the design tree and resolving dependencies between decisions one by one.
 
-        This is the request:
+        Rules:
+        - Ask ONE question at a time (step by step), using your ask tool with a recommendation for each question.
+        - If a question can be answered by exploring the codebase, explore the codebase instead of asking.
+        - Keep questions concrete and decision-oriented; always offer a recommended answer.
+        - When the user answers, follow up on the next unresolved decision — never skip ahead to a plan.
+        - Only after all material unknowns are resolved, summarize the shared understanding and present the
+          implementation plan, then await the user's explicit go-ahead before any edit.
+
+        This is the request to explore:
 
         ]] .. rem,
 	})
 	blitz.queue.push_chat_entry("user", "[PLAN]: " .. rem)
+end)
+
+blitz.add_command("/show", function(rem)
+	blitz.queue.reset_session()
+	blitz.queue.spawn_agent({
+		agent_type = blitz.AGENT_GENERAL,
+		prompt = [[
+        The user has a question. Explain the answer in a visual way: use short and precise mermaid diagrams
+        (flow, sequence, class, er, state) in markdown code blocks ```mermaid ... ``` whenever a diagram
+        clarifies the explanation better than text alone.
+
+
+        Task:
+
+        ]] .. rem,
+	})
+	blitz.queue.push_chat_entry("user", "[DEBUG]: " .. rem)
 end)
 
 blitz.add_command("/debug", function(rem)
@@ -262,7 +287,7 @@ blitz.add_command("/review", function()
 
     1. Correctness challenger: Does the change fit the contract of the task?
     2. Edge cases and regressions: Does the change have unhandled edge cases or regressions?
-    3. Ponytail review: Find dead code and simplification opportunities.
+    3. Ponytail review: Tell the challanger to load the ponytail-review skill.
     ]]
 
 	if main_id == nil then
@@ -275,6 +300,70 @@ blitz.add_command("/review", function()
 		blitz.queue.queue_agent_message(main_id, prompt)
 	end
 	blitz.queue.push_chat_entry("user", "[starting review]")
+end)
+
+blitz.add_command("/tospec", function(rem)
+	local main_id = blitz.get_main_agent()
+	local prompt = [[
+    You are now in to-spec mode. Do NOT edit any code and do NOT interview the user. Synthesize everything
+    discussed in this conversation plus your codebase knowledge into a single spec file: spec.md in the
+    current working directory (cwd). The spec must be fully self-contained — another agent with no access
+    to this conversation must be able to start implementing from spec.md alone.
+
+    Process:
+    1. Review the conversation for all decisions, requirements, constraints, and rejected alternatives.
+    2. Explore the codebase to ground the spec in the real project state (existing modules, conventions, ADRs).
+    3. Write spec.md in cwd using EXACTLY this fixed format:
+
+    # <Feature Name>
+
+    ## Problem Statement
+    The problem the user is facing, from the user's perspective.
+
+    ## Solution
+    The solution to the problem, from the user's perspective.
+
+    ## User Stories
+    A LONG, numbered list of user stories, each in the format:
+    1. As an <actor>, I want a <feature>, so that <benefit>
+    This list must be extensive and cover all aspects of the feature.
+
+    ## Implementation Decisions
+    A list of decisions made: modules to build/modify, interfaces, API contracts, schema changes,
+    architectural decisions, technical clarifications. Do NOT include specific file paths or code
+    snippets (they go stale quickly). Exception: a small snippet that encodes a decision more precisely
+    than prose (state machine, schema, type shape) may be inlined.
+
+    ## Step-by-Step Implementation Plan
+    An ordered list of concrete steps another agent can execute top to bottom. For each step state:
+    what to build, which user story it satisfies, and how to verify it.
+
+    ## Testing Decisions
+    - What makes a good test here (external behavior only, not implementation details)
+    - Which modules will be tested
+    - Prior art: similar tests already in the codebase
+
+    ## Out of Scope
+    What is explicitly NOT part of this spec. Things refused during the conversation belong here.
+
+    ## Further Notes
+    Any remaining notes.
+
+    Use the project's own vocabulary throughout. Every decision in the spec must trace back to the
+    conversation or the codebase — never invent anything to fill a section. Write the file with your
+    patch tool, then report the path and a short summary of what was decided.
+
+    Feature: ]] .. rem
+
+	if main_id == nil then
+		blitz.queue.spawn_agent({
+			agent_type = blitz.AGENT_GENERAL,
+			prompt = prompt,
+		})
+	else
+		blitz.queue.queue_agent_message(main_id, prompt)
+	end
+	blitz.queue.push_chat_entry("user", "[TOSPEC]: " .. rem)
 end)
 
 ---------------------------------------------------------------------------------------------------
