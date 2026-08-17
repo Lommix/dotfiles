@@ -13,7 +13,6 @@ description: >
 - Use an `ArenaAllocator` for each scoped task, and group allocations by lifecycle: e.g. a `scene_arena` (per scene), `frame_arena` (per frame), `app_arena` (app lifetime).
 - Never nest arenas inside arenas. One arena per scope; free by dropping the arena.
 - Prefer arena allocators by default; fall back to `gpa` directly only for long-lived or size-changing allocations.
-- When using `ArenaAllocator`, keep the allocator pointer (`arena.allocator()`) around, not the arena itself, when passing it down.
 - Reset arenas at scope boundaries (`arena.reset(.retain_capacity)` where reuse is beneficial, `.free_all` otherwise) instead of creating new ones.
 - Follow Zig best practices: defer `gpa.deinit()` and `arena.deinit()` in reverse order of creation, and use `defer` immediately after allocation.
 - Minimize allocations everywhere: prefer stack buffers (`var buf: [4096]u8`), fixed-size arrays, and reused buffers over heap allocations.

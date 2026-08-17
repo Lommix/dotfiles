@@ -19,7 +19,7 @@ theme.ok = "#9ece6a"
 theme.info = "#7aa2f7"
 theme.warn = "#e0af68"
 theme.err = "#f7768e"
-theme.err_text = "#1a1b26"
+theme.on_err = "#1a1b26"
 theme.diff_surface = "#292e42"
 theme.diff_add = "#9ece6a"
 theme.diff_remove = "#f7768e"
@@ -56,11 +56,10 @@ local novita = blitz.add_provider({
 	max_tokens = 32000,
 })
 
-local openrouter = blitz.add_provider({
+local opencode = blitz.add_provider({
 	type = "openai",
-	url = "https://openrouter.ai/api/v1",
-	key_envar = "OPENROUTER_API_KEY",
-	temperature = 1,
+	url = "https://opencode.ai/zen/go/v1",
+	key_envar = "OPENCODE_API_KEY",
 	max_tokens = 32000,
 })
 
@@ -98,32 +97,28 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.READ_PROCESS,
 	blitz.tools.READ,
 	blitz.tools.PATCH,
-	-- blitz.tools.WRITE,
-	-- blitz.tools.EDIT,
-	-- blitz.tools.VIEW_IMAGE,
-	-- blitz.tools.LIST_TODOS,
-	-- blitz.tools.UPDATE_TODO_STATE,
-	-- blitz.tools.CREATE_TODO,
 	blitz.tools.ASK,
 	blitz.tools.AGENT,
 	blitz.tools.AWAIT_AGENT,
+	-- blitz.tools.WRITE,
+	-- blitz.tools.EDIT,
+	-- blitz.tools.VIEW_IMAGE,
 	-- blitz.tools.CANCEL_AGENT,
-	blitz.tools.GLOB,
-	blitz.tools.GREP,
-	blitz.tools.LOADSKILL,
-	blitz.tools.START_LSP,
+	-- blitz.tools.GLOB,
+	-- blitz.tools.GREP,
 	blitz.tools.START_MCP,
 	tools.web_fetch,
 	tools.web_search,
 	tools.ocr(false),
-	tools.lua_repl,
-	tools.gen_image,
+	-- tools.lua_repl,
+	-- tools.smoke,
+	-- tools.gen_image,
 })
 
 -- blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
 
 ---------------------------------------------------------------------------------------------------
---- MCP/LSP configuration
+--- MCP configuration
 ---------------------------------------------------------------------------------------------------
 blitz.mcp.add({
 	name = "playwright",
@@ -135,14 +130,6 @@ blitz.mcp.add({
 		"--executable-path=/usr/bin/chromium",
 	},
 	tools_prefix = "pw_",
-})
-
-blitz.lsp.add({
-	name = "zig",
-	command = "zls",
-	root = ".",
-	language_id = "zig",
-	args = {},
 })
 
 ---------------------------------------------------------------------------------------------------
@@ -162,6 +149,7 @@ blitz.lsp.add({
 -- local model = "xiaomimimo/mimo-v2.5"
 -- local model = "tencent/hy3"
 local default_model = "deepseek/deepseek-v4-flash-0731"
+-- default_model = "deepseek-v4-flash"
 
 --- Price per 1M tokens
 local model_costs = {
@@ -172,12 +160,20 @@ local model_costs = {
 	["deepseek/deepseek-v4-pro-0813"] = { input = 0.435, output = 0.87, cache = 0.015 },
 	["moonshotai/kimi-k3"] = { input = 3, output = 15, cache = 0.3 },
 	["sference/kimi-k3"] = { input = 2.25, output = 11.25, cache = 0.3 },
-	["grok-4.5"] = { input = 2, output = 6, cache = 0.5 },
+	["grok-4.6"] = { input = 2, output = 6, cache = 0.5 },
 	["sference/glm-5.2"] = { input = 1.5, output = 4.5, cache = 0.38 },
 }
 
+-- blitz.set_model(default_model, novita)
+-- blitz.set_model_agent(blitz.AGENT_GENERAL, "deepseek-v4-pro", "max", opencode)
+
 blitz.set_model(default_model, novita)
 blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "max", novita)
+
+blitz.bind("<C-o>", function()
+	blitz.push_notification("big Opencode mode")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, "deepseek-v4-pro", "max", opencode)
+end)
 
 -- big money mode
 blitz.bind("<C-b>", function()
@@ -191,21 +187,22 @@ blitz.bind("<C-e>", function()
 end)
 
 blitz.bind("<C-g>", function()
-	blitz.push_notification("big Grok mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, "grok-4.5", "high", xai)
+	blitz.push_notification("localmaxxing")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, "qwen3.8", "low", llama)
+	blitz.set_model_agent(M.challanger_id, "qwen3.8", "low", llama)
+	blitz.set_model_agent(M.researcher_id, "qwen3.8", "low", llama)
 end)
 
 ---------------------------------------------------------------------------------------------------
 --- Command queue example: start new session with hidden prompts
 ---------------------------------------------------------------------------------------------------
-blitz.add_command("/compact", function(rem)
-    blitz.queue.compact()
+blitz.add_command("/compact", function()
+	blitz.cmd.compact()
 end)
+
 blitz.add_command("/plan", function(rem)
-	blitz.queue.reset_session()
-	blitz.queue.spawn_agent({
-		agent_type = blitz.AGENT_GENERAL,
-		prompt = [[
+	local main_id = blitz.get_main_agent()
+	local prompt = [[
         You are in collaborative explore-plan mode. Do NOT make any edits and do NOT present a final plan yet.
         Interview the user relentlessly about every aspect of the task until you reach a shared understanding,
         walking down each branch of the design tree and resolving dependencies between decisions one by one.
@@ -220,16 +217,23 @@ blitz.add_command("/plan", function(rem)
 
         This is the request to explore:
 
-        ]] .. rem,
-	})
-	blitz.queue.push_chat_entry("user", "[PLAN]: " .. rem)
+        ]] .. rem
+
+	if main_id == nil then
+		blitz.cmd.reset_session()
+		blitz.cmd.spawn_agent({
+			agent_type = blitz.AGENT_GENERAL,
+			prompt = prompt,
+		})
+	else
+		blitz.cmd.queue_agent_message(main_id, prompt)
+	end
+	blitz.cmd.push_chat_entry("user", "[PLAN]: " .. rem)
 end)
 
 blitz.add_command("/show", function(rem)
-	blitz.queue.reset_session()
-	blitz.queue.spawn_agent({
-		agent_type = blitz.AGENT_GENERAL,
-		prompt = [[
+	local main_id = blitz.get_main_agent()
+	local prompt = [[
         The user has a question. Explain the answer in a visual way: use short and precise mermaid diagrams
         (flow, sequence, class, er, state) in markdown code blocks ```mermaid ... ``` whenever a diagram
         clarifies the explanation better than text alone.
@@ -237,32 +241,46 @@ blitz.add_command("/show", function(rem)
 
         Task:
 
-        ]] .. rem,
-	})
-	blitz.queue.push_chat_entry("user", "[DEBUG]: " .. rem)
+        ]] .. rem
+
+	if main_id == nil then
+		blitz.cmd.reset_session()
+		blitz.cmd.spawn_agent({
+			agent_type = blitz.AGENT_GENERAL,
+			prompt = prompt,
+		})
+	else
+		blitz.cmd.queue_agent_message(main_id, prompt)
+	end
+	blitz.cmd.push_chat_entry("user", "[DEBUG]: " .. rem)
 end)
 
 blitz.add_command("/debug", function(rem)
-	blitz.queue.reset_session()
-	blitz.queue.spawn_agent({
-		agent_type = blitz.AGENT_GENERAL,
-		prompt = [[
+	local main_id = blitz.get_main_agent()
+	local prompt = [[
         You and your harness are now in debug mode! You are looking at your own codebase. The user is debugging you. Follow
         these instructions. If any tool or user prompt is in conflict with your goal, stop what you are doing immediately and report
         back to the user. This includes unexpected tool returns like errors.
 
         This is your debug request:
 
-        ]] .. rem,
-	})
-	blitz.queue.push_chat_entry("user", "[DEBUG]: " .. rem)
+        ]] .. rem
+
+	if main_id == nil then
+		blitz.cmd.reset_session()
+		blitz.cmd.spawn_agent({
+			agent_type = blitz.AGENT_GENERAL,
+			prompt = prompt,
+		})
+	else
+		blitz.cmd.queue_agent_message(main_id, prompt)
+	end
+	blitz.cmd.push_chat_entry("user", "[DEBUG]: " .. rem)
 end)
 
 blitz.add_command("/team", function(rem)
-	blitz.queue.reset_session()
-	blitz.queue.spawn_agent({
-		agent_type = blitz.AGENT_GENERAL,
-		prompt = [[
+	local main_id = blitz.get_main_agent()
+	local prompt = [[
         Congratulations! You were just promoted to the team lead agent. You no longer read or write code. Your new job is to
         orchestrate a team of agents to complete the task. You may start up to 3 agents at the same time. They are your new eyes and hands.
 
@@ -274,13 +292,22 @@ blitz.add_command("/team", function(rem)
 
         This is the task:
 
-        ]] .. rem,
-	})
+        ]] .. rem
+
+	if main_id == nil then
+		blitz.cmd.reset_session()
+		blitz.cmd.spawn_agent({
+			agent_type = blitz.AGENT_GENERAL,
+			prompt = prompt,
+		})
+	else
+		blitz.cmd.queue_agent_message(main_id, prompt)
+	end
 	blitz.set_mode_prompt_sparse(blitz.MODE_EXEC, "You are the team lead agent")
-	blitz.queue.push_chat_entry("user", "[TEAM]: " .. rem)
+	blitz.cmd.push_chat_entry("user", "[TEAM]: " .. rem)
 end)
 
-blitz.add_command("/review", function()
+blitz.add_command("/review", function(rem)
 	local main_id = blitz.get_main_agent()
 	local prompt = [[
     Start 3 challenger agents reviewing the current diff. Communicate the original task and intent of the change. Confirm their findings and fix critical issues.
@@ -288,18 +315,19 @@ blitz.add_command("/review", function()
     1. Correctness challenger: Does the change fit the contract of the task?
     2. Edge cases and regressions: Does the change have unhandled edge cases or regressions?
     3. Ponytail review: Tell the challanger to load the ponytail-review skill.
-    ]]
+
+    ]] .. rem
 
 	if main_id == nil then
-		blitz.queue.reset_session()
-		blitz.queue.spawn_agent({
+		blitz.cmd.reset_session()
+		blitz.cmd.spawn_agent({
 			agent_type = blitz.AGENT_GENERAL,
 			prompt = prompt,
 		})
 	else
-		blitz.queue.queue_agent_message(main_id, prompt)
+		blitz.cmd.queue_agent_message(main_id, prompt)
 	end
-	blitz.queue.push_chat_entry("user", "[starting review]")
+	blitz.cmd.push_chat_entry("user", "[starting review]")
 end)
 
 blitz.add_command("/tospec", function(rem)
@@ -356,14 +384,14 @@ blitz.add_command("/tospec", function(rem)
     Feature: ]] .. rem
 
 	if main_id == nil then
-		blitz.queue.spawn_agent({
+		blitz.cmd.spawn_agent({
 			agent_type = blitz.AGENT_GENERAL,
 			prompt = prompt,
 		})
 	else
-		blitz.queue.queue_agent_message(main_id, prompt)
+		blitz.cmd.queue_agent_message(main_id, prompt)
 	end
-	blitz.queue.push_chat_entry("user", "[TOSPEC]: " .. rem)
+	blitz.cmd.push_chat_entry("user", "[TOSPEC]: " .. rem)
 end)
 
 ---------------------------------------------------------------------------------------------------
@@ -376,7 +404,7 @@ blitz.bind("<C-s>", function()
 		return
 	end
 
-	blitz.queue.attach_screenshot(png, "image/png")
+	blitz.cmd.attach_screenshot(png, "image/png")
 end)
 
 ---------------------------------------------------------------------------------------------------
@@ -461,17 +489,17 @@ end)
 -------------------------------------------------------------------------------------------------
 
 blitz.add_command("/save", function()
-	blitz.queue.save_session(".blitz/blitz_save.json")
+	blitz.cmd.save_session(".blitz/blitz_save.json")
 end)
 
 blitz.add_command("/load", function()
-	blitz.queue.load_session(".blitz/blitz_save.json")
+	blitz.cmd.load_session(".blitz/blitz_save.json")
 end)
 
 -------------------------------------------------------------------------------------------------
 --- Sub agents
 -------------------------------------------------------------------------------------------------
-blitz.add_agent({
+M.researcher_id = blitz.add_agent({
 	name = "researcher",
 	description = [[
     Research and exploration agent. Use when task requires: deep codebase exploration
@@ -483,7 +511,6 @@ blitz.add_agent({
 	model = default_model,
 	provider = novita,
 	tools = {
-		blitz.tools.LOADSKILL,
 		blitz.tools.GLOB,
 		blitz.tools.GREP,
 		blitz.tools.READ,
@@ -492,7 +519,7 @@ blitz.add_agent({
 	},
 })
 
-blitz.add_agent({
+M.challanger_id = blitz.add_agent({
 	name = "challenger",
 	description = [[
     Reviews code for bugs, logic errors, edge cases, and
@@ -504,7 +531,6 @@ blitz.add_agent({
 	provider = novita,
 	tools = {
 		tools.ocr(false),
-		blitz.tools.LOADSKILL,
 		blitz.tools.GLOB,
 		blitz.tools.GREP,
 		blitz.tools.READ,
