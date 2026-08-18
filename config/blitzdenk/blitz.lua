@@ -36,16 +36,13 @@ local llama = blitz.add_provider({
 	type = "openai",
 	url = "http://127.0.0.1:8118",
 	key_envar = "",
-	max_tokens = 32000,
-	effort = "max",
-	temperature = 1,
 })
 
 local novita = blitz.add_provider({
 	type = "openai",
 	url = "https://api.novita.ai/openai/v1",
 	key_envar = "NOVITA_API_KEY",
-	-- rate_limit = 30,
+	rate_limit = 30,
 })
 
 local opencode = blitz.add_provider({
@@ -108,14 +105,14 @@ local qwen3_8 = blitz.add_model({
 	vision = true,
 })
 
-blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "max")
+blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_flash, "max")
 
-blitz.bind("<C-o>", function()
-	blitz.push_notification("big D mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_flash, "max")
-	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "high")
-	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
-end)
+-- blitz.bind("<C-o>", function()
+-- 	blitz.push_notification("big D mode")
+-- 	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_flash, "max")
+-- 	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "high")
+-- 	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
+-- end)
 
 blitz.bind("<C-e>", function()
 	blitz.push_notification("big G mode")
@@ -416,7 +413,8 @@ end
 
 blitz.status_bar_render = function()
 	local use = blitz.token_usage()
-	return "Cache:"
+	return blitz.get_model_name(blitz.AGENT_GENERAL)
+		.. " | Cache:"
 		.. fmt(use.cache)
 		.. " | In:"
 		.. fmt(use.input)
@@ -473,10 +471,9 @@ M.researcher_id = blitz.add_agent({
     ]],
 	prompt = prompts.explore,
 	effort = "low",
-	model = default_model,
+	model = opencode_ds_flash,
 	tools = {
-		blitz.tools.GLOB,
-		blitz.tools.GREP,
+		blitz.tools.BASH,
 		blitz.tools.READ,
 		tools.web_fetch,
 		tools.web_search,
@@ -491,11 +488,9 @@ M.challanger_id = blitz.add_agent({
     ]],
 	prompt = prompts.review,
 	effort = "max",
-	model = default_model,
+	model = opencode_ds_flash,
 	tools = {
 		tools.ocr,
-		blitz.tools.GLOB,
-		blitz.tools.GREP,
 		blitz.tools.READ,
 		blitz.tools.BASH,
 	},
