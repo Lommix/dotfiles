@@ -1,6 +1,7 @@
 local M = {}
 local prompts = require("prompts")
 local tools = require("tools")
+local todo = require("todo")
 
 blitz.set_compact_edge(250000)
 local flags = blitz.get_flags()
@@ -110,6 +111,9 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	tools.web_fetch,
 	tools.web_search,
 	tools.ocr(false),
+	todo.add,
+	todo.list,
+	todo.update,
 	-- tools.lua_repl,
 	-- tools.smoke,
 	-- tools.gen_image,
@@ -234,7 +238,7 @@ end)
 blitz.add_command("/show", function(rem)
 	local main_id = blitz.get_main_agent()
 	local prompt = [[
-        The user has a question. Explain the answer in a visual way: use short and precise mermaid diagrams
+        Explain the answer in a visual way using short and precise mermaid diagrams
         (flow, sequence, class, er, state) in markdown code blocks ```mermaid ... ``` whenever a diagram
         clarifies the explanation better than text alone.
 

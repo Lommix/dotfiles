@@ -146,9 +146,6 @@ M.ocr = function(vision_support)
 			prompt = { type = "string", description = "optional prompt" },
 		},
 		func = function(ctx, call)
-			local ocr_url = "http://127.0.0.1:8119/v1/chat/completions"
-			local model = "ggml-org/GLM-OCR-GGUF:Q8_0"
-
 			local path = call.arguments.path
 			if type(path) ~= "string" or path == "" then
 				error("path is required")
@@ -212,51 +209,51 @@ M.ocr = function(vision_support)
 				return { img = { media_type = mtype, data = data } }
 			end
 
-			local image_url = path
-			if not path:match("^https?://") then
-				local data, mtype = base64_file(local_path)
-				image_url = "data:" .. mtype .. ";base64," .. data
+			local img_path = local_path
+			local downloaded = nil
+			if path:match("^https?://") then
+				downloaded = os.tmpname()
+				local _, ok = blitz.shell("curl -sS --max-time 30 -o " .. downloaded .. " '" .. path .. "'")
+				if not ok then
+					os.remove(downloaded)
+					error("failed to fetch image: " .. path)
+				end
+				img_path = downloaded
 			end
 
-			local payload, ok = blitz.json.encode({
-				model = model,
-				messages = {
-					{
-						role = "user",
-						content = {
-							{ type = "text", text = prompt },
-							{ type = "image_url", image_url = { url = image_url } },
-						},
-					},
-				},
-			})
-			if ok == false then
-				error("failed to build ocr request")
+			local tmp_png = nil
+			if img_path:match("%.webp$") then
+				tmp_png = os.tmpname() .. ".png"
+				local _, ok = blitz.shell("ffmpeg -y -i '" .. img_path .. "' '" .. tmp_png .. "' 2>/dev/null")
+				if not ok then
+					os.remove(tmp_png)
+					error("failed to convert webp to png: " .. img_path)
+				end
+				img_path = tmp_png
 			end
 
-			local tmp = os.tmpname()
-			local f = assert(io.open(tmp, "w"))
-			f:write(payload)
-			f:close()
-
-			local body, ok =
-				blitz.shell("curl -sS --max-time 30 -H 'Content-Type: application/json' -d @" .. tmp .. " " .. ocr_url)
-			os.remove(tmp)
-			if not ok then
-				error("ocr request failed (curl exit non-zero)")
+			if prompt == "OCR" then
+				prompt = "Free OCR."
 			end
 
-			local val, ok = blitz.json.decode(body)
-			if ok == false then
-				error("failed to parse ocr json response")
+			local function shq(s)
+				return "'" .. s:gsub("'", "'\\''") .. "'"
 			end
 
-			local text = val
-				and val.choices
-				and val.choices[1]
-				and val.choices[1].message
-				and val.choices[1].message.content
-			if type(text) ~= "string" or text == "" then
+			local text, ok = blitz.shell(
+				"HIP_VISIBLE_DEVICES=0 ROCR_VISIBLE_DEVICES=0 llama-mtmd-cli "
+					.. "-hf ggml-org/DeepSeek-OCR-GGUF:Q8_0 "
+					.. "--image " .. shq(img_path) .. " "
+					.. "-p " .. shq(prompt) .. " "
+					.. "--chat-template deepseek-ocr --temp 0 -ngl 99 -n 2048 --no-warmup 2>/dev/null"
+			)
+			if tmp_png then
+				os.remove(tmp_png)
+			end
+			if downloaded then
+				os.remove(downloaded)
+			end
+			if not ok or text == nil or text == "" then
 				error("OCR returned empty content")
 			end
 

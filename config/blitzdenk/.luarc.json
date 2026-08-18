@@ -1,7 +1,7 @@
 {
   "workspace": {
     "library": [
-      "/home/lommix/Projects/zig/blitzdenk/src/blitz_defs.lua"
+      "meta.lua"
     ]
   }
 }
