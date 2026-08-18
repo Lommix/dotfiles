@@ -47,13 +47,27 @@ local novita = blitz.add_provider({
     max_tokens = 32000,
 })
 
-blitz.set_model("deepseek/deepseek-v4-flash-0731", novita)
-blitz.set_model_agent(blitz.AGENT_GENERAL, "deepseek-v4-pro", "max", novita)
+local deepseek = blitz.add_model({
+    name = "deepseek/deepseek-v4-flash-0731",
+    provider = novita,
+    vision = false,
+    cost = { input = 0.14, output = 0.28, cache = 0.028 },  -- USD per 1M tokens
+})
+
+blitz.set_model_agent(blitz.AGENT_GENERAL, deepseek, "max")
 ```
 
 `add_provider` returns an integer handle. Other optional provider fields:
-`effort`, `max_completion_tokens`, `max_output_tokens`, `top_p`, `top_k`,
-`frequency_penalty`, `presence_penalty`, `enable_thinking`, `thinking = { type = ..., budget_tokens = ... }`.
+`max_completion_tokens`, `max_output_tokens`, `top_p`, `top_k`,
+`frequency_penalty`, `presence_penalty`, `enable_thinking`, `thinking = { type = ..., budget_tokens = ... }`,
+`rate_limit` (requests per minute, shared per provider URL, `0` = unlimited).
+
+`add_model` returns an integer handle. `vision` (default false) gates the
+`view_image` tool and image pasting for agents using the model. `cost` is
+optional; absent means the model is free. Bind a model per agent with
+`blitz.set_model_agent(agent_type, handle, effort?)` (effort defaults to
+`"medium"`) or with `model = handle` in `blitz.add_agent`. Every agent must
+have a bound model; unbound agents fail to spawn.
 
 Effort values: `"none"`, `"low"`, `"medium"`, `"high"`, `"xhigh"`, `"max"`.
 
@@ -61,10 +75,8 @@ Effort values: `"none"`, `"low"`, `"medium"`, `"high"`, `"xhigh"`, `"max"`.
 
 `blitz.tools.*` are string constants for the built-in tool names.
 
-Built-in names: `BASH`, `CANCEL_PROCESS`, `READ_PROCESS`, `READ`, `VIEW_IMAGE`,
-`WRITE`, `EDIT`, `PATCH`, `AGENT`, `ASK`, `AWAIT_AGENT`, `CANCEL_AGENT`, `GLOB`,
-`GREP`, `START_MCP`. There is no LOADSKILL or TODO constant; skills load
-automatically (see Skills).
+Built-in names: `BASH`, `READ`, `VIEW_IMAGE`,
+`WRITE`, `EDIT`, `PATCH`, `AGENT`, `ASK`, `GLOB`, `GREP`, `START_MCP`.
 
 - `blitz.set_agent_tools(agent_type, {names})` replaces the whole tool set.
 - `blitz.add_tool(agent_type, tool_name)` adds one tool to the current set.
@@ -109,7 +121,7 @@ local my_tool = blitz.register_tool({
 Tool function rules:
 
 - `call.name`, `call.id`, `call.arguments` (table of parsed args).
-- `ctx` fields/methods: `ctx.cwd`, `ctx.agent_id`, `ctx.state`, `ctx:set_status(msg)`,
+- `ctx` fields/methods: `ctx.cwd`, `ctx.vision` (calling model supports images), `ctx.agent_id`, `ctx.state`, `ctx:set_status(msg)`,
   `ctx:set_child_id(id)`, `ctx:approve(name, args)`, `ctx:plan(path, text)`,
   `ctx:ask(header, question, options)`. `approve`/`plan`/`ask` return a status
   integer plus an optional string; compare with `blitz.REQ_STATUS_*`.
@@ -128,16 +140,16 @@ local researcher = blitz.add_agent({
     description = "Read-only research agent.",
     prompt = [[You are a fast read-only research agent. Answer the question. Stop.]],
     effort = "low",
-    model = "deepseek/deepseek-v4-flash-0731",
-    provider = novita,
+    model = deepseek,
     tools = { blitz.tools.READ, blitz.tools.GREP, blitz.tools.GLOB },
 })
 ```
 
 `add_agent` returns an integer agent type id. Spawn it with
 `blitz.cmd.spawn_agent({ agent_type = researcher, prompt = "..." })`.
-Optional field: `in_agent_tool = false` hides the agent from the general
-agent's sub-agent tool.
+Optional fields: `model` (a handle from `add_model`; agents without a bound
+model fail to spawn) and `in_agent_tool = false` hides the agent from the
+general agent's sub-agent tool.
 
 ## Commands and cmd
 
@@ -255,8 +267,9 @@ end
 
 Also: `blitz.get_flags()` / `blitz.set_flags(t)` for `show_thinking`, `debug_log`,
 `skip_permissions`; `blitz.get_theme()` / `blitz.set_theme(t)` for hex colors;
-`blitz.push_notification(msg)`; `blitz.log(msg)`; `blitz.token_usage_by_model()`;
-`blitz.set_compact_edge(tokens)`.
+`blitz.push_notification(msg)`; `blitz.log(msg)`; `blitz.set_compact_edge(tokens)`.
+`blitz.token_usage()` also returns `cost` (total USD, computed from the model
+registry).
 
 ## Skills
 

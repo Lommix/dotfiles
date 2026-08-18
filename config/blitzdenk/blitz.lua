@@ -40,53 +40,105 @@ local llama = blitz.add_provider({
 	effort = "max",
 	temperature = 1,
 })
---
--- local novita = blitz.add_provider({
--- 	type = "anthropic",
--- 	url = "https://api.novita.ai/anthropic/v1",
--- 	key_envar = "NOVITA_API_KEY",
--- 	max_tokens = 32000,
--- 	temperature = 1,
--- })
 
 local novita = blitz.add_provider({
 	type = "openai",
 	url = "https://api.novita.ai/openai/v1",
 	key_envar = "NOVITA_API_KEY",
-	temperature = 0.7,
-	max_tokens = 32000,
+	-- rate_limit = 30,
 })
 
 local opencode = blitz.add_provider({
 	type = "openai",
 	url = "https://opencode.ai/zen/go/v1",
 	key_envar = "OPENCODE_API_KEY",
-	max_tokens = 32000,
 })
 
 local requesty = blitz.add_provider({
 	type = "openai",
 	url = "https://router.requesty.ai/v1",
 	key_envar = "REQUESTY_API_KEY",
-	temperature = 1,
-	max_tokens = 32000,
 })
 
 local xai = blitz.add_provider({
 	type = "response",
 	url = "https://api.x.ai/v1",
 	key_envar = "XAI_API_KEY",
-	temperature = 1,
-	max_tokens = 32000,
 })
 
 local openai = blitz.add_provider({
 	type = "response",
 	url = "https://api.openai.com/v1",
 	key_envar = "OPENAI_API_KEY",
-	max_tokens = 32000,
 })
 
+---------------------------------------------------------------------------------------------------
+--- Model configuration, simple
+---------------------------------------------------------------------------------------------------
+local default_model = blitz.add_model({
+	name = "deepseek/deepseek-v4-flash-0731",
+	provider = novita,
+	cost = { input = 0.14, output = 0.28, cache = 0.028 },
+})
+
+local opencode_ds_pro = blitz.add_model({
+	name = "deepseek-v4-pro",
+	provider = opencode,
+})
+
+local opencode_ds_flash = blitz.add_model({
+	name = "deepseek-v4-flash",
+	provider = opencode,
+})
+
+local opencode_glm_53 = blitz.add_model({
+	name = "glm-5.3",
+	provider = opencode,
+})
+
+local grok_46 = blitz.add_model({
+	name = "grok-4.6",
+	provider = xai,
+	vision = true,
+})
+
+local qwen3_8 = blitz.add_model({
+	name = "qwen3.8",
+	provider = llama,
+	vision = true,
+})
+
+blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "max")
+
+blitz.bind("<C-o>", function()
+	blitz.push_notification("big D mode")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_flash, "max")
+	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "high")
+	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
+end)
+
+blitz.bind("<C-e>", function()
+	blitz.push_notification("big G mode")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, grok_46, "high")
+	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "medium")
+	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
+end)
+
+blitz.bind("<C-b>", function()
+	blitz.push_notification("big G mode")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_glm_53, "high")
+	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "medium")
+	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
+end)
+
+blitz.bind("<C-g>", function()
+	blitz.push_notification("localmaxxing")
+	blitz.set_compact_edge(64000)
+	blitz.set_model_agent(blitz.AGENT_GENERAL, qwen3_8, "low")
+	blitz.set_model_agent(M.challanger_id, qwen3_8, "low")
+	blitz.set_model_agent(M.researcher_id, qwen3_8, "low")
+end)
+-- blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
 ---------------------------------------------------------------------------------------------------
 --- Default Agent tool set overwrites
 ---------------------------------------------------------------------------------------------------
@@ -94,23 +146,20 @@ local openai = blitz.add_provider({
 -- main agent/fork
 blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.BASH,
-	blitz.tools.CANCEL_PROCESS,
-	blitz.tools.READ_PROCESS,
 	blitz.tools.READ,
-	blitz.tools.PATCH,
 	blitz.tools.ASK,
 	blitz.tools.AGENT,
-	blitz.tools.AWAIT_AGENT,
-	-- blitz.tools.WRITE,
-	-- blitz.tools.EDIT,
+	blitz.tools.WRITE,
+	blitz.tools.EDIT,
+	-- blitz.tools.PATCH,
 	-- blitz.tools.VIEW_IMAGE,
 	-- blitz.tools.CANCEL_AGENT,
 	-- blitz.tools.GLOB,
 	-- blitz.tools.GREP,
-	blitz.tools.START_MCP,
+	-- blitz.tools.START_MCP,
 	tools.web_fetch,
 	tools.web_search,
-	tools.ocr(false),
+	-- tools.ocr,
 	todo.add,
 	todo.list,
 	todo.update,
@@ -118,8 +167,6 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	-- tools.smoke,
 	-- tools.gen_image,
 })
-
--- blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
 
 ---------------------------------------------------------------------------------------------------
 --- MCP configuration
@@ -135,67 +182,6 @@ blitz.mcp.add({
 	},
 	tools_prefix = "pw_",
 })
-
----------------------------------------------------------------------------------------------------
---- Model configuration, simple
----------------------------------------------------------------------------------------------------
--- local model = "zai-org/glm-5.1"
--- local model = "google/gemma-4-26b-a4b-it";
--- local model = "moonshotai/kimi-k2.6"
--- local model = "minimax/minimax-m2.7"
--- local model = "deepseek/deepseek-v4-pro"
--- local model = "zai-org/glm-4.7-flash"
--- local model = "gpt-5.4-mini"
--- local model = "inclusionai/ling-2.6-1t"
--- local model = "xiaomimimo/mimo-v2.5-pro"
--- local model = "qwen/qwen3.5-397b-a17b"
--- local model = "google/gemma-4-31b-it"
--- local model = "xiaomimimo/mimo-v2.5"
--- local model = "tencent/hy3"
-local default_model = "deepseek/deepseek-v4-flash-0731"
--- default_model = "deepseek-v4-flash"
-
---- Price per 1M tokens
-local model_costs = {
-	["stepfun/step-3.7-flash"] = { input = 0.2, output = 1.15, cache = 0.04 },
-	["deepinfra/deepseek-v4-flash-0731"] = { input = 0.09, output = 0.18, cache = 0.018 },
-	["deepseek/deepseek-v4-flash-0731"] = { input = 0.14, output = 0.28, cache = 0.028 },
-	["deepseek/deepseek-v4-flash"] = { input = 0.14, output = 0.28, cache = 0.028 },
-	["deepseek/deepseek-v4-pro-0813"] = { input = 0.435, output = 0.87, cache = 0.015 },
-	["moonshotai/kimi-k3"] = { input = 3, output = 15, cache = 0.3 },
-	["sference/kimi-k3"] = { input = 2.25, output = 11.25, cache = 0.3 },
-	["grok-4.6"] = { input = 2, output = 6, cache = 0.5 },
-	["sference/glm-5.2"] = { input = 1.5, output = 4.5, cache = 0.38 },
-}
-
--- blitz.set_model(default_model, novita)
--- blitz.set_model_agent(blitz.AGENT_GENERAL, "deepseek-v4-pro", "max", opencode)
-
-blitz.set_model(default_model, novita)
-blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "max", novita)
-
-blitz.bind("<C-o>", function()
-	blitz.push_notification("big Opencode mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, "deepseek-v4-pro", "max", opencode)
-end)
-
--- big money mode
-blitz.bind("<C-b>", function()
-	blitz.push_notification("big D mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, "deepseek/deepseek-v4-pro-0813", "high", requesty)
-end)
-
-blitz.bind("<C-e>", function()
-	blitz.push_notification("big Kimi mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, "sference/kimi-k3", "high", requesty)
-end)
-
-blitz.bind("<C-g>", function()
-	blitz.push_notification("localmaxxing")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, "qwen3.8", "low", llama)
-	blitz.set_model_agent(M.challanger_id, "qwen3.8", "low", llama)
-	blitz.set_model_agent(M.researcher_id, "qwen3.8", "low", llama)
-end)
 
 ---------------------------------------------------------------------------------------------------
 --- Command queue example: start new session with hidden prompts
@@ -289,10 +275,11 @@ blitz.add_command("/team", function(rem)
         orchestrate a team of agents to complete the task. You may start up to 3 agents at the same time. They are your new eyes and hands.
 
         You follow this pattern:
-
-        explore -> plan -> build -> review -> update -> review -> finalize
-
-        Each review step must be aware of the original intent of the task.
+        - only one builder at the time
+        - 3 challengers for code reviews: regression, edge case and correctness
+        - 2 reserach agent from different perspectives
+        - 2 challengers for each claim.
+        - Each review step must be aware of the original intent of the task.
 
         This is the task:
 
@@ -314,10 +301,9 @@ end)
 blitz.add_command("/review", function(rem)
 	local main_id = blitz.get_main_agent()
 	local prompt = [[
-    Start 3 challenger agents reviewing the current diff. Communicate the original task and intent of the change. Confirm their findings and fix critical issues.
+    Start 2 challenger agents reviewing the current diff. Communicate the original task and intent of the change. Confirm their findings and fix critical issues.
 
     1. Correctness challenger: Does the change fit the contract of the task?
-    2. Edge cases and regressions: Does the change have unhandled edge cases or regressions?
     3. Ponytail review: Tell the challanger to load the ponytail-review skill.
 
     ]] .. rem
@@ -412,19 +398,6 @@ blitz.bind("<C-s>", function()
 end)
 
 ---------------------------------------------------------------------------------------------------
---- keybind for local model
----------------------------------------------------------------------------------------------------
-
-blitz.bind("<C-l>", function()
-	-- local local_model = "gemma-4-12b-it"
-	local local_model = "Qwen3.6-35B-A3B"
-	blitz.set_model(local_model, llama)
-	blitz.set_model_agent(blitz.AGENT_GENERAL, local_model, "max", llama)
-	blitz.set_model_agent(M.review_agent, local_model, "low", llama)
-	blitz.set_compact_edge(128000)
-end)
-
----------------------------------------------------------------------------------------------------
 --- Custom status bar render
 ---------------------------------------------------------------------------------------------------
 
@@ -442,18 +415,6 @@ local function fmt(n)
 end
 
 blitz.status_bar_render = function()
-	local total_cost = 0.0
-
-	for _, en in ipairs(blitz.token_usage_by_model()) do
-		local c = model_costs[en.model]
-		if c then
-			total_cost = total_cost
-				+ (en.cache / 1000000) * c.cache
-				+ (en.output / 1000000) * c.output
-				+ (en.input / 1000000) * c.input
-		end
-	end
-
 	local use = blitz.token_usage()
 	return "Cache:"
 		.. fmt(use.cache)
@@ -465,7 +426,7 @@ blitz.status_bar_render = function()
 		.. math.floor(blitz.context_percent())
 		.. "%"
 		.. " | Cost:"
-		.. string.format("%.2f", total_cost)
+		.. string.format("%.2f", use.cost)
 		.. "$"
 end
 
@@ -513,7 +474,6 @@ M.researcher_id = blitz.add_agent({
 	prompt = prompts.explore,
 	effort = "low",
 	model = default_model,
-	provider = novita,
 	tools = {
 		blitz.tools.GLOB,
 		blitz.tools.GREP,
@@ -532,9 +492,8 @@ M.challanger_id = blitz.add_agent({
 	prompt = prompts.review,
 	effort = "max",
 	model = default_model,
-	provider = novita,
 	tools = {
-		tools.ocr(false),
+		tools.ocr,
 		blitz.tools.GLOB,
 		blitz.tools.GREP,
 		blitz.tools.READ,

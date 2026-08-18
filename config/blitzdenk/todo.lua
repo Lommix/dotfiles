@@ -76,7 +76,7 @@ M.list = blitz.register_tool({
 	name = "list",
 	description = "List all TODOs with their id, status, and text.",
 	args = {},
-	func = function(ctx, call)
+	func = function(ctx, _)
 		local list = load(ctx.agent_id)
 		if #list == 0 then
 			local c = colors()
@@ -86,22 +86,23 @@ M.list = blitz.register_tool({
 		local c = colors()
 		local open, done = 0, 0
 		for _, t in ipairs(list) do
-			if t.done then done = done + 1 else open = open + 1 end
+			if t.done then
+				done = done + 1
+			else
+				open = open + 1
+			end
 		end
 		local status = {
-			(open > 0 and c.warn or c.ok) .. open .. " open"
-				.. RESET .. " \xb7 " .. c.ok .. done .. " done" .. RESET,
+			(open > 0 and c.warn or c.ok) .. open .. " open" .. RESET .. " \xb7 " .. c.ok .. done .. " done" .. RESET,
 		}
 		local lines = { "TODO list for agent #" .. ctx.agent_id.index .. ":" }
 		for _, t in ipairs(list) do
 			local mark = t.done and "\u{f111}" or "\u{f10c}"
 			lines[#lines + 1] = string.format("%s #%s %s", mark, t.id, t.text)
 			if t.done then
-				status[#status + 1] = c.ok .. ICON_DONE .. RESET .. " #" .. t.id
-				.. " " .. c.muted .. t.text .. RESET
+				status[#status + 1] = c.ok .. ICON_DONE .. RESET .. " #" .. t.id .. " " .. c.muted .. t.text .. RESET
 			else
-				status[#status + 1] = c.ok .. ICON_PENDING .. RESET .. " #" .. t.id
-				.. " " .. t.text
+				status[#status + 1] = c.ok .. ICON_PENDING .. RESET .. " #" .. t.id .. " " .. t.text
 			end
 		end
 		ctx:set_status(table.concat(status, "\n"))
@@ -155,7 +156,7 @@ blitz.events.add_listener(blitz.events.ON_INJECT, function(agent_id)
 	local pending = {}
 	for _, t in ipairs(load(agent_id)) do
 		if not t.done then
-		pending[#pending + 1] = string.format("  - \u{f10c} #%s %s", t.id, t.text)
+			pending[#pending + 1] = string.format("  - \u{f10c} #%s %s", t.id, t.text)
 		end
 	end
 	if #pending == 0 then
