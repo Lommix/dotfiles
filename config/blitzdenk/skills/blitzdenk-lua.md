@@ -2,7 +2,7 @@
 name: blitzdenk-lua
 description: >
     How to configure and extend Blitzdenk in Lua: config file layout, hot reload,
-    tool sets, custom tools, agents, modes, commands, keybinds, MCP, events,
+    tool sets, custom tools, agents, commands, keybinds, MCP, events,
     shared state, and status UI. Load when writing or editing
     ~/.config/blitzdenk/*.lua, ./blitz.lua, or when the user asks to configure
     or extend blitzdenk.
@@ -156,7 +156,7 @@ general agent's sub-agent tool.
 ## Commands and cmd
 
 ```lua
-blitz.add_command("/plan", function(rem)
+blitz.add_command("plan", function(rem)
     blitz.cmd.reset_session()
     blitz.cmd.spawn_agent({
         agent_type = blitz.AGENT_GENERAL,
@@ -166,11 +166,19 @@ blitz.add_command("/plan", function(rem)
 end)
 ```
 
-Queue API: `reset_session`, `cancel`, `retry`, `compact`, `push_chat_entry(role, text)`,
-`queue_agent_message(agent_id, text)`, `spawn_agent(args)`, `await_agent(agent_id)`,
+Queue API: `reset_session`, `cancel`, `retry`, `compact`, `cd(path)`,
+`prompt(text)`,
+`push_chat_entry(role, text)`, `queue_agent_message(agent_id, text)`, `spawn_agent(args)`, `await_agent(agent_id)`,
 `await_agent_result(agent_id)` (returns an `AWAIT_*` status), `save_session(path)`, `load_session(path)`,
 `attach_screenshot(data, media_type)`. `spawn_agent` args: `parent_id`,
 `prompt`, `agent_type`, `fork`.
+
+`blitz.cmd.prompt(text)` is the "say something" command: it echoes the text into
+the chat log and sends it to the main agent (queued while it runs, restarted when
+idle), or starts a fresh general agent if none exists. Use it instead of
+`push_chat_entry("user", ...)` (display-only) or hand-rolling
+`get_main_agent()` + `queue_agent_message` (which queues silently, no chat echo).
+Note `spawn_agent` without `parent_id` replaces the running main session.
 
 `blitz.get_main_agent()` returns the main agent id table (`{ index, generation }`) or nil.
 
@@ -186,16 +194,13 @@ end)
 
 Vim-style combos: `<C-c>`, `<M-S-a>`, `<Esc>`, `<Up>`, `<F1>`, `a`.
 
-## Modes
+Command completion actions (custom `blitz.bind` on a key wins over these defaults):
 
-```lua
-local read_mode = blitz.add_mode("READ", "#008F04",
-    "You are in read-only mode!", "You are in read-only mode!")
-blitz.set_mode(read_mode)
-```
+- `completion_next` — `<Tab>`, `<C-n>`. Cycle forward and insert. Wraps.
+- `completion_prev` — `<C-p>`. Cycle backward and insert. Wraps.
+- `completion_accept` — `<C-y>`. Insert the selected entry without cycling.
 
-Also `blitz.set_mode_prompt(mode, prompt)`, `blitz.set_mode_prompt_sparse(mode, prompt)`,
-`blitz.set_mode_name(mode, name)`. `blitz.MODE_EXEC` is the built-in exec mode.
+Arrow `<Up>` / `<Down>` traverse the menu while it is open (wrap, same as `<Tab>`).
 
 ## Events
 
@@ -205,14 +210,14 @@ blitz.events.add_listener(blitz.events.AGENT_COMPLETE, function(agent_id)
 end)
 ```
 
-Event tags on `blitz.events.*`: `SESSION_RESET`, `MODE_CHANGED`, `AGENT_CREATED`,
+Event tags on `blitz.events.*`: `SESSION_RESET`, `AGENT_CREATED`,
 `AGENT_STARTED`, `AGENT_COMPLETE`, `AGENT_FAILED`, `AGENT_CANCELLED`,
 `COMPACTION_STARTED`, `COMPACTION_COMPLETE`, `TOOL_CALL_STARTED`,
 `TOOL_CALL_COMPLETE`, `AGENT_BROADCAST`, `PERMISSION_REQUESTED`,
 `PERMISSION_RESOLVED`, `USER_MESSAGE_SENT`, `MCP_TOOLS_RELOADED`, `ON_INJECT`.
 
-Payloads vary: agent events receive an agent id table, `MODE_CHANGED` receives an
-integer, `USER_MESSAGE_SENT` receives a string. Check `meta.lua` for descriptions.
+Payloads vary: agent events receive an agent id table, `USER_MESSAGE_SENT`
+receives a string. Check `meta.lua` for descriptions.
 
 `ON_INJECT` fires for every agent on each step, right before the system reminder
 is built. Return a string to append it to that agent's `<system-reminder>` block:
