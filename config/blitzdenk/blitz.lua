@@ -30,6 +30,12 @@ local requesty = blitz.add_provider({
 	key_envar = "REQUESTY_API_KEY",
 })
 
+local router = blitz.add_provider({
+	type = "response",
+	url = "https://openrouter.ai/api/v1",
+	key_envar = "OPENROUTER_API_KEY",
+})
+
 local hetzner = blitz.add_provider({
 	type = "openai",
 	url = "https://inference.hetzner.com/api/v1",
@@ -55,11 +61,6 @@ local default_model = blitz.add_model({
 	name = "deepseek/deepseek-v4-flash-0731",
 	provider = novita,
 	cost = { input = 0.14, output = 0.28, cache = 0.028 },
-})
-
-local qwen3_8_hetz = blitz.add_model({
-	name = "Qwen3.8-27B",
-	provider = hetzner,
 })
 
 local opencode_ds_pro = blitz.add_model({
@@ -95,14 +96,14 @@ blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "max")
 
 blitz.bind("<C-o>", function()
 	blitz.push_notification("big D mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_flash, "max")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_flash, "high")
 	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "high")
 	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
 end)
 
 blitz.bind("<C-e>", function()
-	blitz.push_notification("big G mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, grok_46, "high")
+	blitz.push_notification("big DP mode")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_pro, "high")
 	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "medium")
 	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
 end)
@@ -114,14 +115,7 @@ blitz.bind("<C-b>", function()
 	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
 end)
 
-blitz.bind("<C-g>", function()
-	blitz.push_notification("localmaxxing")
-	blitz.set_compact_edge(64000)
-	blitz.set_model_agent(blitz.AGENT_GENERAL, qwen3_8_hetz, "low")
-	blitz.set_model_agent(M.challanger_id, qwen3_8_hetz, "low")
-	blitz.set_model_agent(M.researcher_id, qwen3_8_hetz, "low")
-end)
--- blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
+blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
 ---------------------------------------------------------------------------------------------------
 --- Default Agent tool set overwrites
 ---------------------------------------------------------------------------------------------------
@@ -134,6 +128,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.AGENT,
 	blitz.tools.WRITE,
 	blitz.tools.EDIT,
+    blitz.tools.SKILL,
 	-- blitz.tools.PATCH,
 	-- blitz.tools.VIEW_IMAGE,
 	-- blitz.tools.CANCEL_AGENT,
@@ -347,19 +342,19 @@ end
 
 blitz.status_bar_render = function()
 	local use = blitz.token_usage()
-	return blitz.get_model_name(blitz.AGENT_GENERAL)
-		.. " | Cache:"
-		.. fmt(use.cache)
-		.. " | In:"
-		.. fmt(use.input)
-		.. " | Out:"
-		.. fmt(use.output)
-		.. " | Ctx:"
+	local white = "\27[1;37m"
+	local green = "\27[32m"
+	local orange = "\27[38;5;208m"
+	local red = "\27[31m"
+	local reset = "\27[0m"
+	return white .. blitz.get_model_name(blitz.AGENT_GENERAL) .. reset
+		.. " (Cache:" .. green .. fmt(use.cache) .. reset
+		.. " In:" .. orange .. fmt(use.input) .. reset
+		.. " Out:" .. orange .. fmt(use.output) .. reset
+		.. ") Ctx:"
 		.. math.floor(blitz.context_percent())
 		.. "%"
-		.. " | Cost:"
-		.. string.format("%.2f", use.cost)
-		.. "$"
+		.. " Cost:" .. red .. string.format("$%.2f", use.cost) .. reset
 end
 
 ---------------------------------------------------------------------------------------------------

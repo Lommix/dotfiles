@@ -44,6 +44,25 @@ local function save(agent_id, list)
 	blitz.state.set(state_key(agent_id), list)
 end
 
+local function next_key(agent_id)
+	return state_key(agent_id) .. "_next"
+end
+
+local function load_next(agent_id)
+	local n = blitz.state.get(next_key(agent_id))
+	if n then
+		return n
+	end
+	local max_id = 0
+	for _, t in ipairs(load(agent_id)) do
+		local i = tonumber(t.id)
+		if i and i > max_id then
+			max_id = i
+		end
+	end
+	return max_id + 1
+end
+
 -------------------------------------------------------------------------------------------------
 --- TODO tools
 -------------------------------------------------------------------------------------------------
@@ -59,16 +78,17 @@ M.add = blitz.register_tool({
 			error("text is required")
 		end
 		local list = load(ctx.agent_id)
+		local nid = load_next(ctx.agent_id)
 		list[#list + 1] = {
-			id = tostring(#list + 1),
+			id = tostring(nid),
 			text = text,
 			done = false,
-			created = os.date("%Y-%m-%d %H:%M"),
 		}
 		save(ctx.agent_id, list)
+		blitz.state.set(next_key(ctx.agent_id), nid + 1)
 		local c = colors()
-		ctx:set_status(c.info .. ICON_ADD .. RESET .. " Added #" .. #list .. ": " .. text)
-		return { msg = "Added TODO #" .. #list .. ": " .. text }
+		ctx:set_status(c.info .. ICON_ADD .. RESET .. " Added #" .. nid .. ": " .. text)
+		return { msg = "Added TODO #" .. nid .. ": " .. text }
 	end,
 })
 
@@ -122,6 +142,12 @@ M.update = blitz.register_tool({
 	func = function(ctx, call)
 		local id = tostring(call.arguments.id)
 		local args = call.arguments
+		if args.text ~= nil and (type(args.text) ~= "string" or args.text == "") then
+			error("text cannot be empty")
+		end
+		if not (args.delete or args.done ~= nil or args.text ~= nil) then
+			error("update requires at least one of: done, text, delete")
+		end
 		local list = load(ctx.agent_id)
 		for i, t in ipairs(list) do
 			if t.id == id then
@@ -135,7 +161,7 @@ M.update = blitz.register_tool({
 				if args.done ~= nil then
 					t.done = args.done
 				end
-				if type(args.text) == "string" and args.text ~= "" then
+				if args.text ~= nil then
 					t.text = args.text
 				end
 				save(ctx.agent_id, list)

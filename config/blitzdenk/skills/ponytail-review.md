@@ -8,6 +8,10 @@ description: >
     delete", "is this over-engineered", "simplify review", or invokes
     /ponytail-review. Complements correctness-focused review, this one only
     hunts complexity.
+whenToUse: >
+    The user asks for an over-engineering or simplification review of a diff,
+    says review for over-engineering/what can we delete/is this over-engineered,
+    or invokes /ponytail-review.
 ---
 
 Review diffs for unnecessary complexity. One line per finding: location, what

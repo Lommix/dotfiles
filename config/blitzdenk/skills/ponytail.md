@@ -10,6 +10,10 @@ description: >
     "minimal solution", "yagni", "do less", or "shortest path", and whenever
     they complain about over-engineering, bloat, boilerplate, or unnecessary
     dependencies.
+whenToUse: >
+    The user asks for the laziest, simplest, or most minimal solution; says
+    ponytail/lazy mode/yagni/do less/shortest path; or complains about
+    over-engineering, bloat, boilerplate, or unnecessary dependencies.
 license: MIT
 ---
 

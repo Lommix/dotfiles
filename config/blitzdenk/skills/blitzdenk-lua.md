@@ -3,9 +3,8 @@ name: blitzdenk-lua
 description: >
     How to configure and extend Blitzdenk in Lua: config file layout, hot reload,
     tool sets, custom tools, agents, commands, keybinds, MCP, events,
-    shared state, and status UI. Load when writing or editing
-    ~/.config/blitzdenk/*.lua, ./blitz.lua, or when the user asks to configure
-    or extend blitzdenk.
+    shared state, and status UI. Load wehn writing or editing ~/.config/blitzdenk/*.lua or ./blitz.lua, or when the
+    user asks to configure or extend blitzdenk in Lua.
 ---
 
 # Blitzdenk Lua configuration
@@ -273,17 +272,30 @@ end
 ```
 
 Also: `blitz.get_flags()` / `blitz.set_flags(t)` for `show_thinking`, `debug_log`,
-`skip_permissions`; `blitz.get_theme()` / `blitz.set_theme(t)` for hex colors;
+`skip_permissions`; `blitz.get_theme()` / `blitz.set_theme(t)` for hex colors
+(`"transparent"` clears a field);
 `blitz.push_notification(msg)`; `blitz.log(msg)`; `blitz.set_compact_edge(tokens)`.
 `blitz.token_usage()` also returns `cost` (total USD, computed from the model
 registry).
 
 ## Skills
 
-Skills are plain markdown files in `~/.config/blitzdenk/skills/*.md` with YAML
-frontmatter. Only `name` and `description` are parsed (`description` may use a
-folded `>` block); other frontmatter keys are ignored. Blitzdenk injects them
-into the agent's system prompt at context build.
+Skills are markdown files discovered from three ranked layers: project
+`.blitz/skills` (highest), project `.agents/skills`, and user
+`~/.config/blitzdenk/skills`. Project skills shadow same-named user skills.
+The project root is the nearest ancestor of the working directory containing
+`.git`.
+
+Frontmatter keys: `name` (kebab-case), `description`, optional `whenToUse`,
+`user-invocable` (default true), and `disable-model-invocation` (default
+false). Unknown keys are ignored. Descriptions support YAML folded (`>`) and
+literal (`|`) block scalars.
+
+Blitzdenk no longer lists skill paths in the system prompt. Model-invocable
+skills appear in an `<available_skills>` system reminder only when the catalog
+changes; the model loads a body with the `skill` tool. `/skill-<name>` still
+pastes the body plus prompt into chat, and is rejected for `user-invocable:
+false`.
 
 ## Reference
 

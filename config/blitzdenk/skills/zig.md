@@ -1,8 +1,7 @@
 ---
 name: zig
 description: >
-    MUST load this skill when any .zig file is read, written, or modified, or when any build/run/test command involves zig.
-    If you see zig code and have NOT loaded this skill, stop and load it immediately.
+    Up-to-date Zig programming language patterns and guidlines. Load this skill if any .zig file is read, written, or modified, or any zig build/run/test command is involved.
 ---
 
 # Zig guidelines
