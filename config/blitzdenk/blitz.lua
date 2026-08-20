@@ -31,7 +31,7 @@ local requesty = blitz.add_provider({
 })
 
 local router = blitz.add_provider({
-	type = "response",
+	type = "openai",
 	url = "https://openrouter.ai/api/v1",
 	key_envar = "OPENROUTER_API_KEY",
 })
@@ -57,9 +57,15 @@ local openai = blitz.add_provider({
 ---------------------------------------------------------------------------------------------------
 --- Model configuration, simple
 ---------------------------------------------------------------------------------------------------
+-- local default_model = blitz.add_model({
+-- 	name = "deepseek/deepseek-v4-flash-0731",
+-- 	provider = novita,
+-- 	cost = { input = 0.14, output = 0.28, cache = 0.028 },
+-- })
+
 local default_model = blitz.add_model({
-	name = "deepseek/deepseek-v4-flash-0731",
-	provider = novita,
+	name = "deepseek/deepseek-v4-flash-0731:exacto",
+	provider = router,
 	cost = { input = 0.14, output = 0.28, cache = 0.028 },
 })
 
@@ -115,7 +121,7 @@ blitz.bind("<C-b>", function()
 	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
 end)
 
-blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
+-- blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
 ---------------------------------------------------------------------------------------------------
 --- Default Agent tool set overwrites
 ---------------------------------------------------------------------------------------------------
@@ -370,8 +376,10 @@ blitz.status_bar_render = function()
 		.. fmt(use.output)
 		.. reset
 		.. ") Ctx:"
+		.. white
 		.. math.floor(blitz.context_percent())
 		.. "%"
+		.. reset
 		.. " Cost:"
 		.. red
 		.. string.format("$%.2f", use.cost)
