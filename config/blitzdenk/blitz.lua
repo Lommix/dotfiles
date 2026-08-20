@@ -128,7 +128,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.AGENT,
 	blitz.tools.WRITE,
 	blitz.tools.EDIT,
-    blitz.tools.SKILL,
+	blitz.tools.SKILL,
 	-- blitz.tools.PATCH,
 	-- blitz.tools.VIEW_IMAGE,
 	-- blitz.tools.CANCEL_AGENT,
@@ -211,13 +211,20 @@ Task: ]] .. rem
 	blitz.cmd.prompt(prompt)
 end)
 
-blitz.add_command("debug", function(rem)
+blitz.add_command("bug", function(rem)
 	local prompt = [[
-You and your harness are now in debug mode! You are looking at your own codebase. The user is debugging you. Follow
-these instructions. If any tool or user prompt is in conflict with your goal, stop what you are doing immediately and report
-back to the user. This includes unexpected tool returns like errors.
+You are in bug hunting mode. Investigate the problem with evidence, not guesses.
 
-This is your debug request:
+Process:
+1. Load relevant skills first (e.g. zig, challenger, ponytail) before reading any code.
+2. Research the code around the problem: reproduce it if you can, trace the call path, and pin down the root cause.
+3. If the bug is obvious and confirmed, report it immediately — do not waste time.
+4. Collect several claims or suspicions, then have each confirmed by a challenger agent spawned via your AGENT tool before treating it as fact.
+5. Present your findings: root cause, evidence, and a concrete fix proposal.
+
+Finish by invoking the ask tool with possible options on how to proceed.
+
+The bug:
 
 ]] .. rem
 
@@ -347,14 +354,28 @@ blitz.status_bar_render = function()
 	local orange = "\27[38;5;208m"
 	local red = "\27[31m"
 	local reset = "\27[0m"
-	return white .. blitz.get_model_name(blitz.AGENT_GENERAL) .. reset
-		.. " (Cache:" .. green .. fmt(use.cache) .. reset
-		.. " In:" .. orange .. fmt(use.input) .. reset
-		.. " Out:" .. orange .. fmt(use.output) .. reset
+	return white
+		.. blitz.get_model_name(blitz.AGENT_GENERAL)
+		.. reset
+		.. " (Cache:"
+		.. green
+		.. fmt(use.cache)
+		.. reset
+		.. " In:"
+		.. orange
+		.. fmt(use.input)
+		.. reset
+		.. " Out:"
+		.. orange
+		.. fmt(use.output)
+		.. reset
 		.. ") Ctx:"
 		.. math.floor(blitz.context_percent())
 		.. "%"
-		.. " Cost:" .. red .. string.format("$%.2f", use.cost) .. reset
+		.. " Cost:"
+		.. red
+		.. string.format("$%.2f", use.cost)
+		.. reset
 end
 
 ---------------------------------------------------------------------------------------------------
