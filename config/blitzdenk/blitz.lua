@@ -413,9 +413,11 @@ end)
 M.researcher_id = blitz.add_agent({
 	name = "researcher",
 	description = [[
-    Research and exploration agent. Use when task requires: deep codebase exploration
-    across many files, searching for patterns or definitions, web research for libraries/
-    docs/solutions, or gathering context from multiple sources before making a decision.
+    Read-only research and exploration agent. Delegate when the task needs search you
+    would grind through yourself: locating a definition or pattern across many files,
+    picking a library or API from docs, looking up exact symbols or paths, or gathering
+    facts from several places. Always prefer this subagent for pure lookup work instead of
+    exploring from the main loop. Does not edit, build, or test.
     ]],
 	prompt = prompts.explore,
 	effort = "low",
