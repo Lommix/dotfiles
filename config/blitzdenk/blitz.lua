@@ -57,16 +57,16 @@ local openai = blitz.add_provider({
 ---------------------------------------------------------------------------------------------------
 --- Model configuration, simple
 ---------------------------------------------------------------------------------------------------
--- local default_model = blitz.add_model({
--- 	name = "deepseek/deepseek-v4-flash-0731",
--- 	provider = novita,
--- 	cost = { input = 0.14, output = 0.28, cache = 0.028 },
--- })
-
 local default_model = blitz.add_model({
-	name = "deepseek/deepseek-v4-flash-0731:exacto",
-	provider = router,
+	name = "deepseek/deepseek-v4-flash-0731",
+	provider = novita,
 	cost = { input = 0.14, output = 0.28, cache = 0.028 },
+})
+local default_model = blitz.add_model({
+	-- name = "deepseek-v4-flash-vision-exp",
+	name = "ox-alpha-free",
+	vision = true,
+	provider = opencode,
 })
 
 local opencode_ds_pro = blitz.add_model({
@@ -75,8 +75,9 @@ local opencode_ds_pro = blitz.add_model({
 })
 
 local opencode_ds_flash = blitz.add_model({
-	name = "deepseek-v4-flash",
+	name = "deepseek-v4-flash-vision-exp",
 	provider = opencode,
+	vision = true,
 })
 
 local opencode_glm_53 = blitz.add_model({
@@ -97,23 +98,23 @@ local qwen3_8 = blitz.add_model({
 	vision = true,
 })
 
-blitz.set_compact_edge(250000)
+blitz.set_compact_edge(128000)
 blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "max")
 
 blitz.bind("<C-o>", function()
 	blitz.push_notification("big D mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_flash, "high")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_flash, "low")
 	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "high")
 	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
 end)
-
-blitz.bind("<C-e>", function()
-	blitz.push_notification("big DP mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_pro, "high")
-	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "medium")
-	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
-end)
-
+--
+-- blitz.bind("<C-e>", function()
+-- 	blitz.push_notification("big DP mode")
+-- 	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_pro, "high")
+-- 	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "medium")
+-- 	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
+-- end)
+--
 blitz.bind("<C-b>", function()
 	blitz.push_notification("big G mode")
 	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_glm_53, "high")
@@ -135,20 +136,18 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.WRITE,
 	blitz.tools.EDIT,
 	blitz.tools.SKILL,
+	blitz.tools.VIEW_IMAGE,
 	-- blitz.tools.PATCH,
-	-- blitz.tools.VIEW_IMAGE,
-	-- blitz.tools.CANCEL_AGENT,
 	-- blitz.tools.GLOB,
 	-- blitz.tools.GREP,
 	-- blitz.tools.START_MCP,
 	tools.web_fetch,
 	tools.web_search,
-	-- tools.ocr,
 	todo.add,
 	todo.list,
 	todo.update,
-	-- tools.lua_repl,
-	-- tools.smoke,
+	tools.lua_repl,
+	-- tools.ocr,
 	-- tools.gen_image,
 })
 

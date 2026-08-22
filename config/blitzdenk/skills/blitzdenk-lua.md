@@ -106,6 +106,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 ## Custom tools
 
 `blitz.register_tool` returns the tool name string to use in tool sets.
+Omit both `args` and `schema` for a tool that takes no arguments.
 
 ```lua
 local my_tool = blitz.register_tool({
@@ -125,11 +126,47 @@ local my_tool = blitz.register_tool({
 })
 ```
 
+The `args` shorthand supports only `type`, `description`, and `required`. Use
+`schema` for arrays, nested objects, enums, or other JSON Schema constraints:
+
+```lua
+local process_files = blitz.register_tool({
+    name = "process_files",
+    description = "Process several files",
+    schema = [[
+{
+  "type": "object",
+  "properties": {
+    "paths": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Files to process"
+    }
+  },
+  "required": ["paths"],
+  "additionalProperties": false
+}
+]],
+    func = function(ctx, call)
+        for _, path in ipairs(call.arguments.paths) do
+            print(path)
+        end
+        return { msg = "done" }
+    end,
+})
+```
+
+`schema` must be a JSON Schema string no longer than 2048 bytes. If both
+`schema` and `args` are present, `schema` is used. JSON arrays are passed to
+the tool function as 1-indexed Lua tables. Blitzdenk does not validate tool
+arguments against the schema before calling the function, so validate critical
+inputs in the function.
+
 Tool function rules:
 
 - `call.name`, `call.id`, `call.arguments` (table of parsed args).
 - `ctx` fields/methods: `ctx.cwd`, `ctx.vision` (calling model supports images), `ctx.agent_id`, `ctx.state`, `ctx:set_status(msg)`,
-  `ctx:set_child_id(id)`, `ctx:approve(name, args)`, `ctx:plan(path, text)`,
+  `ctx:set_child_id(id)`, `ctx:approve(description)`, `ctx:plan(path, text)`,
   `ctx:ask(header, question, options)`. `approve`/`plan`/`ask` return a status
   integer plus an optional string; compare with `blitz.REQ_STATUS_*`.
 - Return `{ msg = "..." }`. To attach an image:
@@ -266,7 +303,7 @@ local pw = blitz.mcp.add({
     args = { "-y", "@playwright/mcp@latest", "--browser=chromium" },
     tools_prefix = "pw_",
 })
-blitz.mcp.enable(pw)
+blitz.mcp.enable(pw) -- start on load (optional)
 ```
 
 `add` registers a stdio server (disabled) and returns an integer id. `enable`

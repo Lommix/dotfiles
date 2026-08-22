@@ -267,7 +267,7 @@ M.ocr = blitz.register_tool({
 -------------------------------------------------------------------------------------------------
 M.lua_repl = blitz.register_tool({
 	name = "lua_repl",
-	description = "Execute arbitrary Lua code and return the result. Use this tool for any math calculations",
+	description = "Execute arbitrary Lua code and return the result. Runs inside the blitzdenk Lua VM",
 	args = {
 		code = { type = "string", description = "Lua code to execute", required = true },
 	},
