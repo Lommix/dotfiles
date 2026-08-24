@@ -175,6 +175,7 @@ Tool function rules:
 - Raise `error("...")` for failure.
 - `blitz.exit_loop("done")` returns a result that ends the loop.
 - `blitz.shell(cmd)` returns `output, ok` (two values).
+- `blitz.shell(cmd, timeout)` accepts an optional timeout in seconds.
 - `blitz.json.encode(obj)` / `blitz.json.decode(str)` return the value plus an ok boolean.
   The `BlitzToolDef`, `BlitzToolResult`, `BlitzCtx`, and `BlitzCall` classes in
   `meta.lua` list the exact fields.
@@ -260,9 +261,8 @@ end)
 
 Event tags on `blitz.events.*`: `SESSION_RESET`, `AGENT_CREATED`,
 `AGENT_STARTED`, `AGENT_COMPLETE`, `AGENT_FAILED`, `AGENT_CANCELLED`,
-`COMPACTION_STARTED`, `COMPACTION_COMPLETE`, `TOOL_CALL_STARTED`,
-`TOOL_CALL_COMPLETE`, `AGENT_BROADCAST`, `PERMISSION_REQUESTED`,
-`PERMISSION_RESOLVED`, `USER_MESSAGE_SENT`, `MCP_TOOLS_RELOADED`, `ON_INJECT`.
+`COMPACTION_STARTED`, `COMPACTION_COMPLETE`, `USER_MESSAGE_SENT`,
+`MCP_TOOLS_RELOADED`, `ON_INJECT`.
 
 Do not enumerate payloads; read the `BlitzEventDef` class in `meta.lua`, which
 lists each tag with a one-line meaning.

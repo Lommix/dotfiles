@@ -57,7 +57,7 @@ local openai = blitz.add_provider({
 ---------------------------------------------------------------------------------------------------
 --- Model configuration, simple
 ---------------------------------------------------------------------------------------------------
-local default_model = blitz.add_model({
+local novita_ds_flash = blitz.add_model({
 	name = "deepseek/deepseek-v4-flash-0731",
 	provider = novita,
 	cost = { input = 0.14, output = 0.28, cache = 0.028 },
@@ -98,7 +98,7 @@ local qwen3_8 = blitz.add_model({
 	vision = true,
 })
 
-blitz.set_compact_edge(128000)
+blitz.set_compact_edge(300000)
 blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "max")
 
 blitz.bind("<C-o>", function()
@@ -106,20 +106,22 @@ blitz.bind("<C-o>", function()
 	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_flash, "low")
 	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "high")
 	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
+	blitz.set_model_agent(M.writer_id, opencode_ds_flash, "low")
 end)
 --
--- blitz.bind("<C-e>", function()
--- 	blitz.push_notification("big DP mode")
--- 	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_pro, "high")
--- 	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "medium")
--- 	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
--- end)
+blitz.bind("<C-e>", function()
+	blitz.push_notification("big DP mode")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_pro, "high")
+	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "medium")
+	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
+end)
 --
 blitz.bind("<C-b>", function()
 	blitz.push_notification("big G mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_glm_53, "high")
-	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "medium")
-	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, novita_ds_flash, "high")
+	blitz.set_model_agent(M.challanger_id, novita_ds_flash, "medium")
+	blitz.set_model_agent(M.researcher_id, novita_ds_flash, "low")
+	blitz.set_model_agent(M.writer_id, novita_ds_flash, "low")
 end)
 
 -- blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
@@ -137,17 +139,16 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.EDIT,
 	blitz.tools.SKILL,
 	blitz.tools.VIEW_IMAGE,
+	blitz.tools.START_MCP,
 	-- blitz.tools.PATCH,
 	-- blitz.tools.GLOB,
 	-- blitz.tools.GREP,
-	-- blitz.tools.START_MCP,
 	tools.web_fetch,
 	tools.web_search,
 	todo.add,
 	todo.list,
 	todo.update,
 	tools.lua_repl,
-	-- tools.ocr,
 	-- tools.gen_image,
 })
 
@@ -208,9 +209,16 @@ end)
 
 blitz.add_command("show", function(rem)
 	local prompt = [[
-Explain the answer in a visual way using short and precise mermaid diagrams
-(flow, sequence, class, er, state) in markdown code blocks ```mermaid ... ``` whenever a diagram
-clarifies the explanation better than text alone.
+Explain the answer visually. Pick the one mermaid diagram type that best fits the shape of what you are explaining and render it in a markdown code block ```mermaid ... ```.
+
+Choose the type by the structure of the idea:
+- flowchart: steps, decisions, branching logic, pipelines
+- sequence: message passing over time between actors or components
+- class: object types, fields, methods, and their relationships
+- er: entities and their relationships (tables, records, keys)
+- state: states and the transitions a thing moves through
+
+Use a diagram only when it clarifies more than text alone. Keep it short and precise: label every edge, drop any node or arrow that carries no meaning, and prefer the smallest diagram that tells the whole story.
 
 Task: ]] .. rem
 	blitz.cmd.prompt(prompt)
@@ -422,6 +430,8 @@ M.researcher_id = blitz.add_agent({
 	effort = "low",
 	model = default_model,
 	tools = {
+		blitz.tools.VIEW_IMAGE,
+		blitz.tools.SKILL,
 		blitz.tools.BASH,
 		blitz.tools.READ,
 		tools.web_fetch,
@@ -439,8 +449,28 @@ M.challanger_id = blitz.add_agent({
 	effort = "max",
 	model = default_model,
 	tools = {
-		tools.ocr,
+		blitz.tools.VIEW_IMAGE,
+		blitz.tools.SKILL,
 		blitz.tools.READ,
+		blitz.tools.BASH,
+	},
+})
+
+M.writer_id = blitz.add_agent({
+	name = "writer",
+	description = [[
+    Writes any text a human will read. Reviews existing text for clarity.
+    Use for marketing, docs and messages. Do not write code.
+    ]],
+	prompt = prompts.writer,
+	effort = "medium",
+	model = default_model,
+	tools = {
+		blitz.tools.VIEW_IMAGE,
+		blitz.tools.SKILL,
+		blitz.tools.READ,
+		blitz.tools.EDIT,
+		blitz.tools.WRITE,
 		blitz.tools.BASH,
 	},
 })
