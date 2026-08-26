@@ -142,7 +142,11 @@ M.lua_repl = blitz.register_tool({
 		code = { type = "string", description = "Lua code to execute", required = true },
 	},
 	func = function(ctx, call)
-		ctx:set_status("(Lua) `" .. call.arguments.code .. "`")
+		local orange = "\27[38;5;208m"
+		local bold = "\27[1m"
+		local reset = "\27[0m"
+
+		ctx:set_status(orange .. bold .. "(Lua)" .. reset .. " `" .. call.arguments.code .. "`")
 
 		local fn, err = load(call.arguments.code)
 		if not fn then

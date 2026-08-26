@@ -67,7 +67,7 @@ end
 --- TODO tools
 -------------------------------------------------------------------------------------------------
 M.add = blitz.register_tool({
-	name = "add",
+	name = "todo_add",
 	description = "Add a task to the TODO list.",
 	args = {
 		text = { type = "string", description = "the task description", required = true },
@@ -93,7 +93,7 @@ M.add = blitz.register_tool({
 })
 
 M.list = blitz.register_tool({
-	name = "list",
+	name = "todo_list",
 	description = "List all TODOs with their id, status, and text.",
 	args = {},
 	func = function(ctx, _)
@@ -131,22 +131,18 @@ M.list = blitz.register_tool({
 })
 
 M.update = blitz.register_tool({
-	name = "update",
-	description = "Update a TODO by id: mark done, delete, or change its text.",
+	name = "todo_update",
+	description = "Update a TODO by id: mark done or delete it. To change text, delete and re-add.",
 	args = {
 		id = { type = "string", description = "the TODO id", required = true },
 		done = { type = "boolean", description = "set true to mark done, false to reopen", required = false },
-		text = { type = "string", description = "new task description", required = false },
 		delete = { type = "boolean", description = "set true to delete the TODO", required = false },
 	},
 	func = function(ctx, call)
 		local id = tostring(call.arguments.id)
 		local args = call.arguments
-		if args.text ~= nil and (type(args.text) ~= "string" or args.text == "") then
-			error("text cannot be empty")
-		end
-		if not (args.delete or args.done ~= nil or args.text ~= nil) then
-			error("update requires at least one of: done, text, delete")
+		if not (args.delete or args.done ~= nil) then
+			error("update requires at least one of: done, delete")
 		end
 		local list = load(ctx.agent_id)
 		for i, t in ipairs(list) do
@@ -160,9 +156,6 @@ M.update = blitz.register_tool({
 				end
 				if args.done ~= nil then
 					t.done = args.done
-				end
-				if args.text ~= nil then
-					t.text = args.text
 				end
 				save(ctx.agent_id, list)
 				local c = colors()

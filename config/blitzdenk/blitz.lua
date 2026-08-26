@@ -42,6 +42,12 @@ local hetzner = blitz.add_provider({
 	key_envar = "HETZNER_AI_KEY",
 })
 
+local zai = blitz.add_provider({
+	type = "openai",
+	url = "https://api.z.ai/api/coding/paas/v4",
+	key_envar = "Z_AI_KEY",
+})
+
 local xai = blitz.add_provider({
 	type = "response",
 	url = "https://api.x.ai/v1",
@@ -69,6 +75,13 @@ local default_model = blitz.add_model({
 	provider = opencode,
 })
 
+-- local default_model = blitz.add_model({
+-- 	name = "deepseek/deepseek-v4-flash-vision-exp",
+-- 	vision = true,
+-- 	provider = router,
+-- 	cost = { input = 0.22, output = 0.66, cache = 0.007 },
+-- })
+
 local opencode_ds_pro = blitz.add_model({
 	name = "deepseek-v4-pro",
 	provider = opencode,
@@ -92,14 +105,34 @@ local grok_46 = blitz.add_model({
 	cost = { input = 2, output = 6, cache = 0.5 },
 })
 
-local qwen3_8 = blitz.add_model({
-	name = "qwen3.8",
-	provider = llama,
+local glm = blitz.add_model({
+	name = "glm-5.3",
+	provider = zai,
 	vision = true,
 })
 
 blitz.set_compact_edge(300000)
 blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "max")
+
+blitz.set_theme({
+	bg = "#282828",
+	overlay_dark = "#1d2021",
+	overlay = "#3c3836",
+	muted = "#928374",
+	text = "#ebdbb2",
+	text_hl = "#cbcbc2",
+	ok = "#b8bb26",
+	info = "#83a598",
+	warn = "#fabd2f",
+	err = "#fb4934",
+	on_err = "#282828",
+	diff_surface = "#504945",
+	diff_add = "#b8bb26",
+	diff_remove = "#fb4934",
+	role_user = "#83a598",
+	role_agent = "#d3869b",
+	role_system = "#8ec07c",
+})
 
 blitz.bind("<C-o>", function()
 	blitz.push_notification("big D mode")
@@ -110,18 +143,19 @@ blitz.bind("<C-o>", function()
 end)
 --
 blitz.bind("<C-e>", function()
-	blitz.push_notification("big DP mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_pro, "high")
-	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "medium")
-	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
+	blitz.push_notification("big Z mode")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, glm, "medium")
+	blitz.set_model_agent(M.challanger_id, glm, "medium")
+	blitz.set_model_agent(M.researcher_id, glm, "low")
+	blitz.set_model_agent(M.writer_id, glm, "low")
 end)
 --
 blitz.bind("<C-b>", function()
 	blitz.push_notification("big G mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, novita_ds_flash, "high")
-	blitz.set_model_agent(M.challanger_id, novita_ds_flash, "medium")
-	blitz.set_model_agent(M.researcher_id, novita_ds_flash, "low")
-	blitz.set_model_agent(M.writer_id, novita_ds_flash, "low")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, glm, "high")
+	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "medium")
+	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
+	blitz.set_model_agent(M.writer_id, opencode_ds_flash, "low")
 end)
 
 -- blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
@@ -139,7 +173,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.EDIT,
 	blitz.tools.SKILL,
 	blitz.tools.VIEW_IMAGE,
-	blitz.tools.START_MCP,
+	-- blitz.tools.START_MCP,
 	-- blitz.tools.PATCH,
 	-- blitz.tools.GLOB,
 	-- blitz.tools.GREP,
@@ -155,36 +189,55 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 ---------------------------------------------------------------------------------------------------
 --- MCP configuration
 ---------------------------------------------------------------------------------------------------
-blitz.mcp.add({
-	name = "playwright",
-	command = "npx",
-	args = {
-		"-y",
-		"@playwright/mcp@latest",
-		"--browser=chromium",
-		"--executable-path=/usr/bin/chromium",
-	},
-	tools_prefix = "pw_",
-})
+-- blitz.mcp.add({
+-- 	name = "playwright",
+-- 	command = "npx",
+-- 	args = {
+-- 		"-y",
+-- 		"@playwright/mcp@latest",
+-- 		"--browser=chromium",
+-- 		"--executable-path=/usr/bin/chromium",
+-- 	},
+-- 	tools_prefix = "pw_",
+-- })
 
 ---------------------------------------------------------------------------------------------------
 --- Command queue example: start new session with hidden prompts
 ---------------------------------------------------------------------------------------------------
 blitz.add_command("compact", function()
 	blitz.cmd.compact()
-end)
+end, "manual compact")
 
 blitz.add_command("cd", function(path)
 	blitz.cmd.cd(path)
-end)
+end, "cd to dir")
 
 blitz.add_command("clear", function()
 	blitz.cmd.reset_session()
-end)
+end, "clear session")
 
-blitz.add_command("help", function(rem)
-	blitz.cmd.prompt("Load the blitzdenk skill and help the user: \n" .. rem)
-end)
+blitz.add_command("improve", function(rem)
+	local prompt = [[
+You are in retrospective mode. Reflect on the current session, then improve the local tool sandbox.
+
+Process:
+1. Load the blitzdenk-lua before you do anything else.
+2. Reconstruct the session history from the chat log. List every tool that was used and rate it: did it help, was it redundant, did it fail or force a workaround?
+3. Find friction: shell one-liners typed more than once, lookups done by hand, any pattern that needed two or more calls of the same kind. Each repeated pattern is a candidate for a custom tool.
+4. Decide where a custom tool would have benefited the task. Only accept candidates seen at least twice in this session. Reject vague or one-off ideas.
+5. Open ./blitz.lua in the cwd. This is the project sandbox, loaded after the user config, and it holds the project tools registered with blitz.register_tool. Create the file if it does not exist.
+6. Apply the improvements: add or fix custom tools there, keep each tool minimal, and register the new tool names in the tool set of the main agent with blitz.add_tool(blitz.AGENT_GENERAL, name).
+7. Syntax check the file with `luac -p blitz.lua`. A file with a syntax error keeps the old config active after the hot reload.
+
+Rules:
+- Edit only ./blitz.lua in the cwd. Never touch the user config in ~/.config/blitzdenk.
+- Saving the file triggers a hot reload; the new tools become available without a restart.
+- Finish with a report: tool ratings, friction found, tools added or changed.
+
+]] .. rem
+
+	blitz.cmd.prompt(prompt)
+end, "session retrospective, improve local tools")
 
 blitz.add_command("plan", function(rem)
 	local prompt = [[
@@ -205,7 +258,7 @@ This is the request to explore:
 ]] .. rem
 
 	blitz.cmd.prompt(prompt)
-end)
+end, "plan mode")
 
 blitz.add_command("show", function(rem)
 	local prompt = [[
@@ -222,7 +275,7 @@ Use a diagram only when it clarifies more than text alone. Keep it short and pre
 
 Task: ]] .. rem
 	blitz.cmd.prompt(prompt)
-end)
+end, "draw diagram")
 
 blitz.add_command("bug", function(rem)
 	local prompt = [[
@@ -242,7 +295,7 @@ The bug:
 ]] .. rem
 
 	blitz.cmd.prompt(prompt)
-end)
+end, "bug hunt")
 
 blitz.add_command("team", function(rem)
 	local prompt = [[
@@ -260,7 +313,7 @@ This is the task:
 ]] .. rem
 
 	blitz.cmd.prompt(prompt)
-end)
+end, "orchestrate")
 
 blitz.add_command("review", function(rem)
 	local prompt = [[
@@ -272,7 +325,7 @@ Start 2 challenger agents reviewing the current diff. Communicate the original t
 ]] .. rem
 
 	blitz.cmd.prompt(prompt)
-end)
+end, "diff review")
 
 blitz.add_command("tospec", function(rem)
 	local prompt = [[
@@ -328,7 +381,7 @@ Feature:
 ]] .. rem
 
 	blitz.cmd.prompt(prompt)
-end)
+end, "write down plan")
 
 ---------------------------------------------------------------------------------------------------
 --- Screenshots
