@@ -87,12 +87,12 @@ M.done = blitz.register_tool({
 blitz.events.add_listener(blitz.events.ON_INJECT, function(agent_id)
 	local pending = {}
 	for _, t in ipairs(load(agent_id)) do
-		pending[#pending + 1] = "  - #" .. t.id .. " " .. t.text
+		pending[#pending + 1] = "  - #id:" .. t.id .. " " .. t.text
 	end
 	if #pending == 0 then
 		return nil
 	end
-	return "Pending TODOs for agent #" .. agent_id.index .. ":\n" .. table.concat(pending, "\n")
+	return "#Pending TODOs:\n" .. table.concat(pending, "\n")
 end)
 
 return M

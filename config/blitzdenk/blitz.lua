@@ -63,31 +63,10 @@ local openai = blitz.add_provider({
 ---------------------------------------------------------------------------------------------------
 --- Model configuration, simple
 ---------------------------------------------------------------------------------------------------
-local novita_ds_flash = blitz.add_model({
-	name = "deepseek/deepseek-v4-flash-0731",
-	provider = novita,
-	cost = { input = 0.14, output = 0.28, cache = 0.028 },
-})
 local default_model = blitz.add_model({
-	-- name = "deepseek-v4-flash-vision-exp",
-	-- name = "ox-alpha-free",
-	-- vision = true,
-	-- provider = opencode,
 	name = "glm-5.3-flash",
 	provider = zai,
 	vision = true,
-})
-
--- local default_model = blitz.add_model({
--- 	name = "deepseek/deepseek-v4-flash-vision-exp",
--- 	vision = true,
--- 	provider = router,
--- 	cost = { input = 0.22, output = 0.66, cache = 0.007 },
--- })
-
-local opencode_ds_pro = blitz.add_model({
-	name = "deepseek-v4-pro",
-	provider = opencode,
 })
 
 local opencode_ds_flash = blitz.add_model({
@@ -96,20 +75,14 @@ local opencode_ds_flash = blitz.add_model({
 	vision = true,
 })
 
-local opencode_glm_53 = blitz.add_model({
-	name = "glm-5.3",
-	provider = opencode,
-})
-
-local grok_46 = blitz.add_model({
-	name = "grok-4.6",
-	provider = xai,
+local glm_flash = blitz.add_model({
+	name = "glm-5.3-flash",
+	provider = zai,
 	vision = true,
-	cost = { input = 2, output = 6, cache = 0.5 },
 })
 
 local glm = blitz.add_model({
-	name = "glm-5.3-flash",
+	name = "glm-5.3",
 	provider = zai,
 	vision = true,
 })
@@ -117,51 +90,43 @@ local glm = blitz.add_model({
 blitz.set_compact_edge(300000)
 blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "high")
 
--- blitz.set_theme({
--- 	bg = "#282828",
--- 	overlay_dark = "#1d2021",
--- 	overlay = "#3c3836",
--- 	muted = "#928374",
--- 	text = "#ebdbb2",
--- 	text_hl = "#cbcbc2",
--- 	ok = "#b8bb26",
--- 	info = "#83a598",
--- 	warn = "#fabd2f",
--- 	err = "#fb4934",
--- 	on_err = "#282828",
--- 	diff_surface = "#504945",
--- 	diff_add = "#b8bb26",
--- 	diff_remove = "#fb4934",
--- 	role_user = "#83a598",
--- 	role_agent = "#d3869b",
--- 	role_system = "#8ec07c",
--- })
+blitz.set_theme({
+	bg = "#1f2430",
+	overlay_dark = "#171b24",
+	overlay = "#242936",
+	muted = "#707a8c",
+	text = "#cbccc6",
+	text_hl = "#d9d7ce",
+	ok = "#aad94c",
+	info = "#73d0ff",
+	warn = "#ffb454",
+	err = "#f07178",
+	on_err = "#1f2430",
+	diff_surface = "#2d3647",
+	diff_add = "#aad94c",
+	diff_remove = "#f07178",
+	role_user = "#73d0ff",
+	role_agent = "#d2a6ff",
+	role_system = "#95e6cb",
+})
 
 blitz.bind("<C-o>", function()
 	blitz.push_notification("big D mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_flash, "low")
+	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_flash, "high")
 	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "high")
 	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
 	blitz.set_model_agent(M.writer_id, opencode_ds_flash, "low")
 end)
---
+
 blitz.bind("<C-e>", function()
 	blitz.push_notification("big Z mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, glm, "medium")
-	blitz.set_model_agent(M.challanger_id, glm, "medium")
-	blitz.set_model_agent(M.researcher_id, glm, "low")
-	blitz.set_model_agent(M.writer_id, glm, "low")
-end)
---
-blitz.bind("<C-b>", function()
-	blitz.push_notification("big G mode")
 	blitz.set_model_agent(blitz.AGENT_GENERAL, glm, "high")
-	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "medium")
-	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
-	blitz.set_model_agent(M.writer_id, opencode_ds_flash, "low")
+	blitz.set_model_agent(M.challanger_id, glm_flash, "medium")
+	blitz.set_model_agent(M.researcher_id, glm_flash, "low")
+	blitz.set_model_agent(M.writer_id, glm_flash, "medium")
 end)
 
-blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
+-- blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
 ---------------------------------------------------------------------------------------------------
 --- Default Agent tool set overwrites
 ---------------------------------------------------------------------------------------------------
@@ -351,16 +316,15 @@ end, "bug hunt")
 
 blitz.add_command("team", function(rem)
 	local prompt = [[
-Congratulations! You were just promoted to the team lead agent. You no longer read or write code. Your new job is to
-orchestrate a team of agents to complete the task. You may start up to 8 agents at the same time. They are your new eyes and hands.
+You are the team-lead agent. You do not read or write code yourself — you orchestrate sub-agents.
+Start by loading the prompt skill and begin orchestrating the work load.
 
 Rules:
-- No concurrent builder agents
-- Clear instruction and goals. Load the prompt skill
-- Each builder agent must be followed by a challenger performing a ponytail review.
-- Each review step must be aware of the original intent of the task
+- Only one builder active per code base; researchers and reviewers may run in parallel (up to 8 at the same time)
+- Challenger agents must be aware of the original intent of the task and load the ponytail skill.
+- Each builder is followed by a challenger. Up to 3 iterations on the builder -> challenger loop. Prefer less, skip minor issues.
 
-This is the task:
+Task:
 ]] .. rem
 
 	blitz.cmd.prompt(prompt)
@@ -504,18 +468,6 @@ blitz.bind("<C-t>", function()
 	local f = blitz.get_flags()
 	f.show_thinking = not f.show_thinking
 	blitz.set_flags(f)
-end)
-
--------------------------------------------------------------------------------------------------
---- Saving and loading Sessions
--------------------------------------------------------------------------------------------------
-
-blitz.add_command("save", function()
-	blitz.cmd.save_session(".blitz/blitz_save.json")
-end)
-
-blitz.add_command("load", function()
-	blitz.cmd.load_session(".blitz/blitz_save.json")
 end)
 
 -------------------------------------------------------------------------------------------------
