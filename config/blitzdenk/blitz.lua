@@ -70,9 +70,12 @@ local novita_ds_flash = blitz.add_model({
 })
 local default_model = blitz.add_model({
 	-- name = "deepseek-v4-flash-vision-exp",
-	name = "ox-alpha-free",
+	-- name = "ox-alpha-free",
+	-- vision = true,
+	-- provider = opencode,
+	name = "glm-5.3-flash",
+	provider = zai,
 	vision = true,
-	provider = opencode,
 })
 
 -- local default_model = blitz.add_model({
@@ -106,33 +109,33 @@ local grok_46 = blitz.add_model({
 })
 
 local glm = blitz.add_model({
-	name = "glm-5.3",
+	name = "glm-5.3-flash",
 	provider = zai,
 	vision = true,
 })
 
 blitz.set_compact_edge(300000)
-blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "max")
+blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "high")
 
-blitz.set_theme({
-	bg = "#282828",
-	overlay_dark = "#1d2021",
-	overlay = "#3c3836",
-	muted = "#928374",
-	text = "#ebdbb2",
-	text_hl = "#cbcbc2",
-	ok = "#b8bb26",
-	info = "#83a598",
-	warn = "#fabd2f",
-	err = "#fb4934",
-	on_err = "#282828",
-	diff_surface = "#504945",
-	diff_add = "#b8bb26",
-	diff_remove = "#fb4934",
-	role_user = "#83a598",
-	role_agent = "#d3869b",
-	role_system = "#8ec07c",
-})
+-- blitz.set_theme({
+-- 	bg = "#282828",
+-- 	overlay_dark = "#1d2021",
+-- 	overlay = "#3c3836",
+-- 	muted = "#928374",
+-- 	text = "#ebdbb2",
+-- 	text_hl = "#cbcbc2",
+-- 	ok = "#b8bb26",
+-- 	info = "#83a598",
+-- 	warn = "#fabd2f",
+-- 	err = "#fb4934",
+-- 	on_err = "#282828",
+-- 	diff_surface = "#504945",
+-- 	diff_add = "#b8bb26",
+-- 	diff_remove = "#fb4934",
+-- 	role_user = "#83a598",
+-- 	role_agent = "#d3869b",
+-- 	role_system = "#8ec07c",
+-- })
 
 blitz.bind("<C-o>", function()
 	blitz.push_notification("big D mode")
@@ -158,10 +161,26 @@ blitz.bind("<C-b>", function()
 	blitz.set_model_agent(M.writer_id, opencode_ds_flash, "low")
 end)
 
--- blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
+blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
 ---------------------------------------------------------------------------------------------------
 --- Default Agent tool set overwrites
 ---------------------------------------------------------------------------------------------------
+
+blitz.set_capabilities({
+	{ binary = "rg", rule = "Use rg for fast recursive grep searches. Prefer rg over grep." },
+	{ binary = "fd", rule = "Use fd for fast file discovery. Prefer fd over find." },
+	{ binary = "jq", rule = "Use jq to parse and filter JSON data." },
+})
+
+local idle_tool = blitz.register_tool({
+	name = "idle",
+	description = "End your turn. The next event or sub agent will wake you up.",
+	func = function(ctx, _)
+		ctx:set_status("Waiting for something to happen")
+		blitz.get_main_agent()
+		return { exit_loop = true }
+	end,
+})
 
 -- main agent/fork
 blitz.set_agent_tools(blitz.AGENT_GENERAL, {
@@ -180,9 +199,9 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	tools.web_fetch,
 	tools.web_search,
 	todo.add,
-	todo.list,
-	todo.update,
+	todo.done,
 	tools.lua_repl,
+	idle_tool,
 	-- tools.gen_image,
 })
 
@@ -218,26 +237,59 @@ end, "clear session")
 
 blitz.add_command("improve", function(rem)
 	local prompt = [[
-You are in retrospective mode. Reflect on the current session, then improve the local tool sandbox.
+You are in retrospective mode. Your scope is the project-local tool sandbox in ./blitz.lua. Everything else is out of scope.
 
 Process:
-1. Load the blitzdenk-lua before you do anything else.
+1. Load the blitzdenk-lua skill and read the local blitz.lua. Do nothing else until it is loaded.
 2. Reconstruct the session history from the chat log. List every tool that was used and rate it: did it help, was it redundant, did it fail or force a workaround?
 3. Find friction: shell one-liners typed more than once, lookups done by hand, any pattern that needed two or more calls of the same kind. Each repeated pattern is a candidate for a custom tool.
-4. Decide where a custom tool would have benefited the task. Only accept candidates seen at least twice in this session. Reject vague or one-off ideas.
-5. Open ./blitz.lua in the cwd. This is the project sandbox, loaded after the user config, and it holds the project tools registered with blitz.register_tool. Create the file if it does not exist.
-6. Apply the improvements: add or fix custom tools there, keep each tool minimal, and register the new tool names in the tool set of the main agent with blitz.add_tool(blitz.AGENT_GENERAL, name).
-7. Syntax check the file with `luac -p blitz.lua`. A file with a syntax error keeps the old config active after the hot reload.
+4. Rate every tool already defined in ./blitz.lua: helped, redundant, failed, or forced a workaround. Skip this step silently when there are none.
+5. Improve ./blitz.lua only: fix broken tools, implement accepted candidates, one concern per tool, minimal bodies. Expose each new tool with blitz.add_tool(blitz.AGENT_GENERAL, name).
+6. Run `luac -p blitz.lua`. Fix errors before continuing; a broken file keeps the old config active after the hot reload.
+7. Wait for the hot reload to register the changed tools, then test each new or fixed tool directly with one real call and realistic arguments. Record pass/fail per tool. If the reload lags, fall back: load the file with dofile in lua_repl, use a stub ctx (ctx.cwd real, ctx:set_status no-op), call the tool functions by hand.
 
 Rules:
-- Edit only ./blitz.lua in the cwd. Never touch the user config in ~/.config/blitzdenk.
-- Saving the file triggers a hot reload; the new tools become available without a restart.
-- Finish with a report: tool ratings, friction found, tools added or changed.
+- Edit only ./blitz.lua in the cwd.
+- An edited tool with no recorded direct test count as unfinished work. Test tools by calling them directly!
+- Finish with a report: tool ratings, bash friction found, edits made, direct test results.
+
+Reports:
+1. List friction found
+2. Changelog
+
 
 ]] .. rem
 
 	blitz.cmd.prompt(prompt)
 end, "session retrospective, improve local tools")
+
+blitz.add_command("remember", function(rem)
+	local prompt = [[
+You are in retrospective mode. Your scope is ./AGENTS.md in the cwd. Everything else is out of scope.
+
+AGENTS.md is a wayfinder file. Hard truths and limits are welcome. Implementation details do not matter unless critical!
+
+Process:
+1. Reconstruct the session history from the chat log. Collect every durable fact it revealed: module map, build and test commands, non-obvious behavior, rules the user corrected or had to repeat.
+2. Read ./AGENTS.md. Compare it with those facts: find missing entries, stale entries, and lines any competent engineer gets by skimming the code anyway.
+3. Update ./AGENTS.md only: add proven missing facts, fix stale ones, drop the obvious.
+4. Shape: exactly one # headline at the top, ## heads below, bullets not paragraphs, commands as inline code. It is a guide for exploring the codebase, not its documentation.
+5. Run `wc -l AGENTS.md`. Stay under 100 lines; compress first if over.
+
+Rules:
+- Edit only ./AGENTS.md in the cwd.
+- Every added line needs evidence from this session or the codebase.
+- No motivation text, no why-explanations, no empty sections.
+
+Reports:
+1. Facts extracted
+2. Changelog
+
+
+]] .. rem
+
+	blitz.cmd.prompt(prompt)
+end, "update AGENTS.md")
 
 blitz.add_command("plan", function(rem)
 	local prompt = [[
@@ -300,14 +352,13 @@ end, "bug hunt")
 blitz.add_command("team", function(rem)
 	local prompt = [[
 Congratulations! You were just promoted to the team lead agent. You no longer read or write code. Your new job is to
-orchestrate a team of agents to complete the task. You may start up to 3 agents at the same time. They are your new eyes and hands.
+orchestrate a team of agents to complete the task. You may start up to 8 agents at the same time. They are your new eyes and hands.
 
-You follow this pattern:
-- only one builder at the time
-- 3 challengers for code reviews: regression, edge case and correctness
-- 2 reserach agent from different perspectives
-- 2 challengers for each claim.
-- Each review step must be aware of the original intent of the task.
+Rules:
+- No concurrent builder agents
+- Clear instruction and goals. Load the prompt skill
+- Each builder agent must be followed by a challenger performing a ponytail review.
+- Each review step must be aware of the original intent of the task
 
 This is the task:
 ]] .. rem
@@ -499,7 +550,7 @@ M.challanger_id = blitz.add_agent({
     correctness issues. Use when: need a second pair of eyes on a diff.
     ]],
 	prompt = prompts.review,
-	effort = "max",
+	effort = "high",
 	model = default_model,
 	tools = {
 		blitz.tools.VIEW_IMAGE,

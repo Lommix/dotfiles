@@ -38,11 +38,8 @@ The config dir is prepended to `package.path`, so `require("tools")` and
 `require("prompts")` resolve files from `~/.config/blitzdenk/`. Put reusable
 tools and prompts in `tools.lua` and `prompts.lua`, returning a table `M`.
 
-Hot reload polls the mtime of `./blitz.lua` and every `~/.config/blitzdenk/*.lua`
-about once per second. On change it resets the Lua VM, re-runs the config, and
-re-registers tools, MCP servers, and keybinds. If a tool worker holds the Lua VM
-lock, that tick is skipped and retried later. A syntax error makes the reload
-fail and the previous config stays active. No restart is needed to test a change.
+All Lua files are hot reloaded into your context. You can directly
+call tools you edited and confirm behavior.
 
 ## Providers and models
 
@@ -88,6 +85,7 @@ Built-in names: `BASH`, `READ`, `VIEW_IMAGE`,
 - `blitz.set_agent_tools(agent_type, {names})` replaces the whole tool set.
 - `blitz.add_tool(agent_type, tool_name)` adds one tool to the current set.
 - `blitz.set_prompt(agent_type, prompt)` replaces the system prompt.
+- `blitz.set_capabilities({rules})` registers environment rules; see below.
 - `blitz.AGENT_GENERAL` is the main agent type.
 
 ```lua
@@ -102,6 +100,18 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
     tools.web_fetch,          -- custom tool from require("tools")
 })
 ```
+
+## Env capabilities
+
+```lua
+blitz.set_capabilities({
+    { binary = "rg", rule = "Use rg for fast recursive grep searches." },
+})
+```
+
+Each rule is added under `# Envirement:` in the system prompt when its
+`binary` resolves on PATH. Only agents owning the bash tool get them.
+Calling again replaces all rules.
 
 ## Custom tools
 
@@ -170,7 +180,8 @@ Tool function rules:
   `ctx:ask(header, question, options)`. `approve`/`plan`/`ask` return a status
   integer plus an optional string; compare with `blitz.REQ_STATUS_*`.
 - Return `{ msg = "..." }`. To attach an image:
-  `{ msg = "...", img = { media_type = "image/png", data = bytes } }`. Set
+  `{ msg = "...", img = { media_type = "image/png", data = encoded } }`
+  where `encoded` is Base64 text from `blitz.base64.encode`. Set
   `exit_loop = true` to end the agent loop.
 - Raise `error("...")` for failure.
 - `blitz.exit_loop("done")` returns a result that ends the loop.
@@ -200,6 +211,9 @@ local researcher = blitz.add_agent({
 Optional fields: `model` (a handle from `add_model`; agents without a bound
 model fail to spawn) and `in_agent_tool = false` hides the agent from the
 general agent's sub-agent tool.
+`blitz.cmd.cancel_agent(agent_id)` cancels one agent and returns `"Success"`
+or `"Not Found"`. An agent id is one integer (the packed `{index, generation}`
+pair); the agent tool result carries it as an `agent_id: <int>` string.
 
 ## Commands and cmd
 
@@ -217,10 +231,12 @@ blitz.add_command("plan", function(rem)
 end, "plan a task without editing")
 ```
 
-Queue API: `reset_session`, `cancel`, `retry`, `compact`, `cd(path)`,
+Queue API: `reset_session`, `cancel`, `cancel_agent(agent_id)`, `retry`,
+`compact`, `cd(path)`,
 `prompt(text)`,
 `push_chat_entry(role, text)`, `queue_agent_message(agent_id, text)`, `spawn_agent(args)`, `await_agent(agent_id)`,
 `await_agent_result(agent_id)` returns the agent's last assistant text string.
+`cancel_agent(agent_id)` cancels one agent; returns `"Success"` or `"Not Found"`.
 `await_agent(agent_id)` blocks and returns an `AWAIT_*` status
 (`AWAIT_COMPLETE`, `AWAIT_FAILED`, `AWAIT_CANCELED`, `AWAIT_INVALID`).
 `save_session(path)`, `load_session(path)`,
@@ -234,7 +250,7 @@ idle), or starts a fresh general agent if none exists. Use it instead of
 `get_main_agent()` + `queue_agent_message` (which queues silently, no chat echo).
 Note `spawn_agent` without `parent_id` replaces the running main session.
 
-`blitz.get_main_agent()` returns the main agent id table (`{ index, generation }`) or nil.
+`blitz.get_main_agent()` returns the main agent id (an integer) or nil.
 
 ## Keybinds
 
@@ -260,7 +276,7 @@ Menu arrow `<Up>` / `<Down>` traverse while open (wrap, same as `<Tab>`).
 
 ```lua
 blitz.events.add_listener(blitz.events.AGENT_COMPLETE, function(agent_id)
-    -- agent_id.index and agent_id.generation
+    -- agent_id is the packed integer id
 end)
 ```
 
@@ -277,7 +293,7 @@ is built. Return a string to append it to that agent's `<system-reminder>` block
 
 ```lua
 blitz.events.add_listener(blitz.events.ON_INJECT, function(agent_id)
-    if agent_id.index == blitz.get_main_agent().index then
+    if agent_id == blitz.get_main_agent() then
         return "[CUSTOM] main agent reminder\n"
     end
 end)
