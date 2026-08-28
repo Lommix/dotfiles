@@ -27,7 +27,7 @@ hl.bind("SUPER + SHIFT + R", hl.dsp.exec_cmd("hyprctl reload; killall ags hyprpa
 hl.bind("SUPER + O", hl.dsp.exec_cmd("flatpak run md.obsidian.Obsidian"))
 hl.bind("SUPER + A", hl.dsp.exec_cmd("aseprite"))
 
-hl.bind("SUPER + SHIFT + Q", hl.dsp.window.kill())
+hl.bind("SUPER + SHIFT + Q", hl.dsp.window.close())
 hl.bind("SUPER + SHIFT + Space", hl.dsp.window.float({ action = "toggle" }))
 hl.bind("SUPER + SHIFT + X", hl.dsp.exit())
 hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd([[grim -g "$(slurp)" - | swappy -f -]]))
