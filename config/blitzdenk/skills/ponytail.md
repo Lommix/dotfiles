@@ -32,6 +32,7 @@ Stop at the first rung that holds:
 4. **Already-installed dependency solves it?** Use it. Never add a new one for what a few lines can do.
 5. **Can it be one line?** One line.
 6. **Only then:** the minimum code that works.
+7. **Tautological tests considered harmful** don't test the obvious.
 
 The ladder is a reflex, not a research project. Two rungs work → take the
 higher one and move on. The first lazy solution that works is the right one.

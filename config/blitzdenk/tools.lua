@@ -34,10 +34,16 @@ M.gen_image = blitz.register_tool({
 			error("prompt is required")
 		end
 		local size = call.arguments.size
+		local size_str
 		if type(size) ~= "string" or size == "" then
-			size = "512*512"
+			size_str = "512*512"
 		else
-			size = size:gsub("x", "*")
+			local w, h = size:match("^(%d+)x(%d+)$")
+			w, h = tonumber(w), tonumber(h)
+			if not w or not h or w < 256 or h < 256 or w > 1536 or h > 1536 then
+				error("invalid size `" .. size .. "`, use WxH with 256..1536")
+			end
+			size_str = w .. "*" .. h
 		end
 
 		local api_key = os.getenv("NOVITA_API_KEY")
@@ -51,11 +57,8 @@ M.gen_image = blitz.register_tool({
 		ctx:set_status("gen image `" .. prompt .. "`")
 
 		local payload, ok = blitz.json.encode({
-			seed = 101,
-			size = size,
 			prompt = prompt,
-			output_format = "webp",
-			enable_base64_output = false,
+			size = size_str,
 		})
 		if ok == false then
 			error("failed to build image request")
@@ -67,7 +70,7 @@ M.gen_image = blitz.register_tool({
 		f:close()
 
 		local body, ok = blitz.shell(
-			"curl -sS --max-time 30 -X POST 'https://api.novita.ai/v3/async/z-image-turbo'"
+			"curl -sS --max-time 30 -X POST 'https://api.novita.ai/v3/async/qwen-image-txt2img'"
 				.. " -H 'Content-Type: application/json'"
 				.. ' -H "Authorization: Bearer $NOVITA_API_KEY"'
 				.. " -d @"
@@ -93,7 +96,7 @@ M.gen_image = blitz.register_tool({
 		local result_url = "https://api.novita.ai/v3/async/task-result?task_id=" .. task_id
 		local image_url
 		for _ = 1, 60 do
-			os.execute("sleep 2")
+			os.execute("sleep 5")
 			local res, ok =
 				blitz.shell('curl -sS --max-time 30 -H "Authorization: Bearer $NOVITA_API_KEY" \'' .. result_url .. "'")
 			if not ok then
@@ -123,12 +126,160 @@ M.gen_image = blitz.register_tool({
 
 		ctx:set_status("downloading image to `" .. path .. "`")
 
-		local _, ok = blitz.shell("curl -sS --max-time 30 -o '" .. path .. "' '" .. image_url .. "'")
+		local file_name = path:match("([^/\\]+)$") or "generated.png"
+		local temp_path = blitz.write_tempfile(file_name, "")
+		local dl_out, ok = blitz.shell("curl -sS --max-time 120 -o '" .. temp_path .. "' '" .. image_url .. "'")
 		if not ok then
-			error("failed to download image to: " .. path)
+			error("failed to download image to: " .. temp_path .. " :: " .. tostring(dl_out))
 		end
 
-		return { msg = "image saved to " .. path }
+		return {
+			msg = "image saved to sandbox temp file `"
+				.. temp_path
+				.. "`."
+				.. " Copy it to the final destination with bash: cp '"
+				.. temp_path
+				.. "' '"
+				.. path
+				.. "'",
+		}
+	end,
+})
+
+-------------------------------------------------------------------------------------------------
+--- Image edit tool (qwen-image-edit)
+-------------------------------------------------------------------------------------------------
+M.edit_image = blitz.register_tool({
+	name = "lua_edit_image",
+	description = [[
+    Edit an existing image file with an instruction prompt. Use for background changes, object edits, style changes on an existing image.
+    ]],
+	args = {
+		path = { type = "string", description = "absolute path of the image file to edit", required = true },
+		prompt = {
+			type = "string",
+			description = "edit instruction, e.g. 'replace the background with pure green'",
+			required = true,
+		},
+	},
+	func = function(ctx, call)
+		local path = call.arguments.path
+		if type(path) ~= "string" or path == "" then
+			error("path is required")
+		end
+		local prompt = call.arguments.prompt
+		if type(prompt) ~= "string" or prompt == "" then
+			error("prompt is required")
+		end
+
+		local f = io.open(path, "rb")
+		if not f then
+			error("cannot read image file: " .. path)
+		end
+		local data = f:read("*a")
+		f:close()
+		if not data or #data == 0 then
+			error("image file is empty: " .. path)
+		end
+		if #data > 15 * 1024 * 1024 then
+			error("image file too large: " .. #data .. " bytes, max 15MB")
+		end
+
+		local encoded, ok = blitz.base64.encode(data)
+		if not ok or type(encoded) ~= "string" then
+			error("failed to base64 encode image")
+		end
+
+		ctx:set_status("edit image `" .. prompt .. "`")
+
+		local payload, ok = blitz.json.encode({
+			prompt = prompt,
+			image = encoded,
+			output_format = "png",
+		})
+		if ok == false then
+			error("failed to build edit request")
+		end
+
+		local tmp = os.tmpname()
+		local fh = assert(io.open(tmp, "w"))
+		fh:write(payload)
+		fh:close()
+
+		local body, ok = blitz.shell(
+			"curl -sS --max-time 30 -X POST 'https://api.novita.ai/v3/async/qwen-image-edit'"
+				.. " -H 'Content-Type: application/json'"
+				.. ' -H "Authorization: Bearer $NOVITA_API_KEY"'
+				.. " -d @"
+				.. tmp
+		)
+		os.remove(tmp)
+		if not ok then
+			error("edit request failed (curl exit non-zero)")
+		end
+
+		local val, ok = blitz.json.decode(body)
+		if ok == false then
+			error("failed to parse edit json response")
+		end
+
+		local task_id = val.task_id or (val.task and val.task.task_id)
+		if type(task_id) ~= "string" or task_id == "" then
+			error("novita did not return a task_id: " .. tostring(body))
+		end
+
+		ctx:set_status("novita edit task " .. task_id .. " pending")
+
+		local result_url = "https://api.novita.ai/v3/async/task-result?task_id=" .. task_id
+		local image_url
+		for _ = 1, 60 do
+			os.execute("sleep 5")
+			local res, ok =
+				blitz.shell('curl -sS --max-time 30 -H "Authorization: Bearer $NOVITA_API_KEY" \'' .. result_url .. "'")
+			if not ok then
+				error("task-result request failed (curl exit non-zero)")
+			end
+			local r, ok = blitz.json.decode(res)
+			if ok == false then
+				error("failed to parse task-result json response")
+			end
+			local status = r.task and r.task.status or ""
+			if status == "TASK_STATUS_SUCCEED" then
+				local imgs = r.images
+				if type(imgs) == "table" and imgs[1] and imgs[1].image_url then
+					image_url = imgs[1].image_url
+					break
+				end
+				error("novita edit succeeded but no image url found: " .. tostring(res))
+			elseif status == "TASK_STATUS_FAILED" then
+				local reason = r.task and r.task.reason or "unknown"
+				error("novita edit task failed: " .. tostring(reason))
+			end
+		end
+
+		if not image_url then
+			error("novita edit task timed out: " .. task_id)
+		end
+
+		ctx:set_status("downloading edited image")
+
+		local file_name = path:match("([^/\\]+)$") or "edited.png"
+		local temp_path = blitz.write_tempfile("edited_" .. file_name, "")
+		local dl_out, ok = blitz.shell("curl -sS --max-time 120 -o '" .. temp_path .. "' '" .. image_url .. "'")
+		if not ok then
+			error("failed to download edited image: " .. tostring(dl_out))
+		end
+
+		return {
+			msg = "edited image saved to sandbox temp file `"
+				.. temp_path
+				.. "`."
+				.. " Copy it to the final destination with bash: cp '"
+				.. temp_path
+				.. "' '"
+				.. path
+				.. "'",
+		}
 	end,
 })
 

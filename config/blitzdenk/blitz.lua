@@ -2,93 +2,24 @@ local M = {}
 local prompts = require("prompts")
 local tools = require("tools")
 local todo = require("todo")
----------------------------------------------------------------------------------------------------
---- Provider configuration
----------------------------------------------------------------------------------------------------
-local llama = blitz.add_provider({
-	type = "openai",
-	url = "http://127.0.0.1:8118",
-	key_envar = "",
-})
+local models = require("provider")
 
-local novita = blitz.add_provider({
-	type = "openai",
-	url = "https://api.novita.ai/openai/v1",
-	key_envar = "NOVITA_API_KEY",
-	rate_limit = 30,
-})
-
-local opencode = blitz.add_provider({
-	type = "openai",
-	url = "https://opencode.ai/zen/go/v1",
-	key_envar = "OPENCODE_API_KEY",
-})
-
-local requesty = blitz.add_provider({
-	type = "openai",
-	url = "https://router.requesty.ai/v1",
-	key_envar = "REQUESTY_API_KEY",
-})
-
-local router = blitz.add_provider({
-	type = "openai",
-	url = "https://openrouter.ai/api/v1",
-	key_envar = "OPENROUTER_API_KEY",
-})
-
-local hetzner = blitz.add_provider({
-	type = "openai",
-	url = "https://inference.hetzner.com/api/v1",
-	key_envar = "HETZNER_AI_KEY",
-})
-
-local zai = blitz.add_provider({
-	type = "openai",
-	url = "https://api.z.ai/api/coding/paas/v4",
-	key_envar = "Z_AI_KEY",
-})
-
-local xai = blitz.add_provider({
-	type = "response",
-	url = "https://api.x.ai/v1",
-	key_envar = "XAI_API_KEY",
-})
-
-local openai = blitz.add_provider({
-	type = "response",
-	url = "https://api.openai.com/v1",
-	key_envar = "OPENAI_API_KEY",
-})
+-- blitz.permissions.approve(function(p)
+-- 	blitz.push_notification(p.tool)
+-- 	return { approved = true }
+-- end)
 
 ---------------------------------------------------------------------------------------------------
 --- Model configuration, simple
 ---------------------------------------------------------------------------------------------------
 local default_model = blitz.add_model({
 	name = "glm-5.3-flash",
-	provider = zai,
-	vision = true,
-})
-
-local opencode_ds_flash = blitz.add_model({
-	name = "deepseek-v4-flash-vision-exp",
-	provider = opencode,
-	vision = true,
-})
-
-local glm_flash = blitz.add_model({
-	name = "glm-5.3-flash",
-	provider = zai,
-	vision = true,
-})
-
-local glm = blitz.add_model({
-	name = "glm-5.3",
-	provider = zai,
+	provider = models.provider.zai,
 	vision = true,
 })
 
 blitz.set_compact_edge(300000)
-blitz.set_model_agent(blitz.AGENT_GENERAL, default_model, "high")
+blitz.set_agent_model(blitz.AGENT_GENERAL, default_model, "high")
 
 blitz.set_theme({
 	bg = "#1f2430",
@@ -112,23 +43,22 @@ blitz.set_theme({
 
 blitz.bind("<C-o>", function()
 	blitz.push_notification("big D mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, opencode_ds_flash, "high")
-	blitz.set_model_agent(M.challanger_id, opencode_ds_flash, "high")
-	blitz.set_model_agent(M.researcher_id, opencode_ds_flash, "low")
-	blitz.set_model_agent(M.writer_id, opencode_ds_flash, "low")
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.qwen_38_flash, "high")
+	blitz.set_agent_model(M.challanger_id, models.qwen_38_flash, "high")
+	blitz.set_agent_model(M.researcher_id, models.qwen_38_flash, "low")
+	blitz.set_agent_model(M.writer_id, models.qwen_38_flash, "low")
 end)
 
 blitz.bind("<C-e>", function()
 	blitz.push_notification("big Z mode")
-	blitz.set_model_agent(blitz.AGENT_GENERAL, glm, "high")
-	blitz.set_model_agent(M.challanger_id, glm_flash, "medium")
-	blitz.set_model_agent(M.researcher_id, glm_flash, "low")
-	blitz.set_model_agent(M.writer_id, glm_flash, "medium")
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.glm, "high")
+	blitz.set_agent_model(M.challanger_id, models.glm_flash, "medium")
+	blitz.set_agent_model(M.researcher_id, models.glm_flash, "low")
+	blitz.set_agent_model(M.writer_id, models.glm_flash, "medium")
 end)
 
--- blitz.set_prompt(blitz.AGENT_GENERAL, prompts.opencode)
 ---------------------------------------------------------------------------------------------------
---- Default Agent tool set overwrites
+--- Usefull cli tools
 ---------------------------------------------------------------------------------------------------
 
 blitz.set_capabilities({
@@ -137,15 +67,52 @@ blitz.set_capabilities({
 	{ binary = "jq", rule = "Use jq to parse and filter JSON data." },
 })
 
+---------------------------------------------------------------------------------------------------
+--- Subagent communication tools
+---------------------------------------------------------------------------------------------------
 local idle_tool = blitz.register_tool({
 	name = "idle",
 	description = "End your turn. The next event or sub agent will wake you up.",
 	func = function(ctx, _)
 		ctx:set_status("Waiting for something to happen")
-		blitz.get_main_agent()
 		return { exit_loop = true }
 	end,
 })
+
+local message_tool = blitz.register_tool({
+	name = "message_agent",
+	description = "send a message to another agent",
+	args = {
+		agent_id = { type = "integer", description = "the id from the agent tool result", required = true },
+		message = { type = "string", description = "the text to deliver", required = true },
+	},
+	func = function(ctx, call)
+		local id = tonumber(call.arguments.agent_id) or error("no agent id provided")
+		local msg = tostring(call.arguments.message or error("no message provided"))
+
+		ctx:set_status("To agent(" .. tostring(id) .. ") :\n> \27[38;2;112;122;140m" .. msg .. "\27[0m")
+		blitz.cmd.message_agent(id, msg)
+		return { msg = "send" }
+	end,
+})
+
+local cancel_tool = blitz.register_tool({
+	name = "cancel_agent",
+	description = "abort a sub agent",
+	args = {
+		agent_id = { type = "integer", description = "the id from the agent tool result", required = true },
+	},
+	func = function(ctx, call)
+		local id = tonumber(call.arguments.agent_id) or error("no agent id provided")
+		ctx:set_status("Cancel agent(" .. tostring(id) .. ")")
+		blitz.cmd.cancel_agent(id)
+		return { msg = "canceled" }
+	end,
+})
+
+---------------------------------------------------------------------------------------------------
+--- Default Agent tool set overwrites
+---------------------------------------------------------------------------------------------------
 
 -- main agent/fork
 blitz.set_agent_tools(blitz.AGENT_GENERAL, {
@@ -167,7 +134,8 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	todo.done,
 	tools.lua_repl,
 	idle_tool,
-	-- tools.gen_image,
+	message_tool,
+	cancel_tool,
 })
 
 ---------------------------------------------------------------------------------------------------
@@ -188,6 +156,10 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 ---------------------------------------------------------------------------------------------------
 --- Command queue example: start new session with hidden prompts
 ---------------------------------------------------------------------------------------------------
+blitz.add_command("/dumb", function()
+	blitz.set_agent_effort(blitz.AGENT_GENERAL, "low")
+end)
+
 blitz.add_command("compact", function()
 	blitz.cmd.compact()
 end, "manual compact")
@@ -317,12 +289,19 @@ end, "bug hunt")
 blitz.add_command("team", function(rem)
 	local prompt = [[
 You are the team-lead agent. You do not read or write code yourself — you orchestrate sub-agents.
-Start by loading the prompt skill and begin orchestrating the work load.
+Start by loading the prompt skill and begin orchestrating the work load. You can message finished
+agents to continue the conversation.
+
+Task patterns:
+- Feature: research -> plan -> build -> challenge -> report
+- Bug: research -> challange -> fix -> challenge -> report
+- Research: research -> challenge -> report
 
 Rules:
-- Only one builder active per code base; researchers and reviewers may run in parallel (up to 8 at the same time)
-- Challenger agents must be aware of the original intent of the task and load the ponytail skill.
-- Each builder is followed by a challenger. Up to 3 iterations on the builder -> challenger loop. Prefer less, skip minor issues.
+- Only one builder per domain space at the same time.
+- Builders must be informed about other builders currently active.
+- Challenger agents must be aware of the original intent of the task.
+- Always at least 2 Challengers from different perspective (correctness, edge cases, ponytail).
 
 Task:
 ]] .. rem
@@ -353,8 +332,6 @@ Process:
 1. Review the conversation for all decisions, requirements, constraints, and rejected alternatives.
 2. Explore the codebase to ground the spec in the real project state (existing modules, conventions, ADRs).
 3. Write spec.md in cwd using EXACTLY this fixed format:
-
-# <Feature Name>
 
 ## Problem Statement
 The problem the user is facing, from the user's perspective.
@@ -389,10 +366,9 @@ What is explicitly NOT part of this spec. Things refused during the conversation
 Any remaining notes.
 
 Use the project's own vocabulary throughout. Every decision in the spec must trace back to the
-conversation or the codebase — never invent anything to fill a section. Write the file with your
-patch tool, then report the path and a short summary of what was decided.
+conversation or the codebase — never invent anything to fill a section. Write the file then
+report the path and a short summary of what was decided.
 
-Feature:
 ]] .. rem
 
 	blitz.cmd.prompt(prompt)
@@ -438,7 +414,7 @@ blitz.status_bar_render = function()
 	return white
 		.. blitz.get_model_name(blitz.AGENT_GENERAL)
 		.. " • "
-		.. blitz.get_model_effort(blitz.AGENT_GENERAL)
+		.. blitz.get_agent_effort(blitz.AGENT_GENERAL)
 		.. reset
 		.. " (Cache:"
 		.. green
