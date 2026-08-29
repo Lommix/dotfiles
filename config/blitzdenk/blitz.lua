@@ -12,14 +12,10 @@ local models = require("provider")
 ---------------------------------------------------------------------------------------------------
 --- Model configuration, simple
 ---------------------------------------------------------------------------------------------------
-local default_model = blitz.add_model({
-	name = "glm-5.3-flash",
-	provider = models.provider.zai,
-	vision = true,
-})
-
+local default_model = models.glm_flash
 blitz.set_compact_edge(300000)
-blitz.set_agent_model(blitz.AGENT_GENERAL, default_model, "high")
+blitz.set_agent_model(blitz.AGENT_GENERAL, default_model)
+blitz.set_agent_effort(blitz.AGENT_GENERAL, "high")
 
 blitz.set_theme({
 	bg = "#1f2430",
@@ -43,18 +39,18 @@ blitz.set_theme({
 
 blitz.bind("<C-o>", function()
 	blitz.push_notification("big D mode")
-	blitz.set_agent_model(blitz.AGENT_GENERAL, models.qwen_38_flash, "high")
-	blitz.set_agent_model(M.challanger_id, models.qwen_38_flash, "high")
-	blitz.set_agent_model(M.researcher_id, models.qwen_38_flash, "low")
-	blitz.set_agent_model(M.writer_id, models.qwen_38_flash, "low")
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.qwen_38_flash, true)
+	blitz.set_agent_model(M.challanger_id, models.qwen_38_flash, true)
+	blitz.set_agent_model(M.researcher_id, models.qwen_38_flash, true)
+	blitz.set_agent_model(M.writer_id, models.qwen_38_flash, true)
 end)
 
 blitz.bind("<C-e>", function()
 	blitz.push_notification("big Z mode")
-	blitz.set_agent_model(blitz.AGENT_GENERAL, models.glm, "high")
-	blitz.set_agent_model(M.challanger_id, models.glm_flash, "medium")
-	blitz.set_agent_model(M.researcher_id, models.glm_flash, "low")
-	blitz.set_agent_model(M.writer_id, models.glm_flash, "medium")
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.glm, true)
+	blitz.set_agent_model(M.challanger_id, models.glm_flash, true)
+	blitz.set_agent_model(M.researcher_id, models.glm_flash, true)
+	blitz.set_agent_model(M.writer_id, models.glm_flash, true)
 end)
 
 ---------------------------------------------------------------------------------------------------
@@ -157,7 +153,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 --- Command queue example: start new session with hidden prompts
 ---------------------------------------------------------------------------------------------------
 blitz.add_command("/dumb", function()
-	blitz.set_agent_effort(blitz.AGENT_GENERAL, "low")
+	blitz.set_agent_effort(blitz.AGENT_GENERAL, "low", true)
 end)
 
 blitz.add_command("compact", function()
