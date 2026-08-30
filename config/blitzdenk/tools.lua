@@ -69,13 +69,14 @@ M.gen_image = blitz.register_tool({
 		f:write(payload)
 		f:close()
 
-		local body, ok = blitz.shell(
-			"curl -sS --max-time 30 -X POST 'https://api.novita.ai/v3/async/qwen-image-txt2img'"
+		local body, ok = blitz.shell({
+			cmd = "curl -sS --max-time 30 -X POST 'https://api.novita.ai/v3/async/qwen-image-txt2img'"
 				.. " -H 'Content-Type: application/json'"
 				.. ' -H "Authorization: Bearer $NOVITA_API_KEY"'
 				.. " -d @"
-				.. tmp
-		)
+				.. tmp,
+			force_local = true,
+		})
 		os.remove(tmp)
 		if not ok then
 			error("image request failed (curl exit non-zero)")
@@ -97,8 +98,10 @@ M.gen_image = blitz.register_tool({
 		local image_url
 		for _ = 1, 60 do
 			os.execute("sleep 5")
-			local res, ok =
-				blitz.shell('curl -sS --max-time 30 -H "Authorization: Bearer $NOVITA_API_KEY" \'' .. result_url .. "'")
+			local res, ok = blitz.shell({
+				cmd = 'curl -sS --max-time 30 -H "Authorization: Bearer $NOVITA_API_KEY" \'' .. result_url .. "'",
+				force_local = true,
+			})
 			if not ok then
 				error("task-result request failed (curl exit non-zero)")
 			end
@@ -128,7 +131,10 @@ M.gen_image = blitz.register_tool({
 
 		local file_name = path:match("([^/\\]+)$") or "generated.png"
 		local temp_path = blitz.write_tempfile(file_name, "")
-		local dl_out, ok = blitz.shell("curl -sS --max-time 120 -o '" .. temp_path .. "' '" .. image_url .. "'")
+		local dl_out, ok = blitz.shell({
+			cmd = "curl -sS --max-time 120 -o '" .. temp_path .. "' '" .. image_url .. "'",
+			force_local = true,
+		})
 		if not ok then
 			error("failed to download image to: " .. temp_path .. " :: " .. tostring(dl_out))
 		end
@@ -206,13 +212,14 @@ M.edit_image = blitz.register_tool({
 		fh:write(payload)
 		fh:close()
 
-		local body, ok = blitz.shell(
-			"curl -sS --max-time 30 -X POST 'https://api.novita.ai/v3/async/qwen-image-edit'"
+		local body, ok = blitz.shell({
+			cmd = "curl -sS --max-time 30 -X POST 'https://api.novita.ai/v3/async/qwen-image-edit'"
 				.. " -H 'Content-Type: application/json'"
 				.. ' -H "Authorization: Bearer $NOVITA_API_KEY"'
 				.. " -d @"
-				.. tmp
-		)
+				.. tmp,
+			force_local = true,
+		})
 		os.remove(tmp)
 		if not ok then
 			error("edit request failed (curl exit non-zero)")
@@ -234,8 +241,10 @@ M.edit_image = blitz.register_tool({
 		local image_url
 		for _ = 1, 60 do
 			os.execute("sleep 5")
-			local res, ok =
-				blitz.shell('curl -sS --max-time 30 -H "Authorization: Bearer $NOVITA_API_KEY" \'' .. result_url .. "'")
+			local res, ok = blitz.shell({
+				cmd = 'curl -sS --max-time 30 -H "Authorization: Bearer $NOVITA_API_KEY" \'' .. result_url .. "'",
+				force_local = true,
+			})
 			if not ok then
 				error("task-result request failed (curl exit non-zero)")
 			end
@@ -265,7 +274,10 @@ M.edit_image = blitz.register_tool({
 
 		local file_name = path:match("([^/\\]+)$") or "edited.png"
 		local temp_path = blitz.write_tempfile("edited_" .. file_name, "")
-		local dl_out, ok = blitz.shell("curl -sS --max-time 120 -o '" .. temp_path .. "' '" .. image_url .. "'")
+		local dl_out, ok = blitz.shell({
+			cmd = "curl -sS --max-time 120 -o '" .. temp_path .. "' '" .. image_url .. "'",
+			force_local = true,
+		})
 		if not ok then
 			error("failed to download edited image: " .. tostring(dl_out))
 		end
@@ -329,7 +341,7 @@ M.web_fetch = blitz.register_tool({
 		end
 
 		ctx:set_status("fetch " .. url)
-		local content, ok = blitz.shell("yomi read " .. url)
+		local content, ok = blitz.shell({ cmd = "yomi read " .. url, force_local = true })
 
 		if not ok or content == nil or content == "" then
 			error("chromium returned no output")
@@ -389,11 +401,12 @@ M.web_search = blitz.register_tool({
 			.. max
 			.. "&result_filter=web&text_decorations=false&extra_snippets=true"
 
-		local body, ok = blitz.shell(
-			"curl -sS --max-time 15 -H 'Accept: application/json' -H \"X-Subscription-Token: $BRAVE_API_KEY\" '"
+		local body, ok = blitz.shell({
+			cmd = "curl -sS --max-time 15 -H 'Accept: application/json' -H \"X-Subscription-Token: $BRAVE_API_KEY\" '"
 				.. search_url
-				.. "'"
-		)
+				.. "'",
+            force_local = true,
+		})
 		if not ok then
 			error("brave request failed (curl exit non-zero)")
 		end

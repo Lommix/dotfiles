@@ -159,6 +159,12 @@ blitz.add_command("/dumb", function()
 	blitz.set_agent_effort(blitz.AGENT_GENERAL, "low", true)
 end)
 
+blitz.add_command("yolo", function()
+	local flags = blitz.get_flags()
+	flags.approval_mode = "yolo"
+	blitz.set_flags(flags)
+end, "manual compact")
+
 blitz.add_command("compact", function()
 	blitz.cmd.compact()
 end, "manual compact")
@@ -377,7 +383,7 @@ end, "write down plan")
 --- Screenshots
 ---------------------------------------------------------------------------------------------------
 blitz.bind("<C-s>", function()
-	local png, ok = blitz.shell('grim -g "$(slurp)" -t png -')
+	local png, ok = blitz.shell({ cmd = 'grim -g "$(slurp)" -t png -', force_local = true })
 
 	if not ok or not png or #png == 0 then
 		return

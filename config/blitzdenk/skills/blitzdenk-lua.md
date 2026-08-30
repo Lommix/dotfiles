@@ -346,6 +346,26 @@ local pw = blitz.mcp.add({
 blitz.mcp.enable(pw)
 ```
 
+## SSH mode
+
+While ssh routing is on, every call (bash, read, write, edit,
+patch, search, `blitz.shell`) wraps in `ssh user@host` instead of running
+locally. Requires `yolo` approval level for auto approval.
+
+The TUI owns the connection: `/ssh user@host:~/dir` or `/ssh-<alias>` establishes the
+target, `/ssh off` clears it. Lua only flips the routing flag:
+
+```lua
+blitz.ssh.enable()
+blitz.ssh.disable()
+```
+
+`blitz.shell` opts carry `force_local`: true runs the command on this machine
+and skips the ssh wrap. Use it for commands that only make sense locally, like
+`git status` before a push or a local `ssh-add` check.
+
+Calls are safe from config, tools, and listeners.
+
 ## UI and status
 
 ```lua
