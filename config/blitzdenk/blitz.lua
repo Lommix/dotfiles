@@ -4,11 +4,6 @@ local tools = require("tools")
 local todo = require("todo")
 local models = require("provider")
 
--- blitz.permissions.approve(function(p)
--- 	blitz.push_notification(p.tool)
--- 	return { approved = true }
--- end)
-
 ---------------------------------------------------------------------------------------------------
 --- Model configuration, simple
 ---------------------------------------------------------------------------------------------------
@@ -43,7 +38,7 @@ blitz.bind("<C-o>", function()
 	blitz.set_agent_model(M.challanger_id, models.qwen_38_flash, true)
 	blitz.set_agent_model(M.researcher_id, models.qwen_38_flash, true)
 	blitz.set_agent_model(M.writer_id, models.qwen_38_flash, true)
-end)
+end, "Big-D")
 
 blitz.bind("<C-e>", function()
 	blitz.push_notification("big Z mode")
@@ -51,7 +46,7 @@ blitz.bind("<C-e>", function()
 	blitz.set_agent_model(M.challanger_id, models.glm_flash, true)
 	blitz.set_agent_model(M.researcher_id, models.glm_flash, true)
 	blitz.set_agent_model(M.writer_id, models.glm_flash, true)
-end)
+end, "Big-Z")
 
 ---------------------------------------------------------------------------------------------------
 --- Usefull cli tools
@@ -381,7 +376,7 @@ blitz.bind("<C-s>", function()
 	end
 
 	blitz.cmd.attach_screenshot(png, "image/png")
-end)
+end, "screenshot")
 
 ---------------------------------------------------------------------------------------------------
 --- Custom status bar render
@@ -436,13 +431,25 @@ blitz.status_bar_render = function()
 end
 
 ---------------------------------------------------------------------------------------------------
---- Thinking
+--- binds
 ---------------------------------------------------------------------------------------------------
 blitz.bind("<C-t>", function()
 	local f = blitz.get_flags()
 	f.show_thinking = not f.show_thinking
 	blitz.set_flags(f)
-end)
+end, "show thinking")
+
+blitz.add_command("effort", function()
+	blitz.cmd.select({
+		header = "Effort",
+		question = "Set reasoning effort for the general agent?",
+		options = { "low", "medium", "high", "xhigh", "max" },
+	}, function(choice)
+		if choice then
+			blitz.set_agent_effort(blitz.AGENT_GENERAL, choice, true)
+		end
+	end)
+end, "set effort level")
 
 -------------------------------------------------------------------------------------------------
 --- Sub agents

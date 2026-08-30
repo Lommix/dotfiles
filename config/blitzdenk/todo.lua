@@ -84,7 +84,7 @@ M.done = blitz.register_tool({
 	end,
 })
 
-blitz.events.add_listener(blitz.events.ON_INJECT, function(agent_id)
+blitz.hooks.inject(function(agent_id)
 	local pending = {}
 	for _, t in ipairs(load(agent_id)) do
 		pending[#pending + 1] = "  - #id:" .. t.id .. " " .. t.text

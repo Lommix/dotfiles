@@ -167,7 +167,9 @@ blitz.add_command("plan", function(rem)
 end, "plan a task without editing")
 ```
 
-The optional description shows next to the command in the completion popup.
+The callback always receives one string: the remaining input after the
+command name, `""` when none. Always declare the parameter. The optional
+description shows next to the command in the completion popup.
 The full command queue API (`reset_session`, `cancel`, `spawn_agent`,
 `await_agent`, and so on) is `BlitzCmd` in `meta.lua`.
 
@@ -176,6 +178,36 @@ into the chat and sends it to the main agent, or starts a fresh general agent
 if none exists. Use it instead of `message_chat("user", ...)` (display only)
 or `get_main_agent()` + `message_agent` (queues silently, no chat echo).
 
+## Selection
+
+`blitz.cmd.select(request, cb)` opens the ask widget from a command and
+returns at once. The request is one table: `header`, `question`, `options`
+(1-8 strings), optional `allow_message` (default false) to append the
+custom-message row. When the user picks, the callback runs as
+`cb(option_text, index)` with a 1-based index. The custom-message row reports
+`cb(message, nil)` and only exists with `allow_message = true`. A cancel
+(`cancel` command, session reset, Lua reload) reports `cb(nil, nil)`.
+
+```lua
+blitz.add_command("effort", function()
+    blitz.cmd.select({
+        header = "Effort",
+        question = "Set reasoning effort for the general agent?",
+        options = { "minimal", "low", "medium", "high", "max" },
+    }, function(choice)
+        if choice then
+            blitz.set_agent_effort(blitz.AGENT_GENERAL, choice)
+            blitz.cmd.message_chat("system", "effort set to " .. choice)
+        end
+    end)
+end, "pick agent reasoning effort")
+```
+
+Callbacks run on the main thread under the Lua lock, so they may call other
+`blitz.cmd` functions, including another `select`. Permissions from agents
+take the screen first; the selection shows after they resolve. Selections
+need the TUI; a headless run drops them at exit.
+
 ## Keybinds
 
 ```lua
@@ -183,8 +215,11 @@ blitz.bind("<C-t>", function()
     local f = blitz.get_flags()
     f.show_thinking = not f.show_thinking
     blitz.set_flags(f)
-end)
+end, "toggle thinking output")
 ```
+
+The optional description shows next to the keybind in the dashboard. Without
+it the row falls back to `custom`.
 
 `set_flags` reads only the fields you pass: `show_thinking` and `debug_log`
 booleans, `approval_mode` string (`"strict"`, `"default"`, `"yolo"`,
@@ -195,22 +230,54 @@ Completion actions with their default keys: `completion_next` (`<Tab>`,
 `<C-n>`), `completion_prev` (`<C-p>`), `completion_accept` (`<C-y>`). A custom
 `blitz.bind` on the same key wins over the default.
 
-## Events
+## Hooks
+
+Each event is one registration function under `blitz.hooks`. Calling it adds
+a listener; multiple listeners per event run in registration order.
+Listeners live until the config reloads; a Lua reload clears all listeners
+and re-runs your config.
+
+Every emitted event runs its listeners in one sandbox Lua VM on a
+background thread, like a tool call. The config re-loads into that VM and
+each listener of the event runs in registration order. Config mutation
+(`add_provider`, `register_tool`, `set_agent_model`, ...) is a no-op inside
+a listener. Use `blitz.state.set/get` for data across calls. The event
+loop does not wait for listeners; an `await_agent` inside one listener
+delays only the listeners behind it. `blitz.cmd.spawn_agent` and
+`blitz.cmd.await_agent` work inside:
+
+A listener that spawns an agent retriggers `agent_created` and
+`agent_started`. Spawning from those two listeners loops without end.
 
 ```lua
-blitz.events.add_listener(blitz.events.AGENT_COMPLETE, function(agent_id)
+blitz.hooks.user_message_sent(function(ev)
+    local id = blitz.cmd.spawn_agent({
+        agent_type = blitz.AGENT_GENERAL,
+        prompt = "Summarize in one line: " .. ev.text,
+    })
+    if blitz.cmd.await_agent(id) == blitz.AWAIT_COMPLETE then
+        blitz.cmd.message_chat("agent", blitz.cmd.await_agent_result(id))
+    else
+        blitz.cmd.message_chat("user", "helper agent failed")
+    end
 end)
 ```
 
-For the tag list read `BlitzEventDef` in `meta.lua`.
+Every payload is one table with the fields shown in `meta.lua` (`BlitzAgentEvent`,
+`BlitzAgentCreatedEvent`, `BlitzAgentFailedEvent`, `BlitzUserMessageEvent`);
+`session_reset` and `mcp_tools_reloaded` listeners take no argument. The full
+list with signatures lives in `BlitzHooks` in `meta.lua`.
 
-`ON_INJECT` fires for every agent on each step, right before the system
-reminder is built. Return a string to append it to that agent's
-`<system-reminder>` block. It runs in the main Lua VM with a brief lock. A nil
-return is skipped; errors are logged and the step continues.
+## Inject hook
+
+`blitz.hooks.inject(fn)` installs one hook that runs for every agent on each step,
+right before the system reminder is built. Return a string to append it to
+that agent's `<system-reminder>` block. It runs in the main Lua VM with a
+brief lock. A nil return is skipped; errors are logged and the step continues.
+Last registration wins. Never call `blitz.cmd.await_agent` inside the hook.
 
 ```lua
-blitz.events.add_listener(blitz.events.ON_INJECT, function(agent_id)
+blitz.hooks.inject(function(agent_id)
     if agent_id == blitz.get_main_agent() then
         return "[CUSTOM] main agent reminder\n"
     end
@@ -219,10 +286,10 @@ end)
 
 ## Permission hook
 
-`blitz.permissions.approve(fn)` installs one hook that decides every tool
+`blitz.hooks.approve(fn)` installs one hook that decides every tool
 approval before the approval-mode check. It runs in every approval mode and
 can deny what `--approval yolo` would auto-approve. Last registration wins;
-`blitz.permissions.clear()` removes the hook.
+`blitz.hooks.clear()` removes the approve and inject hooks.
 
 Return a `BlitzPermissionDecision` table, or `nil` for the normal flow
 (approval mode, then TUI):
@@ -239,7 +306,7 @@ A malformed table (missing `approved`) denies with a fixed reason. A hook
 error denies with `permission hook error: <msg>`.
 
 ```lua
-blitz.permissions.approve(function(p)
+blitz.hooks.approve(function(p)
     if p.kind == "diff" and p.path:find("^/tmp/") then
         return { approved = true }
     end
