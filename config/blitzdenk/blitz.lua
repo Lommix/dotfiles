@@ -59,7 +59,6 @@ end, "Big-X")
 ---------------------------------------------------------------------------------------------------
 --- Usefull cli tools
 ---------------------------------------------------------------------------------------------------
-
 blitz.set_capabilities({
 	{ binary = "rg", rule = "Use rg for fast recursive grep searches. Prefer rg over grep." },
 	{ binary = "fd", rule = "Use fd for fast file discovery. Prefer fd over find." },
@@ -112,8 +111,6 @@ local cancel_tool = blitz.register_tool({
 ---------------------------------------------------------------------------------------------------
 --- Default Agent tool set overwrites
 ---------------------------------------------------------------------------------------------------
-
--- main agent/fork
 blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.BASH,
 	blitz.tools.READ,
@@ -151,19 +148,14 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 -- 	},
 -- 	tools_prefix = "pw_",
 -- })
-
 ---------------------------------------------------------------------------------------------------
 --- Command queue example: start new session with hidden prompts
 ---------------------------------------------------------------------------------------------------
-blitz.add_command("/dumb", function()
-	blitz.set_agent_effort(blitz.AGENT_GENERAL, "low", true)
-end)
-
 blitz.add_command("yolo", function()
 	local flags = blitz.get_flags()
 	flags.approval_mode = "yolo"
 	blitz.set_flags(flags)
-end, "manual compact")
+end, "accept all")
 
 blitz.add_command("compact", function()
 	blitz.cmd.compact()
