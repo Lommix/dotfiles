@@ -48,6 +48,14 @@ blitz.bind("<C-e>", function()
 	blitz.set_agent_model(M.writer_id, models.glm_flash, true)
 end, "Big-Z")
 
+blitz.bind("<C-g>", function()
+	blitz.push_notification("big X mode")
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.grok, true)
+	blitz.set_agent_model(M.challanger_id, models.glm_flash, true)
+	blitz.set_agent_model(M.researcher_id, models.glm_flash, true)
+	blitz.set_agent_model(M.writer_id, models.glm_flash, true)
+end, "Big-X")
+
 ---------------------------------------------------------------------------------------------------
 --- Usefull cli tools
 ---------------------------------------------------------------------------------------------------

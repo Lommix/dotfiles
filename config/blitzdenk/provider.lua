@@ -86,7 +86,15 @@ M.qwen_38_flash = blitz.add_model({
 	name = "qwen3.8-flash",
 	provider = M.provider.opencode,
 	vision = true,
-    replay_reasoning = true,
+	replay_reasoning = true,
+})
+
+M.grok = blitz.add_model({
+	name = "grok-4.6",
+	provider = M.provider.xai,
+	vision = true,
+	replay_reasoning = true,
+	cost = { input = 2, output = 6, cache = 0.5 },
 })
 
 return M
