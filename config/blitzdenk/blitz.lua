@@ -372,17 +372,16 @@ report the path and a short summary of what was decided.
 end, "write down plan")
 
 ---------------------------------------------------------------------------------------------------
---- Screenshots
+--- SSH
 ---------------------------------------------------------------------------------------------------
 blitz.bind("<C-s>", function()
-	local png, ok = blitz.shell({ cmd = 'grim -g "$(slurp)" -t png -', force_local = true })
-
-	if not ok or not png or #png == 0 then
-		return
+	local state = blitz.ssh.get_state()
+	if state.active then
+		blitz.ssh.disable()
+	else
+		blitz.ssh.enable()
 	end
-
-	blitz.cmd.attach_screenshot(png, "image/png")
-end, "screenshot")
+end, "toggle ssh")
 
 ---------------------------------------------------------------------------------------------------
 --- Custom status bar render
@@ -402,12 +401,19 @@ local function fmt(n)
 end
 
 blitz.status_bar_render = function()
+	local ssh = blitz.ssh.get_state()
 	local use = blitz.token_usage()
 	local white = "\27[1;37m"
 	local green = "\27[32m"
 	local orange = "\27[38;5;208m"
 	local red = "\27[31m"
 	local reset = "\27[0m"
+
+	local ssh_status = ""
+	if ssh.active then
+		ssh_status = " (SSH ON)"
+	end
+
 	return white
 		.. blitz.get_model_name(blitz.AGENT_GENERAL)
 		.. " • "
@@ -433,7 +439,8 @@ blitz.status_bar_render = function()
 		.. " Cost:"
 		.. red
 		.. string.format("$%.2f", use.cost)
-		.. reset
+		.. orange
+		.. ssh_status
 end
 
 ---------------------------------------------------------------------------------------------------
