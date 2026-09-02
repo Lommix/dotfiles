@@ -300,7 +300,7 @@ M.edit_image = blitz.register_tool({
 -------------------------------------------------------------------------------------------------
 M.lua_repl = blitz.register_tool({
 	name = "lua_repl",
-	description = "Execute arbitrary Lua code and return the result. Runs inside the blitzdenk Lua VM",
+	description = "Execute arbitrary Lua code and return the result. Runs inside the blitzdenk Lua VM. You can directly probe your config and edits with this tool",
 	args = {
 		code = { type = "string", description = "Lua code to execute", required = true },
 	},
@@ -405,7 +405,7 @@ M.web_search = blitz.register_tool({
 			cmd = "curl -sS --max-time 15 -H 'Accept: application/json' -H \"X-Subscription-Token: $BRAVE_API_KEY\" '"
 				.. search_url
 				.. "'",
-            force_local = true,
+			force_local = true,
 		})
 		if not ok then
 			error("brave request failed (curl exit non-zero)")

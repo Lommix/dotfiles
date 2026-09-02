@@ -15,13 +15,20 @@ local function colors()
 				tonumber(hex:sub(5, 6), 16)
 			)
 		end
-		colors_cache = { ok = fg(theme.ok), info = fg(theme.info) }
+		colors_cache = { muted = fg(theme.muted), ok = fg(theme.ok), warn = fg(theme.warn) }
 	end
 	return colors_cache
 end
 
-local ICON_ADD = "\u{f067}"
-local ICON_DONE = "\u{f00c}"
+local STATE_PENDING = "pending"
+local STATE_PROGRESS = "in_progress"
+local STATE_DONE = "done"
+
+M.marks = {
+	[STATE_PENDING] = "[ ]",
+	[STATE_PROGRESS] = "[~]",
+	[STATE_DONE] = "[x]",
+}
 
 local function state_key(agent_id)
 	return "todo_" .. agent_id
@@ -41,9 +48,18 @@ local function next_id(agent_id)
 	return n
 end
 
+local function find(list, id)
+	for i, t in ipairs(list) do
+		if t.id == id then
+			return i, t
+		end
+	end
+	return nil, nil
+end
+
 M.add = blitz.register_tool({
 	name = "todo_add",
-	description = "Add a task to the TODO list.",
+	description = "Add a task to the TODO list. The new task starts in state pending.",
 	args = {
 		text = { type = "string", description = "the task description", required = true },
 	},
@@ -54,45 +70,82 @@ M.add = blitz.register_tool({
 		end
 		local nid = next_id(ctx.agent_id)
 		local list = load(ctx.agent_id)
-		list[#list + 1] = { id = tostring(nid), text = text }
+		list[#list + 1] = { id = tostring(nid), text = text, state = STATE_PENDING }
 		save(ctx.agent_id, list)
 		local c = colors()
-		ctx:set_status(c.info .. ICON_ADD .. RESET .. " new todo `" .. text .. "`")
-		return { msg = "added #" .. nid .. ": " .. text }
+		ctx:set_status(c.muted .. M.marks[STATE_PENDING] .. RESET .. " new todo `" .. text .. "`")
+		return { msg = "added #" .. nid .. " pending: " .. text }
 	end,
 })
 
-M.done = blitz.register_tool({
-	name = "todo_done",
-	description = "Finish a TODO by id: it is removed from the list.",
+M.start = blitz.register_tool({
+	name = "todo_start",
+	description = "Start work on a pending TODO. It moves to state in_progress.",
 	args = {
 		id = { type = "string", description = "the TODO id", required = true },
 	},
 	func = function(ctx, call)
 		local id = tostring(call.arguments.id)
 		local list = load(ctx.agent_id)
-		for i, t in ipairs(list) do
-			if t.id == id then
-				table.remove(list, i)
-				save(ctx.agent_id, list)
-				local c = colors()
-				ctx:set_status(c.ok .. ICON_DONE .. RESET .. " finished `" .. t.text .. "`")
-				return { msg = "finished #" .. id .. ": " .. t.text }
-			end
+		local _, todo = find(list, id)
+		if not todo then
+			error("todo #" .. id .. " not found")
 		end
-		error("todo #" .. id .. " not found")
+		if todo.state == STATE_DONE then
+			error("todo #" .. id .. " is already done")
+		end
+		local c = colors()
+		if todo.state == STATE_PROGRESS then
+			ctx:set_status(c.warn .. M.marks[STATE_PROGRESS] .. RESET .. " already in progress `" .. todo.text .. "`")
+			return { msg = "already in progress #" .. id .. ": " .. todo.text }
+		end
+		todo.state = STATE_PROGRESS
+		save(ctx.agent_id, list)
+		ctx:set_status(c.warn .. M.marks[STATE_PROGRESS] .. RESET .. " started `" .. todo.text .. "`")
+		return { msg = "in progress #" .. id .. ": " .. todo.text }
 	end,
 })
 
-blitz.hooks.inject(function(agent_id)
-	local pending = {}
+M.done = blitz.register_tool({
+	name = "todo_done",
+	description = "Finish a TODO by id. It moves to state done and leaves the injected list.",
+	args = {
+		id = { type = "string", description = "the TODO id", required = true },
+	},
+	func = function(ctx, call)
+		local id = tostring(call.arguments.id)
+		local list = load(ctx.agent_id)
+		local _, todo = find(list, id)
+		if not todo then
+			error("todo #" .. id .. " not found")
+		end
+		local was_done = todo.state == STATE_DONE
+		todo.state = STATE_DONE
+		save(ctx.agent_id, list)
+		local c = colors()
+		ctx:set_status(c.ok .. M.marks[STATE_DONE] .. RESET .. " finished `" .. todo.text .. "`")
+		if was_done then
+			return { msg = "already done #" .. id .. ": " .. todo.text }
+		end
+		return { msg = "finished #" .. id .. ": " .. todo.text }
+	end,
+})
+
+function M.inject(agent_id)
+	local lines = {}
 	for _, t in ipairs(load(agent_id)) do
-		pending[#pending + 1] = "  - #id:" .. t.id .. " " .. t.text
+		if t.state == STATE_PROGRESS then
+			lines[#lines + 1] = "  - #id:" .. t.id .. " [in_progress] " .. t.text
+		elseif t.state ~= STATE_DONE then
+			lines[#lines + 1] = "  - #id:" .. t.id .. " [pending] " .. t.text
+		end
 	end
-	if #pending == 0 then
-		return nil
+	if #lines == 0 then
+		return ""
 	end
-	return "#Pending TODOs:\n" .. table.concat(pending, "\n")
-end)
+	return "#TODOs:\n" .. table.concat(lines, "\n")
+end
+
+blitz.hooks.inject(M.inject)
 
 return M
