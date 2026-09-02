@@ -37,34 +37,15 @@ local function cut(s, n)
 end
 
 local panel
-local panel_visible
 
 local function wanted_height()
 	return math.max(3, #main_todos() + 2, #blitz.list_agents() * 2 + 2)
-end
-
-local function needs_panel()
-	return #main_todos() > 0 or #blitz.list_agents() >= 2
-end
-
-local function refresh_panel()
-	local needed = needs_panel()
-	if needed == panel_visible then
-		return
-	end
-	panel_visible = needed
-	if needed then
-		panel.show()
-	else
-		panel.hide()
-	end
 end
 
 panel = blitz.draw.panel({
 	height = 3,
 	place = "below",
 	render = function(w, h, buf)
-		refresh_panel()
 		local agents = blitz.list_agents()
 		local wanted = wanted_height()
 		if wanted ~= h then
@@ -128,7 +109,6 @@ panel = blitz.draw.panel({
 })
 
 blitz.hooks.inject(function(agent_id)
-	refresh_panel()
 	if todos.inject then
 		return todos.inject(agent_id)
 	end

@@ -285,6 +285,38 @@ The bug:
 	blitz.cmd.prompt(prompt)
 end, "bug hunt")
 
+blitz.add_command("selftest", function(rem)
+	local prompt = [[
+You are in self-test mode. You run inside the Blitzdenk harness, and the harness is the test subject.
+Load the blitzdenk-lua skill first; treat ~/.config/blitzdenk/meta.lua as the specification for every
+blitz.* call. Your job is to find friction, not to fix anything.
+
+Hunt in four areas:
+1. Documented vs actual: probe the blitz.* API (state, commands, hooks, skills, ssh, draw) and compare
+   each observed result against meta.lua and the skill. Any mismatch is a finding.
+2. Tools: exercise each tool you own with normal, edge (empty, missing, oversized, unicode), and invalid
+   arguments. Flag crashes, misleading errors, silent no-ops, and missing validation.
+3. Ambiguity: reread your own system prompt, skills, and tool descriptions. Flag every instruction you
+   had to guess at, that contradicts another, or that admits two readings.
+4. Friction: note workflows that took a detour, gave no feedback, or made you stop and think.
+
+Rules:
+- Evidence only. Show the exact call and its raw output for every finding; never report a suspicion as fact.
+- Test through the harness itself (tools, hot reload, agent spawn), not by reading source alone.
+- Fix nothing. Write scratch files only under /tmp/blitzdenk-selftest/ and delete them after.
+- Leave git status clean. Stay under ~30 tool calls; go broad, not deep.
+
+Report one line per finding, worst first, in this shape:
+[blocker|papercut|nit] area — expected: X — got: Y — repro: <minimal steps>
+Close with counts per severity and the 3 findings worth fixing first. Then use the ask tool to offer:
+fix now / write findings to a file / stop.
+
+Focus (optional):
+]] .. rem
+
+	blitz.cmd.prompt(prompt)
+end, "self-test the harness")
+
 blitz.add_command("team", function(rem)
 	local prompt = [[
 You are the team-lead agent. You do not read or write code yourself — you orchestrate sub-agents.
