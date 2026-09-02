@@ -11,7 +11,7 @@ require("draw")
 local default_model = models.glm_flash
 blitz.set_compact_edge(300000)
 blitz.set_agent_model(blitz.AGENT_GENERAL, default_model)
-blitz.set_agent_effort(blitz.AGENT_GENERAL, "high")
+blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
 
 blitz.set_theme({
 	bg = "#1f2430",
@@ -33,13 +33,21 @@ blitz.set_theme({
 	role_system = "#95e6cb",
 })
 
+blitz.bind("<C-l>", function()
+	blitz.push_notification("big Q mode")
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.ds_flash_ex, true)
+	blitz.set_agent_model(M.challanger_id, models.ds_flash_ex, true)
+	blitz.set_agent_model(M.researcher_id, models.ds_flash_ex, true)
+	blitz.set_agent_model(M.writer_id, models.ds_flash_ex, true)
+end, "Big-D")
+
 blitz.bind("<C-o>", function()
-	blitz.push_notification("big D mode")
+	blitz.push_notification("big Q mode")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.qwen_38_flash, true)
 	blitz.set_agent_model(M.challanger_id, models.qwen_38_flash, true)
 	blitz.set_agent_model(M.researcher_id, models.qwen_38_flash, true)
 	blitz.set_agent_model(M.writer_id, models.qwen_38_flash, true)
-end, "Big-D")
+end, "Big-Q")
 
 blitz.bind("<C-e>", function()
 	blitz.push_notification("big Z mode")
@@ -291,27 +299,24 @@ You are in self-test mode. You run inside the Blitzdenk harness, and the harness
 Load the blitzdenk-lua skill first; treat ~/.config/blitzdenk/meta.lua as the specification for every
 blitz.* call. Your job is to find friction, not to fix anything.
 
-Hunt in four areas:
-1. Documented vs actual: probe the blitz.* API (state, commands, hooks, skills, ssh, draw) and compare
-   each observed result against meta.lua and the skill. Any mismatch is a finding.
-2. Tools: exercise each tool you own with normal, edge (empty, missing, oversized, unicode), and invalid
+Hunt in three areas:
+1. Tools: exercise each tool you own with normal, edge (empty, missing, oversized, unicode), and invalid
    arguments. Flag crashes, misleading errors, silent no-ops, and missing validation.
-3. Ambiguity: reread your own system prompt, skills, and tool descriptions. Flag every instruction you
+2. Ambiguity: reread your own system prompt, skills, and tool descriptions. Flag every instruction you
    had to guess at, that contradicts another, or that admits two readings.
-4. Friction: note workflows that took a detour, gave no feedback, or made you stop and think.
+3. Friction: note workflows that took a detour, gave no feedback, or made you stop and think.
 
 Rules:
 - Evidence only. Show the exact call and its raw output for every finding; never report a suspicion as fact.
 - Test through the harness itself (tools, hot reload, agent spawn), not by reading source alone.
-- Fix nothing. Write scratch files only under /tmp/blitzdenk-selftest/ and delete them after.
-- Leave git status clean. Stay under ~30 tool calls; go broad, not deep.
+- Don't fix anything yet. This is report task
 
 Report one line per finding, worst first, in this shape:
 [blocker|papercut|nit] area — expected: X — got: Y — repro: <minimal steps>
 Close with counts per severity and the 3 findings worth fixing first. Then use the ask tool to offer:
 fix now / write findings to a file / stop.
 
-Focus (optional):
+Your test scope:
 ]] .. rem
 
 	blitz.cmd.prompt(prompt)
