@@ -82,6 +82,13 @@ M.ds_flash_ex = blitz.add_model({
 	replay_reasoning = true,
 })
 
+M.spark = blitz.add_model({
+	name = "muse-spark-1.2-contributor",
+	provider = M.provider.opencode,
+	vision = true,
+	replay_reasoning = true,
+})
+
 M.qwen_38_flash = blitz.add_model({
 	name = "qwen3.8-flash",
 	provider = M.provider.opencode,
