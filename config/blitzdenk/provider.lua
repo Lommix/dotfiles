@@ -20,24 +20,35 @@ M.provider.opencode = blitz.add_provider({
 	type = "openai",
 	url = "https://opencode.ai/zen/go/v1",
 	key_envar = "OPENCODE_API_KEY",
+    session_key_header = "x-opencode-session",
+})
+
+M.provider.opencode_ant = blitz.add_provider({
+	type = "response",
+	url = "https://opencode.ai/zen/go/v1",
+	key_envar = "OPENCODE_API_KEY",
+    session_key_header = "x-opencode-session",
 })
 
 M.provider.requesty = blitz.add_provider({
 	type = "openai",
 	url = "https://router.requesty.ai/v1",
 	key_envar = "REQUESTY_API_KEY",
+    session_key_header = "x-session-id",
 })
 
 M.provider.router = blitz.add_provider({
 	type = "openai",
 	url = "https://openrouter.ai/api/v1",
 	key_envar = "OPENROUTER_API_KEY",
+    session_key_header = "x-session-id",
 })
 
 M.provider.hetzner = blitz.add_provider({
 	type = "openai",
 	url = "https://inference.hetzner.com/api/v1",
 	key_envar = "HETZNER_AI_KEY",
+    session_key_header = "x-session-id",
 })
 
 M.provider.zai = blitz.add_provider({
@@ -50,6 +61,7 @@ M.provider.xai = blitz.add_provider({
 	type = "response",
 	url = "https://api.x.ai/v1",
 	key_envar = "XAI_API_KEY",
+	session_key_header = "x-grok-conv-id",
 })
 
 M.provider.openai = blitz.add_provider({
@@ -83,8 +95,8 @@ M.ds_flash_ex = blitz.add_model({
 })
 
 M.spark = blitz.add_model({
-	name = "muse-spark-1.2-contributor",
-	provider = M.provider.opencode,
+	name = "muse-spark-1.3-contributor",
+	provider = M.provider.opencode_ant,
 	vision = true,
 	replay_reasoning = true,
 })
