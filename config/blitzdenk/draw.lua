@@ -1,3 +1,6 @@
+-- draw.lua: a simple panel showing the current todo state
+-- and all subagents
+
 local todos = require("todo")
 
 local ICON_CIRCLE = "\u{f111}"

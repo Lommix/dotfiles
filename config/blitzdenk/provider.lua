@@ -20,35 +20,36 @@ M.provider.opencode = blitz.add_provider({
 	type = "openai",
 	url = "https://opencode.ai/zen/go/v1",
 	key_envar = "OPENCODE_API_KEY",
-    session_key_header = "x-opencode-session",
+	session_key_header = "x-opencode-session",
 })
 
 M.provider.opencode_ant = blitz.add_provider({
 	type = "response",
 	url = "https://opencode.ai/zen/go/v1",
 	key_envar = "OPENCODE_API_KEY",
-    session_key_header = "x-opencode-session",
+	session_key_header = "x-opencode-session",
+	enable_thinking = true,
 })
 
 M.provider.requesty = blitz.add_provider({
 	type = "openai",
 	url = "https://router.requesty.ai/v1",
 	key_envar = "REQUESTY_API_KEY",
-    session_key_header = "x-session-id",
+	session_key_header = "x-session-id",
 })
 
 M.provider.router = blitz.add_provider({
 	type = "openai",
 	url = "https://openrouter.ai/api/v1",
 	key_envar = "OPENROUTER_API_KEY",
-    session_key_header = "x-session-id",
+	session_key_header = "x-session-id",
 })
 
 M.provider.hetzner = blitz.add_provider({
 	type = "openai",
 	url = "https://inference.hetzner.com/api/v1",
 	key_envar = "HETZNER_AI_KEY",
-    session_key_header = "x-session-id",
+	session_key_header = "x-session-id",
 })
 
 M.provider.zai = blitz.add_provider({
@@ -83,7 +84,7 @@ M.glm_flash = blitz.add_model({
 M.glm = blitz.add_model({
 	name = "glm-5.3",
 	provider = M.provider.zai,
-	vision = true,
+	vision = false,
 	replay_reasoning = true,
 })
 
@@ -114,6 +115,13 @@ M.grok = blitz.add_model({
 	vision = true,
 	replay_reasoning = true,
 	cost = { input = 2, output = 6, cache = 0.5 },
+})
+
+M.omen = blitz.add_model({
+	name = "omen-alpha",
+	provider = M.provider.opencode,
+	vision = true,
+	replay_reasoning = true,
 })
 
 return M

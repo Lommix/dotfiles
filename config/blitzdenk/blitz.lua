@@ -3,7 +3,8 @@ local prompts = require("prompts")
 local tools = require("tools")
 local todo = require("todo")
 local models = require("provider")
-require("draw")
+-- require("draw")
+require("voice")
 
 ---------------------------------------------------------------------------------------------------
 --- Model configuration, simple
@@ -461,10 +462,19 @@ blitz.status_bar_render = function()
 		ssh_status = " (SSH ON)"
 	end
 
+	local model = blitz.get_model_name(blitz.AGENT_GENERAL)
+	local effort = blitz.get_agent_effort(blitz.AGENT_GENERAL)
+	local main_id = blitz.get_main_agent()
+
+	if main_id ~= nil then
+		model = blitz.agent.get_model(main_id)
+		effort = blitz.agent.get_effort(main_id)
+	end
+
 	return white
-		.. blitz.get_model_name(blitz.AGENT_GENERAL)
+		.. model
 		.. " • "
-		.. blitz.get_agent_effort(blitz.AGENT_GENERAL)
+		.. effort
 		.. reset
 		.. " (Cache:"
 		.. green

@@ -1,5 +1,6 @@
-local M = {}
+-- todo.lua: a simple todo list implementation for agents
 
+local M = {}
 local RESET = "\x1b[0m"
 
 local colors_cache
