@@ -3,7 +3,7 @@ local prompts = require("prompts")
 local tools = require("tools")
 local todo = require("todo")
 local models = require("provider")
--- require("draw")
+require("draw")
 require("voice")
 
 ---------------------------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ blitz.bind("<C-o>", function()
 	blitz.set_agent_model(M.writer_id, models.qwen_38_flash, true)
 end, "Big-Q")
 
-blitz.bind("<C-z>", function()
+blitz.bind("<C-q>", function()
 	blitz.push_notification("big M mode")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.spark, true)
 	blitz.set_agent_model(M.challanger_id, models.spark, true)
@@ -572,6 +572,7 @@ M.writer_id = blitz.add_agent({
 	prompt = prompts.writer,
 	effort = "medium",
 	model = default_model,
+	clean = true,
 	tools = {
 		blitz.tools.VIEW_IMAGE,
 		blitz.tools.SKILL,

@@ -62,7 +62,8 @@ blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
 ```
 
 `add_provider` and `add_model` return integer handles. `vision` gates the
-`view_image` tool and image pasting. Set `replay_reasoning` on chat models that
+`view_image` tool, image pasting and every tool marked `requires_vision`. Set
+`replay_reasoning` on chat models that
 return reasoning but reject replayed history without that field (DeepSeek, GLM).
 Every agent needs a bound model; unbound agents fail to spawn. Bind with
 `blitz.set_agent_model(agent_type, handle)` or `model = handle` in
@@ -82,6 +83,7 @@ change provider and model.
 ## Tool sets
 
 `blitz.tools.*` holds the built-in tool name constants.
+Tool names must be nonempty UTF-8 strings.
 
 ```lua
 blitz.set_agent_tools(blitz.AGENT_GENERAL, {
@@ -152,6 +154,10 @@ Tool function rules:
 - Return `{ msg = "..." }`. Attach an image with
   `img = { media_type = "image/png", data = blitz.base64.encode(raw) }`.
   Set `exit_loop = true` to end the agent loop.
+- Every provider sends `msg` as tool result text. Images follow as user
+  content: a `user` message on `openai`/`ollama`/`response`, an image block in
+  the same user message on `anthropic`. Strict endpoints such as DeepSeek
+  reject images inside tool messages.
 
 For `ctx`, `call`, and result fields, read `BlitzCtx`, `BlitzCall`, and
 `BlitzToolResult` in `meta.lua`.
@@ -172,12 +178,42 @@ local researcher = blitz.add_agent({
 An agent id is one packed integer; the agent tool result carries it as
 `agent_id: <int>`. `fork = true` in `blitz.agent.spawn` requires `parent_id`.
 
+`on_complete` in `blitz.agent.spawn` attaches a one-shot callback to the run.
+It fires once on the main thread when the run ends. Closing or replacing the
+agent before that fires `blitz.AWAIT_CANCELED` instead, and a Lua reload
+drops the callback.
+
+`background = true` detaches the agent from the chat. The agent never becomes
+the main agent, streams nothing into it, and writes its final output to a
+result file instead of chat entries. Combine it with `on_complete` to build a
+silent subagent: read the answer in the callback with
+`blitz.agent.result(id)`.
+
+`clean = true` in `blitz.agent.spawn`, or `clean` on the `agent` tool, builds a
+bare agent: no AGENTS.md files in the system prompt, and no `<system-reminder>`
+injection on any step, so `blitz.hooks.inject` never runs for it. A fork ignores
+the flag and inherits the parent's setting. A finished background child still
+queues its result notice into a clean parent.
+
+```lua
+blitz.agent.spawn({
+    agent_type = researcher,
+    prompt = "Find the registry lock order.",
+    background = true,
+    on_complete = function(id, status)
+        if status == blitz.AWAIT_COMPLETE then
+            blitz.cmd.message_chat("agent", blitz.agent.result(id))
+        end
+    end,
+})
+```
+
 Slots are finite (128) and finished agents keep their slot. History stays
 readable, and `blitz.agent.message` on a finished agent starts a new turn that
 continues the same conversation. Free a slot with `blitz.agent.close`.
-`blitz.agent.spawn` without `parent_id` cancels the running main agent and
-frees its slot; the old conversation stays rendered, the new agent replaces it
-in the chat.
+`blitz.agent.spawn` without `parent_id` and without `background = true`
+cancels the running main agent and frees its slot; the old conversation stays
+rendered, the new agent replaces it in the chat.
 
 `blitz.list_agents()` returns one table per occupied slot, running and
 finished. Fields: `agent_id`, `name`, `task`, `state`, `ctx`,
@@ -288,6 +324,11 @@ The completion popup answers to `blitz.cmp.next`, `blitz.cmp.prev`, and
 `<Tab>`/`<C-n>`, `<C-p>`, and `<C-y>`; a call is a no-op when the popup is
 closed. A custom `blitz.bind` on the same key wins over the default.
 
+Prompt history answers to `blitz.input.history_prev` and
+`blitz.input.history_next`. Each queues one action, the same as the default
+keys `<S-Up>` and `<S-Down>`. Both do nothing outside the text input or
+while an agent runs.
+
 ## Input box
 
 `blitz.input` reads and writes the text input box.
@@ -309,6 +350,9 @@ end, "sign the input")
   raise an error.
 - `set(text)` replaces the text. The cursor moves to the end.
 - `append(text)` inserts text at the cursor, like typed input.
+- `history_prev()` and `history_next()` walk the prompt history into the box,
+  like `<S-Up>` and `<S-Down>`. `history_next` past the newest entry clears
+  the box.
 - `set` and `append` queue a command. The change lands on the next main-loop
   pass. They are safe from config, commands, tools, and listeners.
 - Combine with the prompt hook: `blitz.hooks.prompt` rewrites the text on
@@ -383,7 +427,8 @@ hook. Never call `blitz.agent.await` inside the hook.
 right before the system reminder is built. Return a string to append it to
 that agent's `<system-reminder>` block. It runs in the main Lua VM with a
 brief lock. A nil return is skipped; errors are logged and the step continues.
-Last registration wins. Never call `blitz.agent.await` inside the hook.
+Last registration wins. Never call `blitz.agent.await` inside the hook. A clean
+agent builds no reminder at all, so the hook never runs for it.
 
 ```lua
 blitz.hooks.inject(function(agent_id)

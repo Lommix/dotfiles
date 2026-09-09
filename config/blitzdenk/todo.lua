@@ -60,7 +60,9 @@ end
 
 M.add = blitz.register_tool({
 	name = "todo_add",
+	guidelines = "Divide and conquer. Use todos to split your work.",
 	description = "Add a task to the TODO list. The new task starts in state pending.",
+	snippet = "Add a todo to your list",
 	args = {
 		text = { type = "string", description = "the task description", required = true },
 	},
@@ -82,6 +84,7 @@ M.add = blitz.register_tool({
 M.start = blitz.register_tool({
 	name = "todo_start",
 	description = "Start work on a pending TODO. It moves to state in_progress.",
+	snippet = "Begin working on a todo",
 	args = {
 		id = { type = "string", description = "the TODO id", required = true },
 	},
@@ -110,6 +113,7 @@ M.start = blitz.register_tool({
 M.done = blitz.register_tool({
 	name = "todo_done",
 	description = "Finish a TODO by id. It moves to state done and leaves the injected list.",
+	snippet = "Mark a todo done",
 	args = {
 		id = { type = "string", description = "the TODO id", required = true },
 	},

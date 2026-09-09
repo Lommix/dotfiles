@@ -76,6 +76,21 @@ local refine_prompt =
 The user message is the raw content of an input box. Your entire reply is the rewritten prompt, nothing else: no preamble, no explanation, no questions, no markdown fences.
 
 Work through this silently, then write the rewrite:
+
+
+Before writing any prompt, silently extract these 9 dimensions
+
+| Dimension            | What to extract                                             | Critical?              |
+| -------------------- | ----------------------------------------------------------- | ---------------------- |
+| **Task**             | Specific action — convert vague verbs to precise operations | Always                 |
+| **Output format**    | Shape, length, structure, filetype of the result            | Always                 |
+| **Constraints**      | What MUST and MUST NOT happen, scope boundaries             | If complex             |
+| **Input**            | What the user is providing alongside the prompt             | If applicable          |
+| **Context**          | Domain, project state, prior decisions from this session    | If session has history |
+| **Audience**         | Who reads the output, their technical level                 | If user-facing         |
+| **Success criteria** | How to know the prompt worked — binary where possible       | If task is complex     |
+| **Examples**         | Desired input/output pairs for pattern lock                 | If format-critical     |
+
 1. Extract the intent: the task, the wanted result, the constraints, the given inputs, and how success is checked.
 2. Turn vague verbs into precise operations. Name files, commands, and identifiers exactly as the draft names them.
 3. Keep every concrete detail: paths, numbers, error text, code identifiers. Invent nothing: no new requirements, no guessed paths, no added scope.
@@ -97,7 +112,7 @@ local prompter = blitz.add_agent({
 	description = "Internal. Rewrites the input box draft into a tight prompt. Has no tools.",
 	prompt = refine_prompt,
 	effort = "low",
-	model = models.glm_flash,
+	model = models.ds_flash_ex,
 	tools = {},
 	in_agent_tool = false,
 })
@@ -117,37 +132,10 @@ local function refine_busy(id)
 	return false
 end
 
-local function refine_clean(text)
-	text = text:match("^%s*(.-)%s*$") or ""
-	local fenced = text:match("^```[%w%-]*\n(.-)\n?```$")
-	if fenced then
-		text = fenced:match("^%s*(.-)%s*$") or ""
-	end
-	return text
-end
-
 local function refine_clear()
 	blitz.state.set("refine_agent", nil)
 	blitz.state.set("refine_root", nil)
 end
-
-blitz.hooks.agent_complete(function(ev)
-	local id = blitz.state.get("refine_agent")
-	if id == nil or ev.id ~= id then
-		return
-	end
-	local text = refine_clean(blitz.agent.result(ev.id) or "")
-	blitz.state.set("refine_agent", nil)
-	if blitz.get_main_agent() ~= ev.id then
-		blitz.agent.close(ev.id)
-	end
-	if text == "" then
-		blitz.push_notification("prompter: empty result, input unchanged")
-		return
-	end
-	blitz.input.set(text)
-	blitz.push_notification("input refined")
-end)
 
 blitz.hooks.agent_failed(function(ev)
 	local id = blitz.state.get("refine_agent")
@@ -157,26 +145,14 @@ blitz.hooks.agent_failed(function(ev)
 	end
 end)
 
+
+
 blitz.hooks.agent_cancelled(function(ev)
 	local id = blitz.state.get("refine_agent")
 	if id ~= nil and ev.id == id then
 		refine_clear()
 		blitz.push_notification("prompter canceled, input unchanged")
 	end
-end)
-
-blitz.hooks.prompt(function(text)
-	local root = blitz.state.get("refine_root")
-	if root == nil then
-		return nil
-	end
-	blitz.state.set("refine_root", nil)
-	if blitz.get_main_agent() ~= root or text == "" then
-		return nil
-	end
-	blitz.agent.spawn({ prompt = text })
-	blitz.cmd.message_chat("user", text)
-	return ""
 end)
 
 blitz.bind("<C-f>", function()
@@ -196,12 +172,20 @@ blitz.bind("<C-f>", function()
 		parent_id = parent,
 		prompt = text,
 		task = "refine input box",
+		background = true,
+		on_complete = function(agent_id, _)
+			local result = blitz.agent.result(agent_id)
+			if result then
+				blitz.input.set(result)
+			end
+
+			blitz.agent.close(agent_id)
+		end,
 	})
 	if id == nil then
 		notify("no free agent slot")
 		return
 	end
 	blitz.state.set("refine_agent", id)
-	blitz.state.set("refine_root", parent == nil and id or nil)
 	notify("refining")
 end, "refine prompt")
