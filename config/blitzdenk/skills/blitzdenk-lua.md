@@ -10,6 +10,7 @@ Workflow customization lives in Lua through the global `blitz` table.
 `~/.config/blitzdenk/blitz.lua` loads at startup. `./blitz.lua` adds
 project-local customization. All Lua files hot reload: edit a tool or command,
 then call it and confirm the behavior in the running session.
+Before editing your Lua files. Ensure you and the user agreed on if it's a project local change (./blitz.lua) or a global change (~/.config/blitzdenk/blitz.lua).
 
 ## Your own runtime
 
@@ -73,8 +74,7 @@ Every agent needs a bound model; unbound agents fail to spawn. Bind with
 Pass `force = true` to either call to also swap the model on live agents of
 that type: `blitz.set_agent_model(agent_type, handle, true)`. Idle
 agents swap at once. An agent mid-run keeps its current model until that run
-ends, then adopts the new one. A fork made during that run starts on the new
-model. Without `force`, only new agents use the change.
+ends, then adopts the new one. Without `force`, only new agents use the change.
 
 The first-run wizard writes `~/.config/blitzdenk/provider.lua` and `blitz.lua`
 imports it with `pcall(require, "provider")`. Edit or delete that file to
@@ -176,7 +176,7 @@ local researcher = blitz.add_agent({
 ```
 
 An agent id is one packed integer; the agent tool result carries it as
-`agent_id: <int>`. `fork = true` in `blitz.agent.spawn` requires `parent_id`.
+`agent_id: <int>`.
 
 `on_complete` in `blitz.agent.spawn` attaches a one-shot callback to the run.
 It fires once on the main thread when the run ends. Closing or replacing the
@@ -191,9 +191,15 @@ build a silent subagent: read the answer in the callback with
 
 `clean = true` in `blitz.agent.spawn`, or `clean` on the `agent` tool, builds a
 bare agent: no AGENTS.md files in the system prompt, and no `<system-reminder>`
-injection on any step, so `blitz.hooks.inject` never runs for it. A fork ignores
-the flag and inherits the parent's setting. A finished background child still
-queues its result notice into a clean parent.
+injection on any step, so `blitz.hooks.inject` never runs for it. A finished
+background child still queues its result notice into a clean parent.
+
+`cwd` in `blitz.agent.spawn` sets the working directory of the child. A relative
+path resolves against the parent agent cwd.
+
+`blitz.list_agent_types()` returns one row per configured type: `agent_type` is
+the handle `blitz.agent.spawn` takes, plus `name`, `description`, and
+`in_agent_tool`. Use it to map type names from tool arguments to handles.
 
 ```lua
 blitz.agent.spawn({
@@ -423,19 +429,24 @@ hook. Never call `blitz.agent.await` inside the hook.
 
 ## Inject hook
 
-`blitz.hooks.inject(fn)` installs one hook that runs for every agent on each step,
-right before the system reminder is built. Return a string to append it to
-that agent's `<system-reminder>` block. It runs in the main Lua VM with a
-brief lock. A nil return is skipped; errors are logged and the step continues.
-Last registration wins. Never call `blitz.agent.await` inside the hook. A clean
-agent builds no reminder at all, so the hook never runs for it.
+`blitz.hooks.inject({ main_only = bool, func = fn, digest = bool })` installs
+one hook that runs on each agent step, right before the system reminder is
+built. `func(agent_id, agent_type_id)` returns a string to append to that
+agent's `<system-reminder>` block, or nil to add nothing. `agent_type_id` is
+the type handle from `blitz.list_agent_types()`. It runs in the main Lua VM
+with a brief lock. Errors are logged and the step continues. Last registration
+wins. Never call `blitz.agent.await` inside the hook. A clean agent builds no
+reminder at all, so the hook never runs for it. The reminder precedes the user
+prompt.
 
 ```lua
-blitz.hooks.inject(function(agent_id)
-    if agent_id == blitz.get_main_agent() then
-        return "[CUSTOM] main agent reminder\n"
-    end
-end)
+blitz.hooks.inject({
+    main_only = true,
+    digest = true,
+    func = function(agent_id, agent_type_id)
+        return "[AGENTS] " .. #blitz.list_agents() .. " slots used\n"
+    end,
+})
 ```
 
 ## Permission hook

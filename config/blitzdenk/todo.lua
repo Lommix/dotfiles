@@ -151,6 +151,8 @@ function M.inject(agent_id)
 	return "#TODOs:\n" .. table.concat(lines, "\n")
 end
 
-blitz.hooks.inject(M.inject)
+blitz.hooks.inject({
+	func = M.inject,
+})
 
 return M

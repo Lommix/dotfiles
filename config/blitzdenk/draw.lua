@@ -133,9 +133,3 @@ panel = blitz.draw.panel({
 		end
 	end,
 })
-
-blitz.hooks.inject(function(agent_id)
-	if todos.inject then
-		return todos.inject(agent_id)
-	end
-end)
