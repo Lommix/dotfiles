@@ -12,7 +12,7 @@ require("voice")
 local default_model = models.glm_flash
 blitz.set_compact_edge(300000)
 blitz.set_agent_model(blitz.AGENT_GENERAL, default_model)
-blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
+blitz.set_agent_effort(blitz.AGENT_GENERAL, "high")
 
 blitz.set_theme({
 	bg = "#1f2430",
@@ -36,10 +36,10 @@ blitz.set_theme({
 
 blitz.bind("<C-l>", function()
 	blitz.push_notification("big Q mode")
-	blitz.set_agent_model(blitz.AGENT_GENERAL, models.ds_flash_ex, true)
-	blitz.set_agent_model(M.challanger_id, models.ds_flash_ex, true)
-	blitz.set_agent_model(M.researcher_id, models.ds_flash_ex, true)
-	blitz.set_agent_model(M.writer_id, models.ds_flash_ex, true)
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.ds_flash, true)
+	blitz.set_agent_model(M.challanger_id, models.ds_flash, true)
+	blitz.set_agent_model(M.researcher_id, models.ds_flash, true)
+	blitz.set_agent_model(M.writer_id, models.ds_flash, true)
 end, "Big-D")
 
 blitz.bind("<C-o>", function()

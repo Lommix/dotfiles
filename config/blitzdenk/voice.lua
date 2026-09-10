@@ -6,7 +6,7 @@ local CLI = "/home/lommix/Projects/vendor/transcribe.cpp/build/bin/transcribe-cl
 local MODEL = "/home/lommix/Projects/vendor/localai/models/nemotron-3.5-asr-streaming-0.6b-Q8_0.gguf"
 local DIR = "/tmp/blitz-voice"
 local RATE = 16000
-local LANG = "auto" -- full locale like "de-DE", or "auto"
+local LANG = "en-US"
 
 local recording = false
 
@@ -112,7 +112,7 @@ local prompter = blitz.add_agent({
 	description = "Internal. Rewrites the input box draft into a tight prompt. Has no tools.",
 	prompt = refine_prompt,
 	effort = "low",
-	model = models.ds_flash_ex,
+	model = models.ds_flash,
 	tools = {},
 	in_agent_tool = false,
 })
@@ -144,8 +144,6 @@ blitz.hooks.agent_failed(function(ev)
 		blitz.push_notification("prompter failed: " .. ev.err)
 	end
 end)
-
-
 
 blitz.hooks.agent_cancelled(function(ev)
 	local id = blitz.state.get("refine_agent")

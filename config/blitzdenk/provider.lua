@@ -88,8 +88,8 @@ M.glm = blitz.add_model({
 	replay_reasoning = true,
 })
 
-M.ds_flash_ex = blitz.add_model({
-	name = "deepseek-v4-flash-vision-exp",
+M.ds_flash = blitz.add_model({
+	name = "deepseek-flash",
 	provider = M.provider.opencode,
 	vision = true,
 	replay_reasoning = true,
