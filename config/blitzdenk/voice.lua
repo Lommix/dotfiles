@@ -7,6 +7,7 @@ local MODEL = "/home/lommix/Projects/vendor/localai/models/nemotron-3.5-asr-stre
 local DIR = "/tmp/blitz-voice"
 local RATE = 16000
 local LANG = "en-US"
+-- local LANG = "de-DE"
 
 local recording = false
 

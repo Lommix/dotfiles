@@ -5,6 +5,9 @@ local todos = require("todo")
 
 local ICON_CIRCLE = "\u{f111}"
 local ICON_CIRCLE_OPEN = "\u{f10c}"
+local ICON_BLANK = " "
+
+local BLINK_FRAMES = 20
 
 local MARK_X = 1
 local MARK_WIDTH = 3
@@ -42,18 +45,20 @@ end
 local panel
 
 local function wanted_height()
-	return math.max(3, #main_todos() + 2, #blitz.list_agents() * 2 + 2)
+	return math.max(3, #main_todos() + 2, #blitz.list_agents() + 2)
 end
 
 panel = blitz.draw.panel({
 	height = 3,
 	place = "below",
-	render = function(w, h, buf)
+	render = function(w, h, buf, frame)
 		local agents = blitz.list_agents()
 		local wanted = wanted_height()
 		if wanted ~= h then
 			panel.set_size(wanted)
 		end
+		local blink_on = math.floor(frame / BLINK_FRAMES) % 2 == 0
+		local blinking = false
 		buf.fill(0, 0, w, h, "bg")
 		buf.box(0, 0, w, h, "muted")
 		local theme = blitz.get_theme()
@@ -97,16 +102,34 @@ panel = blitz.draw.panel({
 		y = 1
 		local budget = w - mid - 4
 		for _, a in ipairs(agents) do
-			if y + 1 > bottom then
+			if y > bottom then
 				break
 			end
 			local busy = a.state ~= "idle" and a.state ~= "complete" and a.state ~= "canceled" and a.state ~= "failed"
 			local color = not busy and "muted" or (a.state == "failed" and theme.err or "#ff00ff")
-			buf.set_color(ax, y, busy and ICON_CIRCLE or ICON_CIRCLE_OPEN, color)
-			buf.set(ax + 2, y, cut(a.name, budget - 16))
-			buf.set(ax + 2 + #a.name + 1, y, a.state .. " " .. math.floor(a.ctx or 0) .. "%")
-			buf.set_color(ax + 2, y + 1, cut(a.task or "", budget), "muted")
-			y = y + 2
+			local icon = busy and ICON_CIRCLE or ICON_CIRCLE_OPEN
+			if busy then
+				blinking = true
+				if not blink_on then
+					icon = ICON_BLANK
+				end
+			end
+			local status = a.state .. " " .. math.floor(a.ctx or 0) .. "%"
+			if a.tps and a.tps > 0 then
+				status = status .. string.format(" %.1f tps", a.tps)
+			end
+			local name = cut(a.name, budget - #status - 4)
+			buf.set_color(ax, y, icon, color)
+			local nx = ax + 2
+			buf.set(nx, y, name .. " ")
+			nx = nx + #name + 1
+			buf.set(nx, y, status .. " ")
+			nx = nx + #status + 1
+			buf.set_color(nx, y, cut(a.task or "", w - nx - 1), "muted")
+			y = y + 1
+		end
+		if blinking then
+			blitz.draw.redraw()
 		end
 	end,
 })
