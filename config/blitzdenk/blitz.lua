@@ -5,6 +5,7 @@ local todo = require("todo")
 local models = require("provider")
 require("draw")
 require("voice")
+require("memory")
 
 ---------------------------------------------------------------------------------------------------
 --- Model configuration, simple
@@ -13,6 +14,7 @@ local default_model = models.glm_flash
 blitz.set_compact_edge(300000)
 blitz.set_agent_model(blitz.AGENT_GENERAL, default_model)
 blitz.set_agent_effort(blitz.AGENT_GENERAL, "high")
+blitz.set_prompt(blitz.AGENT_GENERAL, prompts.system)
 
 blitz.set_theme({
 	bg = "#1f2430",
@@ -35,7 +37,7 @@ blitz.set_theme({
 })
 
 blitz.bind("<C-l>", function()
-	blitz.push_notification("big Q mode")
+	blitz.push_notification("big D mode")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.ds_flash, true)
 	blitz.set_agent_model(M.challanger_id, models.ds_flash, true)
 	blitz.set_agent_model(M.researcher_id, models.ds_flash, true)
@@ -52,26 +54,26 @@ end, "Big-Q")
 
 blitz.bind("<C-q>", function()
 	blitz.push_notification("big M mode")
-	blitz.set_agent_model(blitz.AGENT_GENERAL, models.spark, true)
-	blitz.set_agent_model(M.challanger_id, models.spark, true)
-	blitz.set_agent_model(M.researcher_id, models.spark, true)
-	blitz.set_agent_model(M.writer_id, models.spark, true)
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.alpha, true)
+	blitz.set_agent_model(M.challanger_id, models.alpha, true)
+	blitz.set_agent_model(M.researcher_id, models.alpha, true)
+	blitz.set_agent_model(M.writer_id, models.alpha, true)
 end, "Big-Z")
 
 blitz.bind("<C-e>", function()
 	blitz.push_notification("big Z mode")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.glm, true)
-	blitz.set_agent_model(M.challanger_id, models.glm_flash, true)
-	blitz.set_agent_model(M.researcher_id, models.glm_flash, true)
-	blitz.set_agent_model(M.writer_id, models.glm_flash, true)
+	blitz.set_agent_model(M.challanger_id, models.ds_flash, true)
+	blitz.set_agent_model(M.researcher_id, models.ds_flash, true)
+	blitz.set_agent_model(M.writer_id, models.ds_flash, true)
 end, "Big-Z")
 
 blitz.bind("<C-g>", function()
-	blitz.push_notification("big X mode")
-	blitz.set_agent_model(blitz.AGENT_GENERAL, models.grok, true)
-	blitz.set_agent_model(M.challanger_id, models.glm_flash, true)
-	blitz.set_agent_model(M.researcher_id, models.glm_flash, true)
-	blitz.set_agent_model(M.writer_id, models.glm_flash, true)
+	blitz.push_notification("big M mode")
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.spark, true)
+	blitz.set_agent_model(M.challanger_id, models.spark, true)
+	blitz.set_agent_model(M.researcher_id, models.spark, true)
+	blitz.set_agent_model(M.writer_id, models.spark, true)
 end, "Big-X")
 
 ---------------------------------------------------------------------------------------------------
@@ -228,7 +230,7 @@ blitz.hooks.inject({
 		end
 		local body = table.concat(rows, "\n")
 		if body == "" then
-			body = "(none)"
+			return ""
 		end
 		return "<available_agents>\n" .. body .. "\n</available_agents>\n"
 	end,
@@ -686,3 +688,56 @@ M.writer_id = blitz.add_agent({
 		blitz.tools.BASH,
 	},
 })
+
+blitz.add_command("what", function()
+	local prompt = [[
+# Role
+You explain a code diff to a tech lead who must approve or reject it. The lead
+knows the system but not this branch. Write for a decision, not a tutorial.
+
+# Task
+
+1. Read the diff in full. Read the surrounding code and call sites when a change
+   depends on context outside the diff.
+2. Group the changes into logical units. Ignore noise (formatting, renames with
+   no effect), but state that you ignored it.
+3. Explain each unit: what behavior changed, why, and what it touches.
+4. State what the diff does NOT do.
+
+# Output format
+
+## Summary
+Three sentences maximum. What changes, in plain terms, and the review verdict
+you would give (ship / ship with a fix / needs rework).
+
+## Changes
+One section per logical unit:
+- **What**: the behavior before and after, in one or two sentences.
+- **Why**: the reason the change exists.
+- **Files**: affected paths.
+- **Risk**: what can break, and how likely.
+
+## Decisions worth your attention
+Tradeoffs the author made. Alternatives that were rejected. List only real
+forks, not style choices.
+
+## Verification
+What tests, manual checks, or evidence support this diff. State gaps.
+
+## Open questions
+Unresolved items the lead must answer or route. Empty list if none.
+
+# Constraints
+
+- Do not review style, naming, or formatting unless it changes behavior.
+- Do not praise. Do not describe the process of reading the diff.
+- Do not guess. If the intent is unclear, write "unclear from the diff" and say
+  what is missing.
+- Never claim a test passes, a bug is fixed, or behavior is safe without
+  evidence in the diff or files you read.
+- Use the reader's time as the budget. Cut every sentence that does not help
+  the lead decide.
+- Use short sentences. Active voice. No filler openers.
+    ]]
+	blitz.cmd.prompt(prompt)
+end)

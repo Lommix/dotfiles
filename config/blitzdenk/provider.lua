@@ -23,6 +23,14 @@ M.provider.opencode = blitz.add_provider({
 	session_key_header = "x-opencode-session",
 })
 
+
+M.provider.opencode_pic = blitz.add_provider({
+	type = "anthropic",
+	url = "https://opencode.ai/zen/go/v1",
+	key_envar = "OPENCODE_API_KEY",
+	session_key_header = "x-opencode-session",
+})
+
 M.provider.opencode_ant = blitz.add_provider({
 	type = "response",
 	url = "https://opencode.ai/zen/go/v1",
@@ -89,7 +97,7 @@ M.glm = blitz.add_model({
 })
 
 M.ds_flash = blitz.add_model({
-	-- name = "deepseek/deepseek-v4.1-flash",
+	-- name = "deepseek/deepseek-v4.1-flash:nitro",
 	-- provider = M.provider.orouter,
 	name = "deepseek-flash",
 	provider = M.provider.opencode,
@@ -123,6 +131,13 @@ M.grok = blitz.add_model({
 M.omen = blitz.add_model({
 	name = "omen-alpha",
 	provider = M.provider.opencode,
+	vision = true,
+	replay_reasoning = true,
+})
+
+M.alpha = blitz.add_model({
+	name = "union-alpha",
+	provider = M.provider.opencode_pic,
 	vision = true,
 	replay_reasoning = true,
 })
