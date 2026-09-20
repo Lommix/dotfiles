@@ -292,7 +292,11 @@ blitz.add_command("cd", function(path)
 end, "cd to dir")
 
 blitz.add_command("clear", function()
-	blitz.cmd.reset_session()
+	blitz.cmd.reset_session(true)
+end, "clear session")
+
+blitz.bind("<c-x>", function()
+	blitz.cmd.reset_session(true)
 end, "clear session")
 
 blitz.add_command("improve", function(rem)

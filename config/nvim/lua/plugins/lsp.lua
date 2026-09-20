@@ -197,6 +197,16 @@ return {
 			})
 			vim.lsp.enable("lua_ls")
 
+			vim.lsp.config("tailwindcss", {
+				capabilities = {
+					workspace = {
+						didChangeWatchedFiles = {
+							dynamicRegistration = false,
+						},
+					},
+				},
+			})
+
 			vim.lsp.config("zls", {
 				-- cmd = { "/hole/lommix/.local/bin/zls" },
 				settings = {
