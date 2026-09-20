@@ -252,6 +252,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	todo.add,
 	todo.start,
 	todo.done,
+	todo.list,
 	tools.lua_repl,
 	idle_tool,
 	message_tool,
@@ -633,11 +634,8 @@ end, "set effort level")
 M.researcher_id = blitz.add_agent({
 	name = "researcher",
 	description = [[
-    Read-only research and exploration agent. Delegate when the task needs search you
-    would grind through yourself: locating a definition or pattern across many files,
-    picking a library or API from docs, looking up exact symbols or paths, or gathering
-    facts from several places. Always prefer this subagent for pure lookup work instead of
-    exploring from the main loop. Does not edit, build, or test.
+    Read-only research and exploration agent. Usefull for locating a definition or pattern across many files,
+    looking up exact symbols or paths, or gathering facts from several places, including web search.
     ]],
 	prompt = prompts.explore,
 	effort = "low",
@@ -673,7 +671,7 @@ M.writer_id = blitz.add_agent({
 	name = "writer",
 	description = [[
     Writes any text a human will read. Reviews existing text for clarity.
-    Use for marketing, docs and messages. Do not write code.
+    Use for marketing, docs and website content.
     ]],
 	prompt = prompts.writer,
 	effort = "medium",

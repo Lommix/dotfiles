@@ -1,3 +1,4 @@
+--- ! collection of prompts for agents
 local M = {}
 
 M.explore = [[

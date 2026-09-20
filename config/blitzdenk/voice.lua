@@ -1,5 +1,6 @@
 -- voice.lua: C-r toggles voice recording. First press records the mic,
 -- second press stops, transcribes and pastes the text into the input box.
+-- C-f runs a cleanup agent over the prompt.
 -- Engine: nvidia/nemotron-3.5-asr-streaming-0.6b via transcribe.cpp (local, sync).
 
 local CLI = "/home/lommix/Projects/vendor/transcribe.cpp/build/bin/transcribe-cli"
@@ -172,6 +173,7 @@ blitz.bind("<C-f>", function()
 		prompt = text,
 		task = "refine input box",
 		background = true,
+		clean = true,
 		on_complete = function(agent_id, _)
 			local result = blitz.agent.result(agent_id)
 			if result then

@@ -1,3 +1,5 @@
+--- ! web search/fetch + image generation
+
 local M = {}
 -------------------------------------------------------------------------------------------------
 --- Image generation tool

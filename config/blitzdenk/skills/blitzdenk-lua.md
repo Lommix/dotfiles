@@ -196,9 +196,9 @@ build a silent subagent: read the answer in the callback with
 `blitz.agent.result(id)`.
 
 `clean = true` in `blitz.agent.spawn`, or `clean` on the `agent` tool, builds a
-bare agent: no AGENTS.md files in the system prompt, and no `<system-reminder>`
-injection on any step, so `blitz.hooks.inject` never runs for it. A finished
-background child still queues its result notice into a clean parent.
+bare agent: no AGENTS.md context, and no `<system-reminder>` injection on any
+step, so `blitz.hooks.inject` never runs for it. A finished background child
+still queues its result notice into a clean parent.
 
 `cwd` in `blitz.agent.spawn` sets the working directory of the child. A relative
 path resolves against the parent agent cwd.
@@ -261,7 +261,8 @@ a render callback.
 `blitz.agent.history_since_checkpoint(agent_id)` returns the rows from the user
 prompt that started the current turn. The checkpoint moves when a run starts
 with a new prompt or a queued user message. It resets whenever the history is
-replaced or the agent resets: session load, prompt rewind, compaction. Use it
+replaced or the agent resets: session load, prompt rewind, compaction. A cancel
+keeps the checkpoint, so a correction still sees the canceled output. Use it
 in a `blitz.hooks.agent_complete` listener to hand one turn to a memory
 compressor agent:
 

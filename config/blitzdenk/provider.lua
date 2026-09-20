@@ -1,3 +1,4 @@
+---! provider and model configuration
 local M = {}
 
 ------------------------------------------------------------------
@@ -22,7 +23,6 @@ M.provider.opencode = blitz.add_provider({
 	key_envar = "OPENCODE_API_KEY",
 	session_key_header = "x-opencode-session",
 })
-
 
 M.provider.opencode_pic = blitz.add_provider({
 	type = "anthropic",

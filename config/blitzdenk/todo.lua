@@ -136,22 +136,43 @@ M.done = blitz.register_tool({
 	end,
 })
 
+M.list = blitz.register_tool({
+	name = "todo_list",
+	description = "List the open TODOs. Started tasks come first, done tasks are not shown.",
+	snippet = "List your open todos",
+	func = function(ctx)
+		local list = load(ctx.agent_id)
+		local lines = {}
+		for _, state in ipairs({ STATE_PROGRESS, STATE_PENDING }) do
+			for _, t in ipairs(list) do
+				if t.state == state then
+					lines[#lines + 1] = M.marks[state] .. " #" .. t.id .. " " .. t.text
+				end
+			end
+		end
+		if #lines == 0 then
+			return { msg = "no open todos" }
+		end
+		return { msg = table.concat(lines, "\n") }
+	end,
+})
+
 function M.inject(agent_id)
-	local lines = {}
+	local in_progress = 0
+	local open = 0
 	for _, t in ipairs(load(agent_id)) do
 		if t.state == STATE_PROGRESS then
-			lines[#lines + 1] = "  - #id:" .. t.id .. " [in_progress] " .. t.text
-		elseif t.state ~= STATE_DONE then
-			lines[#lines + 1] = "  - #id:" .. t.id .. " [pending] " .. t.text
+			in_progress = in_progress + 1
+		elseif t.state == STATE_PENDING then
+			open = open + 1
 		end
 	end
-	if #lines == 0 then
-		return ""
-	end
-	return "#TODOs:\n" .. table.concat(lines, "\n")
+
+	return string.format("[TODOS] in_progress=%d open=%d", in_progress, open)
 end
 
 blitz.hooks.inject({
+	digest = true,
 	func = M.inject,
 })
 
