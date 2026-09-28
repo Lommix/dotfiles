@@ -1,11 +1,14 @@
 local M = {}
+
+require("draw")
+require("voice")
+require("memory")
+require("permissions")
+
 local prompts = require("prompts")
 local tools = require("tools")
 local todo = require("todo")
 local models = require("provider")
-require("draw")
-require("voice")
-require("memory")
 
 ---------------------------------------------------------------------------------------------------
 --- Model configuration, simple
@@ -38,6 +41,7 @@ blitz.set_theme({
 
 blitz.bind("<C-l>", function()
 	blitz.push_notification("big D mode")
+	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.ds_flash, true)
 	blitz.set_agent_model(M.challanger_id, models.ds_flash, true)
 	blitz.set_agent_model(M.researcher_id, models.ds_flash, true)
@@ -46,10 +50,11 @@ end, "Big-D")
 
 blitz.bind("<C-o>", function()
 	blitz.push_notification("big Q mode")
-	blitz.set_agent_model(blitz.AGENT_GENERAL, models.qwen_38_flash, true)
-	blitz.set_agent_model(M.challanger_id, models.qwen_38_flash, true)
-	blitz.set_agent_model(M.researcher_id, models.qwen_38_flash, true)
-	blitz.set_agent_model(M.writer_id, models.qwen_38_flash, true)
+	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.mimo, true)
+	blitz.set_agent_model(M.challanger_id, models.mimo, true)
+	blitz.set_agent_model(M.researcher_id, models.mimo, true)
+	blitz.set_agent_model(M.writer_id, models.mimo, true)
 end, "Big-Q")
 
 blitz.bind("<C-q>", function()
@@ -62,6 +67,7 @@ end, "Big-Z")
 
 blitz.bind("<C-e>", function()
 	blitz.push_notification("big Z mode")
+	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.glm, true)
 	blitz.set_agent_model(M.challanger_id, models.ds_flash, true)
 	blitz.set_agent_model(M.researcher_id, models.ds_flash, true)

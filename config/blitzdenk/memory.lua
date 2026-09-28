@@ -2,118 +2,6 @@
 
 local M = {}
 
-local function read_file(path)
-	local f = io.open(path, "r")
-	if not f then
-		return nil
-	end
-	local content = f:read("*a")
-	f:close()
-	return content
-end
-
-local function write_file(path, content)
-	local f, err = io.open(path, "w")
-	if not f then
-		error(err)
-	end
-	f:write(content)
-	f:close()
-end
-
-M.write_memory = blitz.register_tool({
-	name = "write_memory",
-	description = "Overwrite the project MEMORY.md with the given content. Write the full file, never a diff.",
-	snippet = "write MEMORY.md",
-	args = {
-		content = { type = "string", description = "the full memory text", required = true },
-	},
-	func = function(ctx, call)
-		local path = ctx.cwd .. "/MEMORY.md"
-		write_file(path, call.arguments.content)
-		return { msg = "written " .. path }
-	end,
-})
-
-M.read_memory = blitz.register_tool({
-	name = "read_memory",
-	description = "Read the project MEMORY.md. Returns the full text, or empty when no memory exists yet.",
-	snippet = "read MEMORY.md",
-	args = {},
-	func = function(ctx, _)
-		return { msg = read_file(ctx.cwd .. "/MEMORY.md") or "" }
-	end,
-})
-
-M.edit_memory = blitz.register_tool({
-	name = "edit_memory",
-	description = "Replace an exact string in the project MEMORY.md. The old_string must match a unique region unless replace_all is true.",
-	snippet = "edit MEMORY.md",
-	args = {
-		old_string = { type = "string", description = "the exact text to replace", required = true },
-		new_string = { type = "string", description = "the replacement text", required = true },
-		replace_all = { type = "boolean", description = "replace every occurrence (default false)" },
-	},
-	func = function(ctx, call)
-		local old = call.arguments.old_string
-		local new = call.arguments.new_string
-		if type(old) ~= "string" or old == "" then
-			error("old_string is required")
-		end
-		if type(new) ~= "string" then
-			error("new_string is required")
-		end
-		if old == new then
-			error("old_string and new_string are identical")
-		end
-		local path = ctx.cwd .. "/MEMORY.md"
-		local content = read_file(path)
-		if not content then
-			error("no MEMORY.md yet, use write_memory to create it")
-		end
-		local matches = {}
-		local pos = 1
-		while true do
-			local i, j = content:find(old, pos, true)
-			if not i then
-				break
-			end
-			matches[#matches + 1] = { i, j }
-			pos = j + 1
-		end
-		if #matches == 0 then
-			error("old_string not found in MEMORY.md")
-		end
-		if #matches > 1 and call.arguments.replace_all ~= true then
-			error("old_string matches " .. #matches .. " regions, add more context or set replace_all")
-		end
-		local parts = {}
-		local last = 1
-		for _, m in ipairs(matches) do
-			parts[#parts + 1] = content:sub(last, m[1] - 1)
-			parts[#parts + 1] = new
-			last = m[2] + 1
-		end
-		parts[#parts + 1] = content:sub(last)
-		write_file(path, table.concat(parts))
-		return { msg = "edited " .. path }
-	end,
-})
-
-M.get_context = blitz.register_tool({
-	name = "get_context",
-	description = "Return the project AGENTS.md content. Read it to learn the project scope before you judge a fact.",
-	snippet = "read AGENTS.md",
-	args = {},
-	func = function(ctx, _)
-		local content = read_file(ctx.cwd .. "/AGENTS.md")
-		if not content then
-			return { msg = "no AGENTS.md in " .. ctx.cwd }
-		end
-		return { msg = content }
-	end,
-})
-
 M.compressor_id = blitz.add_agent({
 	name = "compressor",
 	description = "extract durable facts for long term memory",
@@ -203,58 +91,59 @@ When one test fails, drop the fact.
 Finish with one line: "added N, removed N, kept N".
 	]],
 	model = require("provider").ds_flash,
-	tools = { M.read_memory, M.write_memory, M.edit_memory, M.get_context },
+	tools = { blitz.tools.EDIT, blitz.tools.WRITE, blitz.tools.GLOB, blitz.tools.GREP, blitz.tools.READ },
 	in_agent_tool = false,
 })
 
-blitz.hooks.inject({
-	main_only = true,
-	digest = true,
-	func = function()
-		local f = io.open("MEMORY.md", "r")
-		if not f then
-			return nil
-		end
-		f:close()
-		return "The project has an agent MEMORY.md file, read it"
-	end,
-})
+-- blitz.hooks.inject({
+-- 	main_only = true,
+-- 	digest = true,
+-- 	func = function()
+-- 		local f = io.open("MEMORY.md", "r")
+-- 		if not f then
+-- 			return nil
+-- 		end
+-- 		f:close()
+-- 		return "The project has an agent MEMORY.md file, read it"
+-- 	end,
+-- })
 
-blitz.hooks.agent_complete(function(ev)
-	if ev.id ~= blitz.get_main_agent() then
-		return
-	end
-	local rows = blitz.agent.history_since_checkpoint(ev.id)
-	local chunk = {}
+-- blitz.hooks.agent_complete(function(ev)
+-- 	if ev.id ~= blitz.get_main_agent() then
+-- 		return
+-- 	end
+-- 	local rows = blitz.agent.history_since_checkpoint(ev.id)
+-- 	local chunk = {}
+--
+-- 	-- skip small context
+-- 	if #rows < 8 then
+-- 		return
+-- 	end
+--
+-- 	for i, row in ipairs(rows) do
+-- 		chunk[i] = row.role .. ": " .. row.text
+-- 	end
+--
+-- 	blitz.push_notification("starting mem compression")
+--
+-- 	local id = blitz.agent.spawn({
+-- 		agent_type = M.compressor_id,
+-- 		prompt = table.concat(chunk, "\n"),
+-- 		background = true,
+-- 		clean = true,
+-- 	})
+--
+-- 	if id == nil then
+-- 		blitz.push_notification("failed to start memory agent")
+-- 		return
+-- 	end
+--
+-- 	if blitz.agent.await(id) == blitz.AWAIT_COMPLETE then
+-- 		blitz.push_notification("memory extracted")
+-- 	else
+-- 		blitz.push_notification("memory extraction failed")
+-- 	end
+-- 	blitz.agent.close(id)
+-- end)
 
-	-- skip small context
-	if #rows < 8 then
-		return
-	end
-
-	for i, row in ipairs(rows) do
-		chunk[i] = row.role .. ": " .. row.text
-	end
-
-	blitz.push_notification("starting mem compression")
-
-	local id = blitz.agent.spawn({
-		agent_type = M.compressor_id,
-		prompt = table.concat(chunk, "\n"),
-		background = true,
-		clean = true,
-	})
-
-	if id == nil then
-		blitz.push_notification("failed to start memory agent")
-		return
-	end
-
-	if blitz.agent.await(id) == blitz.AWAIT_COMPLETE then
-		blitz.push_notification("memory extracted")
-	else
-		blitz.push_notification("memory extraction failed")
-	end
-	blitz.agent.close(id)
-end)
 return M

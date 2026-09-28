@@ -106,6 +106,13 @@ M.ds_flash = blitz.add_model({
 	cost = { input = 0.15, output = 0.6, cache = 0.006 },
 })
 
+M.mimo = blitz.add_model({
+	name = "mimo-v2.6-flash",
+	provider = M.provider.opencode,
+	vision = true,
+	replay_reasoning = true,
+})
+
 M.spark = blitz.add_model({
 	name = "muse-spark-1.3-contributor",
 	provider = M.provider.opencode_ant,
