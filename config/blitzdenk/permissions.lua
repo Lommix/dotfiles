@@ -129,12 +129,19 @@ local function review_prompt(snapshot, ticket)
 	}, "\n\n")
 end
 
-blitz.hooks.permission_requested(function(ev)
-	local ssh = blitz.ssh.get_state()
+blitz.add_command("guard-on", function()
+	blitz.state.set("guard_active", true)
+end)
 
-	if ssh.active == false then
-		return
-	end
+blitz.add_command("guard-off", function()
+	blitz.state.set("guard_active", false)
+end)
+
+blitz.hooks.permission_requested(function(ev)
+    local state = blitz.state.get("guard_active")
+    if state == nil or state == false then
+        return
+    end
 
 	blitz.push_notification("reviewing permission!")
 
