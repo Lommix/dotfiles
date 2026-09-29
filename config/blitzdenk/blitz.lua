@@ -11,15 +11,6 @@ local tools = require("tools")
 local todo = require("todo")
 local models = require("provider")
 
----------------------------------------------------------------------------------------------------
---- Model configuration, simple
----------------------------------------------------------------------------------------------------
-local default_model = models.glm_flash
-blitz.set_compact_edge(300000)
-blitz.set_agent_model(blitz.AGENT_GENERAL, default_model)
-blitz.set_agent_effort(blitz.AGENT_GENERAL, "high")
-blitz.set_prompt(blitz.AGENT_GENERAL, prompts.system)
-
 blitz.set_theme({
 	bg = "#1f2430",
 	overlay_dark = "#171b24",
@@ -39,6 +30,16 @@ blitz.set_theme({
 	role_agent = "#d2a6ff",
 	role_system = "#95e6cb",
 })
+
+---------------------------------------------------------------------------------------------------
+--- Model configuration
+---------------------------------------------------------------------------------------------------
+--- defaults
+local default_model = models.glm_flash
+blitz.set_compact_edge(300000)
+blitz.set_agent_model(blitz.AGENT_GENERAL, default_model)
+blitz.set_agent_effort(blitz.AGENT_GENERAL, "high")
+blitz.set_prompt(blitz.AGENT_GENERAL, prompts.system)
 
 blitz.bind("<C-l>", function()
 	blitz.push_notification("big D mode")
