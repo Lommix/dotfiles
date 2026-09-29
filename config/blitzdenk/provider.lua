@@ -142,9 +142,9 @@ M.omen = blitz.add_model({
 	replay_reasoning = true,
 })
 
-M.alpha = blitz.add_model({
-	name = "union-alpha",
-	provider = M.provider.opencode_pic,
+M.stealth = blitz.add_model({
+	name = "space-bunny-free",
+	provider = M.provider.opencode,
 	vision = true,
 	replay_reasoning = true,
 })
