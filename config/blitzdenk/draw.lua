@@ -23,12 +23,44 @@ local GROUPS = {
 	{ state = STATE_PENDING, key = "muted" },
 }
 
+local MAX_DONE = 3
+
 local function main_todos()
 	local agent = blitz.get_main_agent()
 	if not agent then
 		return {}
 	end
 	return blitz.state.get("todo_" .. agent) or {}
+end
+
+local function group_key(state)
+	for _, g in ipairs(GROUPS) do
+		if g.state == state then
+			return g.key
+		end
+	end
+	return "muted"
+end
+
+local function shown_todos()
+	local grouped = {}
+	for _, t in ipairs(main_todos()) do
+		grouped[t.state] = grouped[t.state] or {}
+		local list = grouped[t.state]
+		list[#list + 1] = t
+	end
+	local rows = {}
+	for _, g in ipairs(GROUPS) do
+		local list = grouped[g.state] or {}
+		local first = 1
+		if g.state == STATE_DONE then
+			first = math.max(1, #list - MAX_DONE + 1)
+		end
+		for i = first, #list do
+			rows[#rows + 1] = list[i]
+		end
+	end
+	return rows
 end
 
 local function cut(s, n)
@@ -45,7 +77,7 @@ end
 local panel
 
 local function wanted_height()
-	return math.max(3, #main_todos() + 2, #blitz.list_agents() + 2)
+	return math.max(3, #shown_todos() + 2, #blitz.list_agents() + 2)
 end
 
 panel = blitz.draw.panel({
@@ -70,16 +102,12 @@ panel = blitz.draw.panel({
 		buf.set_color(mid + 1, 0, " Agents ", "info")
 
 		local todo_rows = {}
-		for _, g in ipairs(GROUPS) do
-			for _, t in ipairs(main_todos()) do
-				if t.state == g.state then
-					todo_rows[#todo_rows + 1] = {
-						mark = todos.marks[t.state],
-						color = theme[g.key] or "#8a8a8a",
-						text = cut("#" .. t.id .. " " .. t.text, mid - TEXT_X - 1),
-					}
-				end
-			end
+		for _, t in ipairs(shown_todos()) do
+			todo_rows[#todo_rows + 1] = {
+				mark = todos.marks[t.state],
+				color = theme[group_key(t.state)] or "#8a8a8a",
+				text = cut("#" .. t.id .. " " .. t.text, mid - TEXT_X - 1),
+			}
 		end
 
 		local bottom = h - 2
