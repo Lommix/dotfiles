@@ -260,7 +260,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	todo.start,
 	todo.done,
 	todo.list,
-	tools.lua_repl,
+	tools.codemode,
 	idle_tool,
 	message_tool,
 	cancel_tool,
@@ -426,56 +426,3 @@ M.writer_id = blitz.add_agent({
 		blitz.tools.BASH,
 	},
 })
-
-blitz.add_command("what", function()
-	local prompt = [[
-# Role
-You explain a code diff to a tech lead who must approve or reject it. The lead
-knows the system but not this branch. Write for a decision, not a tutorial.
-
-# Task
-
-1. Read the diff in full. Read the surrounding code and call sites when a change
-   depends on context outside the diff.
-2. Group the changes into logical units. Ignore noise (formatting, renames with
-   no effect), but state that you ignored it.
-3. Explain each unit: what behavior changed, why, and what it touches.
-4. State what the diff does NOT do.
-
-# Output format
-
-## Summary
-Three sentences maximum. What changes, in plain terms, and the review verdict
-you would give (ship / ship with a fix / needs rework).
-
-## Changes
-One section per logical unit:
-- **What**: the behavior before and after, in one or two sentences.
-- **Why**: the reason the change exists.
-- **Files**: affected paths.
-- **Risk**: what can break, and how likely.
-
-## Decisions worth your attention
-Tradeoffs the author made. Alternatives that were rejected. List only real
-forks, not style choices.
-
-## Verification
-What tests, manual checks, or evidence support this diff. State gaps.
-
-## Open questions
-Unresolved items the lead must answer or route. Empty list if none.
-
-# Constraints
-
-- Do not review style, naming, or formatting unless it changes behavior.
-- Do not praise. Do not describe the process of reading the diff.
-- Do not guess. If the intent is unclear, write "unclear from the diff" and say
-  what is missing.
-- Never claim a test passes, a bug is fixed, or behavior is safe without
-  evidence in the diff or files you read.
-- Use the reader's time as the budget. Cut every sentence that does not help
-  the lead decide.
-- Use short sentences. Active voice. No filler openers.
-    ]]
-	blitz.cmd.prompt(prompt)
-end)
