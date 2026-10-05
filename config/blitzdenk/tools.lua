@@ -327,7 +327,7 @@ for i, out in ipairs(r) do print(i, out:match("^%S+") or "0") end]],
 		local bold = "\27[1m"
 		local reset = "\27[0m"
 
-		ctx:set_status(orange .. bold .. "(Lua)" .. reset .. " `" .. call.arguments.code .. "`")
+		ctx:set_status(orange .. bold .. "Codemode" .. reset .. " `" .. call.arguments.code .. "`")
 
 		local env = setmetatable({ ctx = ctx }, { __index = _G })
 		local fn, err = load(call.arguments.code, "codemode", "t", env)

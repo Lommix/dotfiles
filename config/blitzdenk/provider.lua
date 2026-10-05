@@ -120,6 +120,13 @@ M.spark = blitz.add_model({
 	replay_reasoning = true,
 })
 
+M.qwen_38 = blitz.add_model({
+	name = "qwen3.8",
+	provider = M.provider.llama,
+	vision = true,
+	replay_reasoning = true,
+})
+
 M.qwen_38_flash = blitz.add_model({
 	name = "qwen3.8-flash",
 	provider = M.provider.opencode,

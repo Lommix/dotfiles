@@ -77,10 +77,10 @@ end, "Big-Z")
 
 blitz.bind("<C-g>", function()
 	blitz.push_notification("big M mode")
-	blitz.set_agent_model(blitz.AGENT_GENERAL, models.spark, true)
-	blitz.set_agent_model(M.challanger_id, models.spark, true)
-	blitz.set_agent_model(M.researcher_id, models.spark, true)
-	blitz.set_agent_model(M.writer_id, models.spark, true)
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.qwen_38, true)
+	blitz.set_agent_model(M.challanger_id, models.qwen_38, true)
+	blitz.set_agent_model(M.researcher_id, models.qwen_38, true)
+	blitz.set_agent_model(M.writer_id, models.qwen_38, true)
 end, "Big-X")
 
 ---------------------------------------------------------------------------------------------------
@@ -252,7 +252,6 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.ASK,
 	blitz.tools.WRITE,
 	blitz.tools.EDIT,
-	blitz.tools.SKILL,
 	blitz.tools.VIEW_IMAGE,
 	tools.web_fetch,
 	tools.web_search,
@@ -382,11 +381,11 @@ M.researcher_id = blitz.add_agent({
 	model = default_model,
 	tools = {
 		blitz.tools.VIEW_IMAGE,
-		blitz.tools.SKILL,
 		blitz.tools.BASH,
 		blitz.tools.READ,
 		tools.web_fetch,
 		tools.web_search,
+		tools.codemode,
 	},
 })
 
@@ -401,9 +400,9 @@ M.challanger_id = blitz.add_agent({
 	model = default_model,
 	tools = {
 		blitz.tools.VIEW_IMAGE,
-		blitz.tools.SKILL,
 		blitz.tools.READ,
 		blitz.tools.BASH,
+		tools.codemode,
 	},
 })
 
@@ -417,9 +416,9 @@ M.writer_id = blitz.add_agent({
 	effort = "medium",
 	model = default_model,
 	clean = true,
+	skills = false,
 	tools = {
 		blitz.tools.VIEW_IMAGE,
-		blitz.tools.SKILL,
 		blitz.tools.READ,
 		blitz.tools.EDIT,
 		blitz.tools.WRITE,

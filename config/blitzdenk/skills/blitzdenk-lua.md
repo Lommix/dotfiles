@@ -609,6 +609,22 @@ local pw = blitz.mcp.add({
 blitz.mcp.enable(pw)
 ```
 
+Remote servers take `url` instead of `command` and speak streamable http.
+`key` or `key_envar` sends a bearer token (`key_envar` wins), `timeout` is
+per-request seconds (0 disables, default 300). Set exactly one of `url` or
+`command`.
+
+```lua
+local ctx = blitz.mcp.add({
+    name = "context7",
+    url = "https://mcp.context7.com/mcp",
+    key_envar = "CONTEXT7_KEY",
+    timeout = 60,
+    tools_prefix = "c7_",
+})
+blitz.mcp.enable(ctx)
+```
+
 ## SSH mode
 
 While ssh routing is on, every call (bash, read, write, edit,
@@ -709,6 +725,10 @@ Skills are markdown files discovered from two ranked layers: project `skills`
 at the project root, and user `~/.config/blitzdenk/skills`. Project skills
 shadow same-named user skills. The project root is the nearest ancestor of the
 working directory containing `.git`.
+
+The `<available_skills>` catalogue names each skill with its file path.
+Agents load a skill with the read tool on that path. Set `skills = false` in
+`blitz.add_agent` to keep the catalogue from an agent type.
 
 Frontmatter keys: `name` (kebab-case), `description`, optional `whenToUse`,
 `user-invocable` (default true), and `disable-model-invocation` (default
