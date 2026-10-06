@@ -252,7 +252,6 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.ASK,
 	blitz.tools.WRITE,
 	blitz.tools.EDIT,
-	blitz.tools.VIEW_IMAGE,
 	tools.web_fetch,
 	tools.web_search,
 	todo.add,
@@ -380,7 +379,6 @@ M.researcher_id = blitz.add_agent({
 	effort = "low",
 	model = default_model,
 	tools = {
-		blitz.tools.VIEW_IMAGE,
 		blitz.tools.BASH,
 		blitz.tools.READ,
 		tools.web_fetch,
@@ -399,7 +397,6 @@ M.challanger_id = blitz.add_agent({
 	effort = "high",
 	model = default_model,
 	tools = {
-		blitz.tools.VIEW_IMAGE,
 		blitz.tools.READ,
 		blitz.tools.BASH,
 		tools.codemode,
@@ -418,7 +415,6 @@ M.writer_id = blitz.add_agent({
 	clean = true,
 	skills = false,
 	tools = {
-		blitz.tools.VIEW_IMAGE,
 		blitz.tools.READ,
 		blitz.tools.EDIT,
 		blitz.tools.WRITE,

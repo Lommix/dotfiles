@@ -206,59 +206,6 @@ Start 2 challenger agents reviewing the current diff. Communicate the original t
 	blitz.cmd.prompt(prompt)
 end, "diff review")
 
-blitz.add_command("tospec", function(rem)
-	local prompt = [[
-You are now in to-spec mode. Do NOT edit any code and do NOT interview the user. Synthesize everything
-discussed in this conversation plus your codebase knowledge into a single spec file: spec.md in the
-current working directory (cwd). The spec must be fully self-contained — another agent with no access
-to this conversation must be able to start implementing from spec.md alone.
-
-Process:
-1. Review the conversation for all decisions, requirements, constraints, and rejected alternatives.
-2. Explore the codebase to ground the spec in the real project state (existing modules, conventions, ADRs).
-3. Write spec.md in cwd using EXACTLY this fixed format:
-
-## Problem Statement
-The problem the user is facing, from the user's perspective.
-
-## Solution
-The solution to the problem, from the user's perspective.
-
-## User Stories
-A LONG, numbered list of user stories, each in the format:
-1. As an <actor>, I want a <feature>, so that <benefit>
-This list must be extensive and cover all aspects of the feature.
-
-## Implementation Decisions
-A list of decisions made: modules to build/modify, interfaces, API contracts, schema changes,
-architectural decisions, technical clarifications. Do NOT include specific file paths or code
-snippets (they go stale quickly). Exception: a small snippet that encodes a decision more precisely
-than prose (state machine, schema, type shape) may be inlined.
-
-## Step-by-Step Implementation Plan
-An ordered list of concrete steps another agent can execute top to bottom. For each step state:
-what to build, which user story it satisfies, and how to verify it.
-
-## Testing Decisions
-- What makes a good test here (external behavior only, not implementation details)
-- Which modules will be tested
-- Prior art: similar tests already in the codebase
-
-## Out of Scope
-What is explicitly NOT part of this spec. Things refused during the conversation belong here.
-
-## Further Notes
-Any remaining notes.
-
-Use the project's own vocabulary throughout. Every decision in the spec must trace back to the
-conversation or the codebase — never invent anything to fill a section. Write the file then
-report the path and a short summary of what was decided.
-
-]] .. rem
-
-	blitz.cmd.prompt(prompt)
-end, "write down plan")
-
 blitz.add_command("what", function()
 	local prompt = [[
 # Role

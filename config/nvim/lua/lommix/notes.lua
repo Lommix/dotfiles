@@ -36,42 +36,30 @@ local defaults = {
 	},
 }
 
-M.open_notes = function()
-	local path = defaults.path .. "/" .. string.gsub(vim.fn.getcwd(), "/", "") .. ".md"
-
-	local popup = Popup(defaults.popup_config)
+local function open(title, path)
+	local abs = vim.fn.expand(path)
+	local popup = Popup(vim.tbl_deep_extend("force", defaults.popup_config, {
+		border = { text = { top = title } },
+	}))
 	popup:show()
 
-	vim.api.nvim_buf_call(popup.bufnr, function()
-		vim.cmd("e " .. path)
-		vim.cmd("set number")
-	end)
+	local lines = vim.fn.filereadable(abs) == 1 and vim.fn.readfile(abs) or {}
+	vim.api.nvim_buf_set_lines(popup.bufnr, 0, -1, false, lines)
+	vim.wo[popup.winid].number = true
 
 	popup:map("n", "q", function()
-		vim.cmd("w")
+		vim.fn.writefile(vim.api.nvim_buf_get_lines(popup.bufnr, 0, -1, false), abs)
 		popup:hide()
 		popup:unmount()
 	end)
 end
 
+M.open_notes = function()
+	open("Project Notes", defaults.path .. "/" .. string.gsub(vim.fn.getcwd(), "/", "") .. ".md")
+end
+
 M.open_global_notes = function()
-	local path = defaults.path .. "/" .. "global_note.md"
-	local opts = defaults.popup_config
-	opts.border.text.top = "Global Notes"
-
-	local popup = Popup(opts)
-	popup:show()
-
-	vim.api.nvim_buf_call(popup.bufnr, function()
-		vim.cmd("e " .. path)
-		vim.cmd("set number")
-	end)
-
-	popup:map("n", "q", function()
-		vim.cmd("w")
-		popup:hide()
-		popup:unmount()
-	end)
+	open("Global Notes", defaults.path .. "/global_note.md")
 end
 
 vim.keymap.set("n", "<leader>j", M.open_global_notes, { noremap = true, silent = true })
