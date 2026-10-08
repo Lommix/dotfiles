@@ -46,7 +46,7 @@ blitz.bind("<C-l>", function()
 	blitz.push_notification("big D mode")
 	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.ds_flash, true)
-	blitz.set_agent_model(M.challanger_id, models.ds_flash, true)
+	blitz.set_agent_model(M.reviewer_id, models.ds_flash, true)
 	blitz.set_agent_model(M.researcher_id, models.ds_flash, true)
 	blitz.set_agent_model(M.writer_id, models.ds_flash, true)
 end, "Big-D")
@@ -55,7 +55,7 @@ blitz.bind("<C-o>", function()
 	blitz.push_notification("big Q mode")
 	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.mimo, true)
-	blitz.set_agent_model(M.challanger_id, models.mimo, true)
+	blitz.set_agent_model(M.reviewer_id, models.mimo, true)
 	blitz.set_agent_model(M.researcher_id, models.mimo, true)
 	blitz.set_agent_model(M.writer_id, models.mimo, true)
 end, "Big-Q")
@@ -64,7 +64,7 @@ blitz.bind("<C-q>", function()
 	blitz.push_notification("big free mode")
 	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.stealth, true)
-	blitz.set_agent_model(M.challanger_id, models.stealth, true)
+	blitz.set_agent_model(M.reviewer_id, models.stealth, true)
 	blitz.set_agent_model(M.researcher_id, models.stealth, true)
 end, "Big-Z")
 
@@ -72,14 +72,14 @@ blitz.bind("<C-e>", function()
 	blitz.push_notification("big Z mode")
 	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.glm, true)
-	blitz.set_agent_model(M.challanger_id, models.glm, true)
+	blitz.set_agent_model(M.reviewer_id, models.glm, true)
 	blitz.set_agent_model(M.researcher_id, models.glm, true)
 end, "Big-Z")
 
 blitz.bind("<C-g>", function()
 	blitz.push_notification("big M mode")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.qwen_38, true)
-	blitz.set_agent_model(M.challanger_id, models.qwen_38, true)
+	blitz.set_agent_model(M.reviewer_id, models.qwen_38, true)
 	blitz.set_agent_model(M.researcher_id, models.qwen_38, true)
 	blitz.set_agent_model(M.writer_id, models.qwen_38, true)
 end, "Big-X")
@@ -222,9 +222,10 @@ end, "set effort level")
 M.researcher_id = blitz.add_agent({
 	name = "researcher",
 	description = [[
-    Read-only research and exploration agent. Usefull for locating a definition or pattern across many files,
-    looking up exact symbols or paths, or gathering facts from several places, including web search.
-    ]],
+Answers questions by reading code, files, docs, or the web. Locates
+definitions, symbols, paths, and patterns; reports facts, never opinions
+on code quality. Not for finding bugs in written code; use code-reviewer.
+]],
 	prompt = prompts.explore,
 	effort = "low",
 	model = default_model,
@@ -237,12 +238,13 @@ M.researcher_id = blitz.add_agent({
 	},
 })
 
-M.challanger_id = blitz.add_agent({
-	name = "challenger",
+M.reviewer_id = blitz.add_agent({
+	name = "code-reviewer",
 	description = [[
-    Reviews code for bugs, logic errors, edge cases, and
-    correctness issues. Use when: need a second pair of eyes on a diff.
-    ]],
+Finds bugs, logic errors, edge cases, and correctness issues in code that
+was just written or changed: a diff, a function, a module, or a PR.
+Read-only; reports findings, never edits.
+]],
 	prompt = prompts.review,
 	effort = "high",
 	model = default_model,
@@ -256,9 +258,9 @@ M.challanger_id = blitz.add_agent({
 M.writer_id = blitz.add_agent({
 	name = "writer",
 	description = [[
-    Writes any text a human will read. Reviews existing text for clarity.
-    Use for marketing, docs and website content.
-    ]],
+Writes and edits text a human reads: docs, marketing, website content,
+posts, release notes. Not for code review; that is code-reviewer.
+]],
 	prompt = prompts.writer,
 	effort = "medium",
 	model = default_model,

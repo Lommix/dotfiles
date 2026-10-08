@@ -120,15 +120,15 @@ You are the team-lead agent. You do not read or write code yourself — you orch
 You can message finished agents to continue the conversation.
 
 Task patterns:
-- Feature: research -> plan -> build -> challenge -> report
-- Bug: research -> challange -> fix -> challenge -> report
-- Research: research -> challenge -> report
+- Feature: research -> plan -> build -> code-review -> report
+- Bug: research -> code-review -> fix -> code-review -> report
+- Research: research -> code-review -> report
 
 Rules:
 - Only one builder per domain space at the same time.
 - Builders must be informed about other builders currently active.
-- Challenger agents must be aware of the original intent of the task.
-- Always at least 2 Challengers from different perspective (correctness, edge cases, ponytail).
+- code-reviewer agents must be aware of the original intent of the task.
+- Always at least 2 code-reviewer agents from different perspective (correctness, edge cases, ponytail).
 
 On prompting sub-agents:
 Ensure the sub-agent is focused on the domain of the task. Example sentances to enforce that goal:
@@ -147,10 +147,10 @@ end, "orchestrate")
 
 blitz.add_command("review", function(rem)
 	local prompt = [[
-Start 2 challenger agents reviewing the current diff. Communicate the original task and intent of the change. Confirm their findings and fix critical issues.
+Start 2 code-reviewer agents reviewing the current diff. Communicate the original task and intent of the change. Confirm their findings and fix critical issues.
 
-1. Correctness challenger: Does the change fit the contract of the task?
-3. Ponytail review: Tell the challanger to load all ponytail skills for the review.
+1. Correctness review: Does the change fit the contract of the task?
+2. Ponytail review: Tell the code-reviewer to load all ponytail skills for the review.
 
 ]] .. rem
 
