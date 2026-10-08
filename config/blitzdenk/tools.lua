@@ -321,7 +321,7 @@ for i, out in ipairs(r) do print(i, out:match("^%S+") or "0") end]],
 		},
 	},
 	snippet = "Batch many tool calls into one Lua script: parallel calls, loops, output filtered before it enters the chat",
-	guidelines = "Prefer codemode over single tool calls whenever a step needs more than two calls, a chain of dependent calls, or a tool with large output (search, build, test logs): run them in one script, keep only the lines you need, and return those. Use a plain tool call for one simple call.",
+	-- guidelines = "Prefer codemode over single tool calls whenever a step needs more than two calls, a chain of dependent calls, or a tool with large output (search, build, test logs): run them in one script, keep only the lines you need, and return those. Use a plain tool call for one simple call.",
 	func = function(ctx, call)
 		local orange = "\27[38;5;208m"
 		local bold = "\27[1m"
