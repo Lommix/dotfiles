@@ -31,12 +31,11 @@ M.provider.opencode_pic = blitz.add_provider({
 	session_key_header = "x-opencode-session",
 })
 
-M.provider.opencode_ant = blitz.add_provider({
+M.provider.opencode_res = blitz.add_provider({
 	type = "response",
 	url = "https://opencode.ai/zen/go/v1",
 	key_envar = "OPENCODE_API_KEY",
 	session_key_header = "x-opencode-session",
-	enable_thinking = true,
 })
 
 M.provider.requesty = blitz.add_provider({
@@ -86,14 +85,12 @@ M.glm_flash = blitz.add_model({
 	name = "glm-5.3-flash",
 	provider = M.provider.zai,
 	vision = true,
-	replay_reasoning = true,
 })
 
 M.glm = blitz.add_model({
 	name = "glm-5.3",
 	provider = M.provider.zai,
 	vision = false,
-	replay_reasoning = true,
 })
 
 M.ds_flash = blitz.add_model({
@@ -102,7 +99,6 @@ M.ds_flash = blitz.add_model({
 	name = "deepseek-flash",
 	provider = M.provider.opencode,
 	vision = true,
-	replay_reasoning = true,
 	cost = { input = 0.15, output = 0.6, cache = 0.006 },
 })
 
@@ -110,42 +106,42 @@ M.mimo = blitz.add_model({
 	name = "mimo-v2.6-flash",
 	provider = M.provider.opencode,
 	vision = true,
-	replay_reasoning = true,
 })
 
 M.spark = blitz.add_model({
 	name = "muse-spark-1.3-contributor",
-	provider = M.provider.opencode_ant,
+	provider = M.provider.opencode_res,
 	vision = true,
-	replay_reasoning = true,
 })
 
 M.step = blitz.add_model({
 	name = "step-5-preview-free",
 	provider = M.provider.opencode,
 	vision = true,
-	replay_reasoning = true,
 })
 
 M.qwen_38 = blitz.add_model({
 	name = "qwen3.8",
 	provider = M.provider.llama,
 	vision = true,
-	replay_reasoning = true,
 })
 
 M.qwen_38_flash = blitz.add_model({
 	name = "qwen3.8-flash",
 	provider = M.provider.opencode,
 	vision = true,
-	replay_reasoning = true,
+})
+
+M.haiku = blitz.add_model({
+	name = "claude-haiku-5-5",
+	provider = M.provider.opencode_pic,
+	vision = true,
 })
 
 M.grok = blitz.add_model({
 	name = "grok-4.6",
 	provider = M.provider.xai,
 	vision = true,
-	replay_reasoning = true,
 	cost = { input = 2, output = 6, cache = 0.5 },
 })
 
@@ -153,14 +149,12 @@ M.omen = blitz.add_model({
 	name = "omen-alpha",
 	provider = M.provider.opencode,
 	vision = true,
-	replay_reasoning = true,
 })
 
 M.stealth = blitz.add_model({
 	name = "space-bunny-free",
 	provider = M.provider.opencode,
 	vision = true,
-	replay_reasoning = true,
 })
 
 return M

@@ -144,15 +144,3 @@ Task:
 
 	blitz.cmd.prompt(prompt)
 end, "orchestrate")
-
-blitz.add_command("review", function(rem)
-	local prompt = [[
-Start 2 code-reviewer agents reviewing the current diff. Communicate the original task and intent of the change. Confirm their findings and fix critical issues.
-
-1. Correctness review: Does the change fit the contract of the task?
-2. Ponytail review: Tell the code-reviewer to load all ponytail skills for the review.
-
-]] .. rem
-
-	blitz.cmd.prompt(prompt)
-end, "diff review")
