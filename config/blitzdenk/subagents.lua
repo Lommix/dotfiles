@@ -6,7 +6,8 @@ local M = {}
 
 M.idle_tool = blitz.register_tool({
 	name = "idle",
-	description = "End your turn. The next event or sub agent will wake you up.",
+	description = "Use when waiting for your sub agents to finish work",
+	snippet = "Wait for your sub agents",
 	func = function(ctx, _)
 		ctx:set_status("Waiting for something to happen")
 		return { exit_loop = true }
@@ -16,6 +17,7 @@ M.idle_tool = blitz.register_tool({
 M.message_tool = blitz.register_tool({
 	name = "message_agent",
 	description = "send a message to another agent",
+	snippet = "message an agent",
 	args = {
 		agent_id = { type = "integer", description = "the id from the agent tool result", required = true },
 		message = { type = "string", description = "the text to deliver", required = true },
@@ -33,6 +35,7 @@ M.message_tool = blitz.register_tool({
 M.cancel_tool = blitz.register_tool({
 	name = "cancel_agent",
 	description = "abort a sub agent",
+	snippet = "cancel an agent",
 	args = {
 		agent_id = { type = "integer", description = "the id from the agent tool result", required = true },
 	},
@@ -61,8 +64,7 @@ M.agent_tool = blitz.register_tool({
 			description = "Bare agent: no AGENTS.md context files in the system prompt and no system-reminder injections. Defaults to false",
 		},
 	},
-	snippet = "Launch a subagent",
-	guidelines = "Wait for agents by ending your turn",
+	snippet = "launch a new agent with a task",
 	func = function(ctx, call)
 		local a = call.arguments
 		local description = a.description
@@ -133,7 +135,6 @@ M.agent_tool = blitz.register_tool({
 --- inject an agent catalogue into new sessions
 ---------------------------------------------------------------------------------------------------
 blitz.hooks.inject({
-	-- main_only = true,
 	digest = true,
 	func = function(_, agent_type_id)
 		if blitz.has_tool(agent_type_id, M.agent_tool) == false then

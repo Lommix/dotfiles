@@ -103,7 +103,7 @@ M.ds_flash = blitz.add_model({
 })
 
 M.mimo = blitz.add_model({
-	name = "mimo-v2.6-flash",
+	name = "mimo-v2.6-pro",
 	provider = M.provider.opencode,
 	vision = true,
 })
@@ -143,18 +143,6 @@ M.grok = blitz.add_model({
 	provider = M.provider.xai,
 	vision = true,
 	cost = { input = 2, output = 6, cache = 0.5 },
-})
-
-M.omen = blitz.add_model({
-	name = "omen-alpha",
-	provider = M.provider.opencode,
-	vision = true,
-})
-
-M.stealth = blitz.add_model({
-	name = "space-bunny-free",
-	provider = M.provider.opencode,
-	vision = true,
 })
 
 return M

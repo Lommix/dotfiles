@@ -36,7 +36,7 @@ blitz.set_theme({
 --- Model configuration
 ---------------------------------------------------------------------------------------------------
 --- defaults
-local default_model = models.ds_flash
+local default_model = models.glm_flash
 blitz.set_compact_edge(250000)
 blitz.set_agent_model(blitz.AGENT_GENERAL, default_model)
 blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
@@ -45,19 +45,19 @@ blitz.set_prompt(blitz.AGENT_GENERAL, prompts.system)
 blitz.bind("<C-l>", function()
 	blitz.push_notification("big D mode")
 	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
-	blitz.set_agent_model(blitz.AGENT_GENERAL, models.haiku, true)
-	blitz.set_agent_model(M.reviewer_id, models.haiku, true)
-	blitz.set_agent_model(M.researcher_id, models.haiku, true)
-	blitz.set_agent_model(M.writer_id, models.haiku, true)
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.ds_flash, true)
+	blitz.set_agent_model(M.reviewer_id, models.ds_flash, true)
+	blitz.set_agent_model(M.researcher_id, models.ds_flash, true)
+	blitz.set_agent_model(M.writer_id, models.ds_flash, true)
 end, "Big-D")
 
 blitz.bind("<C-o>", function()
 	blitz.push_notification("big Q mode")
-	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
-	blitz.set_agent_model(blitz.AGENT_GENERAL, models.spark, true)
-	blitz.set_agent_model(M.reviewer_id, models.spark, true)
-	blitz.set_agent_model(M.researcher_id, models.spark, true)
-	blitz.set_agent_model(M.writer_id, models.spark, true)
+	blitz.set_agent_effort(blitz.AGENT_GENERAL, "high")
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.mimo, true)
+	blitz.set_agent_model(M.reviewer_id, models.mimo, true)
+	blitz.set_agent_model(M.researcher_id, models.mimo, true)
+	blitz.set_agent_model(M.writer_id, models.mimo, true)
 end, "Big-Q")
 
 blitz.bind("<C-q>", function()
@@ -227,7 +227,7 @@ definitions, symbols, paths, and patterns; reports facts, never opinions
 on code quality. Not for finding bugs in written code; use code-reviewer.
 ]],
 	prompt = prompts.explore,
-	effort = "low",
+	effort = "medium",
 	model = default_model,
 	tools = {
 		blitz.tools.BASH,
