@@ -79,9 +79,11 @@ M.agent_tool = blitz.register_tool({
 		if self_row == nil then
 			error("agent not found")
 		end
-		if self_row.parent ~= nil then
-			error("subagents cannot spawn subagents")
+
+		if self_row.depth > 1 then
+			error("max agent depth reached")
 		end
+
 		if type(description) ~= "string" or type(prompt) ~= "string" or type(type_name) ~= "string" then
 			error("invalid arguments")
 		end
@@ -131,7 +133,7 @@ M.agent_tool = blitz.register_tool({
 --- inject an agent catalogue into new sessions
 ---------------------------------------------------------------------------------------------------
 blitz.hooks.inject({
-	main_only = true,
+	-- main_only = true,
 	digest = true,
 	func = function(_, agent_type_id)
 		if blitz.has_tool(agent_type_id, M.agent_tool) == false then

@@ -120,6 +120,13 @@ M.spark = blitz.add_model({
 	replay_reasoning = true,
 })
 
+M.step = blitz.add_model({
+	name = "step-5-preview-free",
+	provider = M.provider.opencode,
+	vision = true,
+	replay_reasoning = true,
+})
+
 M.qwen_38 = blitz.add_model({
 	name = "qwen3.8",
 	provider = M.provider.llama,

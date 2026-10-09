@@ -3,6 +3,7 @@ name: ponytail
 description: >
     Forces the laziest solution that actually works, simplest, shortest, most
     minimal.
+disable-model-invocation: true
 license: MIT
 ---
 

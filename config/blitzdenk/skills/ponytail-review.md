@@ -2,6 +2,7 @@
 name: ponytail-review
 description: >
     Code review focused exclusively on over-engineering.
+disable-model-invocation: true
 ---
 
 Review diffs for unnecessary complexity. One line per finding: location, what

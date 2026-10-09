@@ -36,10 +36,10 @@ blitz.set_theme({
 --- Model configuration
 ---------------------------------------------------------------------------------------------------
 --- defaults
-local default_model = models.glm_flash
+local default_model = models.ds_flash
 blitz.set_compact_edge(300000)
 blitz.set_agent_model(blitz.AGENT_GENERAL, default_model)
-blitz.set_agent_effort(blitz.AGENT_GENERAL, "high")
+blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
 blitz.set_prompt(blitz.AGENT_GENERAL, prompts.system)
 
 blitz.bind("<C-l>", function()
@@ -63,9 +63,9 @@ end, "Big-Q")
 blitz.bind("<C-q>", function()
 	blitz.push_notification("big free mode")
 	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
-	blitz.set_agent_model(blitz.AGENT_GENERAL, models.stealth, true)
-	blitz.set_agent_model(M.reviewer_id, models.stealth, true)
-	blitz.set_agent_model(M.researcher_id, models.stealth, true)
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.step, true)
+	blitz.set_agent_model(M.reviewer_id, models.step, true)
+	blitz.set_agent_model(M.researcher_id, models.step, true)
 end, "Big-Z")
 
 blitz.bind("<C-e>", function()
@@ -259,7 +259,7 @@ M.writer_id = blitz.add_agent({
 	name = "writer",
 	description = [[
 Writes and edits text a human reads: docs, marketing, website content,
-posts, release notes. Not for code review; that is code-reviewer.
+posts, release notes.
 ]],
 	prompt = prompts.writer,
 	effort = "medium",
