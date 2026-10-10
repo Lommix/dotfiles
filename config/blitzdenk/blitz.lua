@@ -2,7 +2,6 @@ local M = {}
 
 require("draw")
 require("voice")
-require("memory")
 require("permissions")
 require("commands")
 

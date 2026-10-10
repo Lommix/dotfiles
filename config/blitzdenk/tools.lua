@@ -312,7 +312,8 @@ local r = ctx:batch({
 	{ name = "bash", args = { command = "rg -c TODO a.zig", description = "count TODOs" } },
 	{ name = "bash", args = { command = "rg -c TODO b.zig", description = "count TODOs" } },
 })
-for i, out in ipairs(r) do print(i, out:match("^%S+") or "0") end]],
+for i, out in ipairs(r) do print(i, out:match("^%S+") or "0") end
+]],
 	args = {
 		code = {
 			type = "string",
@@ -327,8 +328,7 @@ for i, out in ipairs(r) do print(i, out:match("^%S+") or "0") end]],
 		local bold = "\27[1m"
 		local reset = "\27[0m"
 
-		ctx:set_status(orange .. bold .. "(Codemode)" .. reset .. "\n" .. call.arguments.code)
-
+		ctx:set_status(orange .. bold .. "Codemode" .. reset .. "\n" .. call.arguments.code)
 		local env = setmetatable({ ctx = ctx }, { __index = _G })
 		local fn, err = load(call.arguments.code, "codemode", "t", env)
 		if not fn then
@@ -363,7 +363,7 @@ M.web_fetch = blitz.register_tool({
 		local content, ok = blitz.shell({ cmd = "yomi read " .. url, force_local = true })
 
 		if not ok or content == nil or content == "" then
-			error("chromium returned no output")
+			error("on content")
 		end
 
 		return { msg = content }

@@ -40,11 +40,6 @@ description: >
 
 You have full read access to the [Zig std](/usr/lib/zig/std/)
 
-## Test
-
-If you need to confirm behavior create zig files under `/tmp/{reason_with_snake}/files.zig` and run them directly with the zig cli.
-Use your normal write/edit/read tools for this.
-
 ## Format
 
 Always apply formatting after making any change to a zig file with `zig fmt`
