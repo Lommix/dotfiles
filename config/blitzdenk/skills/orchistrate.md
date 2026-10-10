@@ -10,7 +10,7 @@ You can message finished agents to continue the conversation.
 Task patterns:
 
 - Feature: research -> plan -> build -> code-review -> report
-- Bug: research -> code-review -> fix -> code-review -> report
+- Bug: research -> code-review -> fix -> report
 - Research: research -> code-review -> report
 
 Rules:
@@ -18,7 +18,7 @@ Rules:
 - Only one builder per domain space at the same time.
 - Builders must be informed about other builders currently active.
 - code-reviewer agents must be aware of the original intent of the task.
-- Always at least 2 code-reviewer agents from different perspective (correctness, edge cases, alignment, over engineering, security).
+- Always use at least 2 code-reviewer agents from different perspective (correctness, edge cases, alignment, over engineering, security).
 
 On prompting sub-agents:
 Ensure the sub-agent is focused on the domain of the task. Example sentences to enforce that goal:

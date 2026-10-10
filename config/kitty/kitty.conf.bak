@@ -1,6 +1,6 @@
 font_size			25.0
 force_ltr			yes
-background_opacity 1
+background_opacity 0.3
 background_blur 0
 background_image none
 
@@ -11,11 +11,13 @@ map ctrl+minus change_font_size all -1.0
 cursor_trail 15
 
 # BEGIN_KITTY_FONTS
-font_family      family="Hasklug Nerd Font"
+font_family      family="CaskaydiaCove Nerd Font"
 bold_font        auto
 italic_font      auto
 bold_italic_font auto
 # END_KITTY_FONTS
+
+symbol_map U+E000-U+FFFF CaskaydiaCove Nerd Font
 
 
 # BEGIN_KITTY_THEME

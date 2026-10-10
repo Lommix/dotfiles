@@ -290,7 +290,8 @@ a render callback.
 prompt that started the current turn. The checkpoint moves when a run starts
 with a new prompt or a queued user message. It resets whenever the history is
 replaced or the agent resets: session load, prompt rewind, compaction. A cancel
-keeps the checkpoint, so a correction still sees the canceled output. Use it
+keeps the turn checkpoint. Completed exchanges remain available; an unfinished
+tool exchange is removed from model history while its display remains visible. Use it
 in a `blitz.hooks.agent_complete` listener to hand one turn to a memory
 compressor agent:
 
@@ -378,10 +379,12 @@ The optional description shows next to the keybind in the dashboard. Without
 it the row falls back to `custom`.
 
 `set_flags` reads only the fields you pass: `show_thinking`, `show_diffs`,
-and `debug_log` booleans, `approval_mode` string (`"strict"`, `"default"`,
-`"yolo"`, `"smart"`). Fields you omit stay unchanged; `get_flags` returns all
-four, `approval_mode` as its tag name. `smart` behaves like `default` today.
-`show_diffs` is true by default; false hides diff blocks in the timeline.
+`notify_on_reload`, and `debug_log` booleans, `approval_mode` string
+(`"strict"`, `"default"`, `"yolo"`, `"smart"`). Fields you omit stay unchanged;
+`get_flags` returns all five, `approval_mode` as its tag name. `smart` behaves
+like `default` today. `show_diffs` is true by default; false hides diff blocks
+in the timeline. `notify_on_reload` is true by default; popup notification
+when the Lua sandbox hot-reloads.
 
 The completion popup answers to `blitz.cmp.next`, `blitz.cmp.prev`, and
 `blitz.cmp.accept`. Each queues one action, the same as the default keys
