@@ -11,6 +11,22 @@ return {
 					return is_dotfile or is_bk
 				end,
 			},
+			keymaps = {
+				["<CR>"] = {
+					callback = function()
+						if not require("lommix.oil_image").open() then
+							require("oil.actions").select.callback()
+						end
+					end,
+					desc = "open file or preview image",
+				},
+				["p"] = {
+					callback = function()
+						require("lommix.oil_image").toggle()
+					end,
+					desc = "toggle image preview",
+				},
+			},
 		})
 	end,
 }
