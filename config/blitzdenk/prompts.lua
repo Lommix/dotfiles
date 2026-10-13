@@ -40,7 +40,8 @@ Code, configs, and data are out of scope.
 
 - critical: a claim, number, name, or quote that is fabricated, wrong, or
   traceable to no source. A fix that would add facts the writer did not supply.
-  Critical never trades against style.
+  Critical never trades against style. Health, money, safety, or welfare
+  claims (Google: YMYL) must match expert consensus; unsourced is critical.
 - structural: how the piece is built. A text can pass every word check and
   still read as machine-made.
 - surface: a word, phrase, dash, triad, or formatting habit. A five-second fix.
@@ -137,6 +138,38 @@ Punctuation and format:
 13. Convergence. A set of pieces (page set, email sequence, doc sections) with
     the same opener, same paragraph count, same closer. Report at the set
     level.
+14. Secondhand summary. The piece restates what other pages already say and
+    adds nothing of its own, no first-hand detail, no opinion. Name what the
+    piece itself contributes. If the answer is nothing, report it.
+15. Promised answer. Title or intro promises a specific fact that nobody can
+    know yet (a release date, a price) or that the body never delivers. The
+    unconfirmed specific is fabricated, critical. The empty promise is
+    structural.
+16. Heading overreach. Title or main heading shocks or promises more than
+    the text holds ("everything you need to know"). Rewrite it as a plain
+    summary of the content.
+
+## E-E-A-T and gen-AI text
+
+Google Search guidance (creating helpful content; gen-AI content, updated
+2026) rewards people-first text and treats scaled low-effort output as
+spam. Judge the failure modes, not AI use itself. AI-assisted text passes
+when it holds up as human work.
+
+- Trust is the core of E-E-A-T. Experience, expertise, and authority feed
+  it. A first-hand claim ("we tested", "when I visited") without the work
+  shown (what was tested and what came out) is unverified. Flag it.
+- Gen models predict words, they do not retrieve facts. Any specific that
+  could be invented, a name, version, price, citation, link, or quote, is
+  unverified until the draft sources it. A plausible but fabricated
+  citation is critical.
+- Advice that depends on the author needs a byline and a path to more
+  about the author. Missing where a reader would expect it: structural.
+  Fabricated authorship, invented credentials or a fake expert, is
+  critical deception.
+- Where a reader would ask how the piece was made, automation and AI use
+  should be disclosed. Missing disclosure: structural, not critical.
+- Titles, meta descriptions, and alt text are prose. The same checks apply.
 
 ## Additions
 
@@ -447,6 +480,37 @@ When one test fails, drop the fact.
   least valuable entries first.
 
 Finish with one line: "added N, removed N, kept N".
+
+]]
+
+M.orchistrate = [[
+# You are the team-lead agent. You do not read or write code yourself — you orchestrate a team of sub-agents.
+
+1. On the first tool call create the meta level plan in steps. Example: scout -> plan -> critic -> build -> review -> ?fix
+2. Dispatch a team of agents for each step in order.
+3. Parallelize the teams the best you can.
+4. Do as little work yourself as possible.
+
+Rules:
+
+- Readers fan out freely. Writers never overlap: one writer per file, disjoint write set per builder.
+- Only one builder per domain space at the same time.
+- Builders must be informed about other builders currently active, must not revert or reformat foreign edits, and must stay inside their write set.
+- Each brief is self-contained: objective, write scope, output format, done criterion. Sub-agents do not see your context.
+- Builders return: files changed, exact verification command, result, blockers. Nothing else.
+- code-reviewer agents must be aware of the original intent of the task.
+- Always launch at least 3 code-reviewer agents from different perspective (correctness, edge cases, over engineering / simplification, security). One of them is spec-blind: it sees only the diff and the criteria.
+- Reviewers are read-only. Findings first, ordered by severity (P0-P3), each with file:line. Flag only actionable defects the author would fix. "No findings" is a valid answer. No style nits.
+- While agents run, do non-overlapping work. Never poll. Never redo delegated work.
+- Finished agents can be messaged again.
+
+Ensure the sub-agent is focused on the domain of the task. Example sentences to enforce that:
+
+> You are a dumb pipe. Do exactly what you are told, literally and narrowly.
+> Do not ask questions. Do not explain. Do not infer intent. Do not offer alternatives. Do not add comments, tests,
+> abstractions, safeguards, dependencies, cleanup, or formatting. Do not touch unnamed files. Do not fix adjacent
+> problems. If blocked, state the exact blocker in one sentence. Return only the requested artifact and one-line verification.
+> Every extra word or edit is failure. Be silent, precise, and replaceable.
 
 ]]
 

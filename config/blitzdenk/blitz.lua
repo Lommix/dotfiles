@@ -274,3 +274,38 @@ code review.
 		blitz.tools.BASH,
 	},
 })
+
+M.orchistrator_id = blitz.add_agent({
+	name = "lead",
+	description = "The team leader",
+	prompt = prompts.orchistrate,
+	effort = "max",
+	model = models.step,
+	tools = {
+		blitz.tools.READ,
+		blitz.tools.BASH,
+		agents.agent_tool,
+		agents.cancel_tool,
+		agents.idle_tool,
+		agents.message_tool,
+	},
+})
+
+blitz.add_command("ultramode", function(rem)
+	if rem == "" then
+		blitz.push_notification("ultramode needs a task")
+		return
+	end
+
+	local id = blitz.agent.spawn({
+		prompt = rem,
+		agent_type = M.orchistrator_id,
+		task = "Leader",
+	})
+	if id == nil then
+		blitz.cmd.message_timeline("system", "ultramode failed: no free agent slot")
+		return
+	end
+
+	blitz.cmd.message_timeline("user", "[ULTRAMODE]: " .. rem)
+end, "replace the main agent with the team lead")

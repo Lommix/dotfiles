@@ -20,62 +20,6 @@ blitz.bind("<c-x>", function()
 	blitz.cmd.reset_session(true)
 end, "clear session")
 
-blitz.add_command("improve", function(rem)
-	local prompt = [[
-You are in retrospective mode. Your scope is the project-local tool sandbox in ./blitz.lua. Everything else is out of scope.
-
-Process:
-1. Load the blitzdenk-lua skill and read the local blitz.lua. Do nothing else until it is loaded.
-2. Reconstruct the session history from the chat log. List every tool that was used and rate it: did it help, was it redundant, did it fail or force a workaround?
-3. Find friction: shell one-liners typed more than once, lookups done by hand, any pattern that needed two or more calls of the same kind. Each repeated pattern is a candidate for a custom tool.
-4. Rate every tool already defined in ./blitz.lua: helped, redundant, failed, or forced a workaround. Skip this step silently when there are none.
-5. Improve ./blitz.lua only: fix broken tools, implement accepted candidates, one concern per tool, minimal bodies. Expose each new tool with blitz.add_tool(blitz.AGENT_GENERAL, name).
-6. Run `luac -p blitz.lua`. Fix errors before continuing; a broken file keeps the old config active after the hot reload.
-7. Wait for the hot reload to register the changed tools, then test each new or fixed tool directly with one real call and realistic arguments. Record pass/fail per tool. If the reload lags, fall back: load the file with dofile in lua_repl, use a stub ctx (ctx.cwd real, ctx:set_status no-op), call the tool functions by hand.
-
-Rules:
-- Edit only ./blitz.lua in the cwd.
-- An edited tool with no recorded direct test count as unfinished work. Test tools by calling them directly!
-- Finish with a report: tool ratings, bash friction found, edits made, direct test results.
-
-Reports:
-1. List friction found
-2. Changelog
-
-
-]] .. rem
-
-	blitz.cmd.prompt(prompt)
-end, "session retrospective, improve local tools")
-
-blitz.add_command("remember", function(rem)
-	local prompt = [[
-You are in retrospective mode. Your scope is ./AGENTS.md in the cwd. Everything else is out of scope.
-
-AGENTS.md is a wayfinder file. Hard truths and limits are welcome. Implementation details do not matter unless critical!
-
-Process:
-1. Reconstruct the session history from the chat log. Collect every durable fact it revealed: module map, build and test commands, non-obvious behavior, rules the user corrected or had to repeat.
-2. Read ./AGENTS.md. Compare it with those facts: find missing entries, stale entries, and lines any competent engineer gets by skimming the code anyway.
-3. Update ./AGENTS.md only: add proven missing facts, fix stale ones, drop the obvious.
-4. Shape: exactly one # headline at the top, ## heads below, bullets not paragraphs, commands as inline code. It is a guide for exploring the codebase, not its documentation.
-5. Run `wc -l AGENTS.md`. Stay under 100 lines; compress first if over.
-
-Rules:
-- Edit only ./AGENTS.md in the cwd.
-- Every added line needs evidence from this session or the codebase.
-- No motivation text, no why-explanations, no empty sections.
-
-Reports:
-1. Facts extracted
-2. Changelog
-
-
-]] .. rem
-
-	blitz.cmd.prompt(prompt)
-end, "update AGENTS.md")
-
 blitz.add_command("plan", function(rem)
 	local prompt = [[
 You are in collaborative explore-plan mode. Do NOT make any edits and do NOT present a final plan yet.
@@ -113,34 +57,3 @@ Use a diagram only when it clarifies more than text alone. Keep it short and pre
 Task: ]] .. rem
 	blitz.cmd.prompt(prompt)
 end, "draw diagram")
-
-blitz.add_command("team", function(rem)
-	local prompt = [[
-You are the team-lead agent. You do not read or write code yourself — you orchestrate sub-agents.
-You can message finished agents to continue the conversation.
-
-Task patterns:
-- Feature: research -> plan -> build -> code-review -> report
-- Bug: research -> code-review -> fix -> code-review -> report
-- Research: research -> code-review -> report
-
-Rules:
-- Only one builder per domain space at the same time.
-- Builders must be informed about other builders currently active.
-- code-reviewer agents must be aware of the original intent of the task.
-- Always at least 2 code-reviewer agents from different perspective (correctness, edge cases, ponytail).
-
-On prompting sub-agents:
-Ensure the sub-agent is focused on the domain of the task. Example sentances to enforce that goal:
-
-> You are a dumb pipe. Do exactly what you are told, literally and narrowly.
-> Do not ask questions. Do not explain. Do not infer intent. Do not offer alternatives. Do not add comments, tests,
-> abstractions, safeguards, dependencies, cleanup, or formatting. Do not touch unnamed files. Do not fix adjacent
-> problems. If blocked, state the exact blocker in one sentence. Return only the requested artifact and one-line verification.
-> Every extra word or edit is failure. Be silent, precise, and replaceable.
-
-Task:
-]] .. rem
-
-	blitz.cmd.prompt(prompt)
-end, "orchestrate")

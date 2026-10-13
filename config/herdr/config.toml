@@ -58,6 +58,11 @@ detach = ["prefix+d", "prefix+q"]
 previous_workspace = "prefix+ctrl+p"
 next_workspace = "prefix+ctrl+n"
 
+workspace_picker = "prefix+s"
+settings = "prefix+shift+s"
+
+navigate_workspace_up = "shift+k"
+navigate_workspace_down = "shift+j"
 open_notification_target = "prefix+shift+o"
 
 [[keys.command]]
