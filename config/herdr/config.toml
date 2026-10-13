@@ -1,0 +1,64 @@
+onboarding = false
+
+[terminal]
+default_shell = "/usr/bin/fish"
+
+[theme]
+name = "one-dark"
+
+auto_switch = false
+[theme.custom]
+accent = "#39BAE6"
+
+[ui]
+mouse_capture = true
+copy_on_select = true
+pane_borders = "auto"
+pane_outer_borders = false
+pane_gaps = false
+tab_bar_right = [{ type = "zoom" }]
+sidebar_width = 30
+
+[ui.sidebar.agents]
+rows = [
+  ["state_icon", "machine", "workspace", "tab"],
+  ["agent", "state_text"],
+  ["$model", "$effort", { token = "$ctx", rules = [
+      { gt = 85, fg = "#f07178", bold = true },
+      { gt = 70, fg = "#ffb454" },
+      { contains = "", dim = true },
+    ] }],
+  [{ token = "$todo", dim = true }],
+]
+
+[keys]
+prefix = "ctrl+a"
+
+focus_pane_left = ["prefix+h", "alt+h"]
+focus_pane_down = ["prefix+j", "alt+j"]
+focus_pane_up = ["prefix+k", "alt+k"]
+focus_pane_right = ["prefix+l", "alt+l"]
+
+resize_pane_up = "prefix+up"
+resize_pane_down = "prefix+down"
+resize_pane_left = "prefix+left"
+resize_pane_right = "prefix+right"
+
+zoom = ["prefix+m", "prefix+z"]
+last_pane = "prefix+space"
+
+reload_config = "prefix+r"
+resize_mode = "prefix+shift+r"
+detach = ["prefix+d", "prefix+q"]
+
+previous_workspace = "prefix+ctrl+p"
+next_workspace = "prefix+ctrl+n"
+
+open_notification_target = "prefix+shift+o"
+
+[[keys.command]]
+key = "prefix+o"
+type = "pane"
+command = "~/.local/bin/herdr_sessionizer.sh"
+description = "open project workspace"
+

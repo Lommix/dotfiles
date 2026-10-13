@@ -20,6 +20,12 @@ fi
 for folder in "$SOURCE_DIR"/*; do
   if [ -d "$folder" ]; then
     folder_name=$(basename "$folder")
+
+    if [ "$folder_name" = "herdr" ]; then
+      echo "Skipping directory link for herdr (runtime logs and socket live there)"
+      continue
+    fi
+
     target_path="$TARGET_DIR/$folder_name"
 
     if [ -d "$target_path" ]; then
@@ -50,6 +56,9 @@ for script in "$SCRIPT_SOURCE_DIR"/*; do
 done
 
 # misc configs
+
+rm -f ~/.config/herdr/config.toml
+ln -s "$(pwd)/config/herdr/config.toml" ~/.config/herdr/config.toml
 
 ln -s "$(pwd)/.tmux.conf" ~/.tmux.conf
 ln -s "$(pwd)/.prettierrc" ~/.prettierrc
