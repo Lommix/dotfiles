@@ -9,6 +9,7 @@ name = "one-dark"
 auto_switch = false
 [theme.custom]
 accent = "#39BAE6"
+sidebar_bg = "#282c34"
 
 [ui]
 mouse_capture = true
@@ -34,7 +35,10 @@ rows = [
 [keys]
 prefix = "ctrl+a"
 
-focus_pane_left = ["prefix+h", "alt+h"]
+focus_pane_left = "alt+h"
+
+split_horizontal = "prefix+h"
+split_vertical = "prefix+v"
 focus_pane_down = ["prefix+j", "alt+j"]
 focus_pane_up = ["prefix+k", "alt+k"]
 focus_pane_right = ["prefix+l", "alt+l"]
