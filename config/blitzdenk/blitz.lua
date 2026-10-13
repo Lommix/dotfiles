@@ -257,18 +257,16 @@ Read-only; reports findings, never edits.
 M.writer_id = blitz.add_agent({
 	name = "writer",
 	description = [[
-Writes and edits text a human reads: docs, marketing, website content,
-posts, release notes.
+Text review agent. Reviews any text meant for facing humans. Website and Docs mostly.
+Do not use for converstion.
 ]],
 	prompt = prompts.writer,
-	effort = "medium",
+	effort = "max",
 	model = default_model,
 	clean = true,
 	skills = false,
 	tools = {
 		blitz.tools.READ,
-		blitz.tools.EDIT,
-		blitz.tools.WRITE,
 		blitz.tools.BASH,
 	},
 })
