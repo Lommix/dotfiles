@@ -4,6 +4,7 @@ require("draw")
 require("voice")
 require("permissions")
 require("commands")
+require("herdr")
 
 local prompts = require("prompts")
 local tools = require("tools")
@@ -47,7 +48,7 @@ blitz.bind("<C-l>", function()
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.ds_flash, true)
 	blitz.set_agent_model(M.reviewer_id, models.ds_flash, true)
 	blitz.set_agent_model(M.researcher_id, models.ds_flash, true)
-	blitz.set_agent_model(M.writer_id, models.ds_flash, true)
+	blitz.set_agent_model(M.prose_reviewer_id, models.ds_flash, true)
 end, "Big-D")
 
 blitz.bind("<C-o>", function()
@@ -56,7 +57,7 @@ blitz.bind("<C-o>", function()
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.qwen_38_flash, true)
 	blitz.set_agent_model(M.reviewer_id, models.qwen_38_flash, true)
 	blitz.set_agent_model(M.researcher_id, models.qwen_38_flash, true)
-	blitz.set_agent_model(M.writer_id, models.qwen_38_flash, true)
+	blitz.set_agent_model(M.prose_reviewer_id, models.qwen_38_flash, true)
 end, "Big-Q")
 
 blitz.bind("<C-q>", function()
@@ -73,6 +74,7 @@ blitz.bind("<C-e>", function()
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.glm, true)
 	blitz.set_agent_model(M.reviewer_id, models.glm, true)
 	blitz.set_agent_model(M.researcher_id, models.glm, true)
+	blitz.set_agent_model(M.prose_reviewer_id, models.glm, true)
 end, "Big-Z")
 
 blitz.bind("<C-g>", function()
@@ -80,7 +82,7 @@ blitz.bind("<C-g>", function()
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.qwen_38, true)
 	blitz.set_agent_model(M.reviewer_id, models.qwen_38, true)
 	blitz.set_agent_model(M.researcher_id, models.qwen_38, true)
-	blitz.set_agent_model(M.writer_id, models.qwen_38, true)
+	blitz.set_agent_model(M.prose_reviewer_id, models.qwen_38, true)
 end, "Big-X")
 
 ---------------------------------------------------------------------------------------------------
@@ -254,13 +256,15 @@ Read-only; reports findings, never edits.
 	},
 })
 
-M.writer_id = blitz.add_agent({
-	name = "writer",
+M.prose_reviewer_id = blitz.add_agent({
+	name = "prose-reviewer",
 	description = [[
-Text review agent. Reviews any text meant for facing humans. Website and Docs mostly.
-Do not use for converstion.
+Finds AI slop, structural tells, and hollow claims in text meant for people:
+docs, website copy, posts, emails, READMEs. Reviews English and German.
+Read-only; reports findings, never edits. Do not use for conversation or
+code review.
 ]],
-	prompt = prompts.writer,
+	prompt = prompts.prose_review,
 	effort = "max",
 	model = default_model,
 	clean = true,
