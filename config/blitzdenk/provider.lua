@@ -114,6 +114,13 @@ M.spark = blitz.add_model({
 	vision = true,
 })
 
+M.free = blitz.add_model({
+	name = "cat-jam-free",
+	provider = M.provider.opencode,
+	vision = true,
+    replay_reasoning = false,
+})
+
 M.step = blitz.add_model({
 	name = "step-5-preview-free",
 	provider = M.provider.opencode,

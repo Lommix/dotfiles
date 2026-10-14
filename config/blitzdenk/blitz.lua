@@ -79,10 +79,11 @@ end, "Big-Z")
 
 blitz.bind("<C-g>", function()
 	blitz.push_notification("big M mode")
-	blitz.set_agent_model(blitz.AGENT_GENERAL, models.qwen_38, true)
-	blitz.set_agent_model(M.reviewer_id, models.qwen_38, true)
-	blitz.set_agent_model(M.researcher_id, models.qwen_38, true)
-	blitz.set_agent_model(M.prose_reviewer_id, models.qwen_38, true)
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.free, true)
+	blitz.set_agent_model(M.reviewer_id, models.free, true)
+	blitz.set_agent_model(M.researcher_id, models.free, true)
+	blitz.set_agent_model(M.prose_reviewer_id, models.free, true)
+	blitz.set_agent_model(M.orchistrator_id, models.free, true)
 end, "Big-X")
 
 ---------------------------------------------------------------------------------------------------
@@ -277,10 +278,11 @@ code review.
 
 M.orchistrator_id = blitz.add_agent({
 	name = "lead",
-	description = "The team leader",
+	description = "The team leader will handle big tasks by working his own team of agents.",
 	prompt = prompts.orchistrate,
 	effort = "max",
-	model = models.step,
+	model = models.glm_flash,
+	in_agent_tool = true,
 	tools = {
 		blitz.tools.READ,
 		blitz.tools.BASH,
