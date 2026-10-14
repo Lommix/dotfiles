@@ -1,5 +1,5 @@
 -- draw.lua: a simple panel showing the current todo state
--- and all subagents
+-- and the active subagents
 
 local todos = require("todo")
 local herdr = require("herdr")
@@ -25,6 +25,23 @@ local GROUPS = {
 }
 
 local MAX_DONE = 3
+
+local INACTIVE_STATES = {
+	idle = true,
+	complete = true,
+	canceled = true,
+	failed = true,
+}
+
+local function active_agents()
+	local active = {}
+	for _, a in ipairs(blitz.list_agents()) do
+		if not INACTIVE_STATES[a.state] then
+			active[#active + 1] = a
+		end
+	end
+	return active
+end
 
 local function main_todos()
 	local agent = blitz.get_main_agent()
@@ -78,7 +95,7 @@ end
 local panel
 
 local function wanted_height()
-	return math.max(3, #shown_todos() + 2, #blitz.list_agents() + 2)
+	return math.max(3, #shown_todos() + 2, #active_agents() + 2)
 end
 
 panel = blitz.draw.panel({
@@ -86,13 +103,13 @@ panel = blitz.draw.panel({
 	place = "below",
 	render = function(w, h, buf, frame)
 		herdr.tick()
-		local agents = blitz.list_agents()
+		local agents = active_agents()
+		local inactive = #blitz.list_agents() - #agents
 		local wanted = wanted_height()
 		if wanted ~= h then
 			panel.set_size(wanted)
 		end
 		local blink_on = math.floor(frame / BLINK_FRAMES) % 2 == 0
-		local blinking = false
 		buf.fill(0, 0, w, h, "bg")
 		buf.box(0, 0, w, h, "muted")
 		local theme = blitz.get_theme()
@@ -101,7 +118,7 @@ panel = blitz.draw.panel({
 		buf.box(0, 0, mid, h, "muted")
 		buf.box(mid, 0, w - mid, h, "muted")
 		buf.set_color(1, 0, " Todos ", "info")
-		buf.set_color(mid + 1, 0, " Agents ", "info")
+		buf.set_color(mid + 1, 0, " Active agents - inactive: " .. inactive .. " ", "info")
 
 		local todo_rows = {}
 		for _, t in ipairs(shown_todos()) do
@@ -126,7 +143,7 @@ panel = blitz.draw.panel({
 		local ax = mid + 1
 		if #agents == 0 then
 			buf.set_color(ax, 1, ICON_CIRCLE_OPEN, "muted")
-			buf.set(ax + 2, 1, cut("no agents yet", w - mid - 4))
+			buf.set(ax + 2, 1, cut("no active agents", w - mid - 4))
 			return
 		end
 		y = 1
@@ -135,21 +152,16 @@ panel = blitz.draw.panel({
 			if y > bottom then
 				break
 			end
-			local busy = a.state ~= "idle" and a.state ~= "complete" and a.state ~= "canceled" and a.state ~= "failed"
-			local color = not busy and "muted" or (a.state == "failed" and theme.err or "#ff00ff")
-			local icon = busy and ICON_CIRCLE or ICON_CIRCLE_OPEN
-			if busy then
-				blinking = true
-				if not blink_on then
-					icon = ICON_BLANK
-				end
+			local icon = ICON_CIRCLE
+			if not blink_on then
+				icon = ICON_BLANK
 			end
 			local status = a.state .. " " .. math.floor(a.ctx or 0) .. "%"
 			if a.tps and a.tps > 0 then
 				status = status .. string.format(" %.1f tps", a.tps)
 			end
 			local name = cut(a.name, budget - #status - 4)
-			buf.set_color(ax, y, icon, color)
+			buf.set_color(ax, y, icon, "#ff00ff")
 			local nx = ax + 2
 			buf.set(nx, y, name .. " ")
 			nx = nx + #name + 1
@@ -158,8 +170,6 @@ panel = blitz.draw.panel({
 			buf.set_color(nx, y, cut(a.task or "", w - nx - 1), "muted")
 			y = y + 1
 		end
-		if blinking then
-			blitz.draw.redraw()
-		end
+		blitz.draw.redraw()
 	end,
 })

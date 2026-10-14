@@ -49,6 +49,7 @@ blitz.bind("<C-l>", function()
 	blitz.set_agent_model(M.reviewer_id, models.ds_flash, true)
 	blitz.set_agent_model(M.researcher_id, models.ds_flash, true)
 	blitz.set_agent_model(M.prose_reviewer_id, models.ds_flash, true)
+	blitz.set_agent_model(M.orchistrator_id, models.ds_flash, true)
 end, "Big-D")
 
 blitz.bind("<C-o>", function()
