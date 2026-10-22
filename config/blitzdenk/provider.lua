@@ -93,8 +93,15 @@ M.glm = blitz.add_model({
 	vision = false,
 })
 
+M.ds_new_flash = blitz.add_model({
+	name = "deepseek/deepseek-v4.1-flash-1017:nitro",
+	provider = M.provider.orouter,
+	vision = true,
+	cost = { input = 0.01625, output = 0.6, cache = 0.002 },
+})
+
 M.ds_flash = blitz.add_model({
-	-- name = "deepseek/deepseek-v4.1-flash:nitro",
+	-- name = "deepseek/deepseek-v4.1-flash-1017",
 	-- provider = M.provider.orouter,
 	name = "deepseek-v4.1-flash",
 	provider = M.provider.opencode,
@@ -118,7 +125,7 @@ M.free = blitz.add_model({
 	name = "cat-jam-free",
 	provider = M.provider.opencode,
 	vision = true,
-    replay_reasoning = false,
+	replay_reasoning = false,
 })
 
 M.step = blitz.add_model({

@@ -37,7 +37,7 @@ blitz.set_theme({
 ---------------------------------------------------------------------------------------------------
 --- defaults
 local default_model = models.glm_flash
-blitz.set_compact_edge(250000)
+blitz.set_compact_edge(300000)
 blitz.set_agent_model(blitz.AGENT_GENERAL, default_model)
 blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
 blitz.set_prompt(blitz.AGENT_GENERAL, prompts.system)
@@ -54,11 +54,11 @@ end, "Big-D")
 
 blitz.bind("<C-o>", function()
 	blitz.push_notification("big Q mode")
-	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
-	blitz.set_agent_model(blitz.AGENT_GENERAL, models.qwen_38_flash, true)
-	blitz.set_agent_model(M.reviewer_id, models.qwen_38_flash, true)
-	blitz.set_agent_model(M.researcher_id, models.qwen_38_flash, true)
-	blitz.set_agent_model(M.prose_reviewer_id, models.qwen_38_flash, true)
+	blitz.set_agent_effort(blitz.AGENT_GENERAL, "high")
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.qwen_38, true)
+	blitz.set_agent_model(M.reviewer_id, models.qwen_38, true)
+	blitz.set_agent_model(M.researcher_id, models.qwen_38, true)
+	blitz.set_agent_model(M.prose_reviewer_id, models.qwen_38, true)
 end, "Big-Q")
 
 blitz.bind("<C-q>", function()
@@ -80,11 +80,12 @@ end, "Big-Z")
 
 blitz.bind("<C-g>", function()
 	blitz.push_notification("big M mode")
-	blitz.set_agent_model(blitz.AGENT_GENERAL, models.free, true)
-	blitz.set_agent_model(M.reviewer_id, models.free, true)
-	blitz.set_agent_model(M.researcher_id, models.free, true)
-	blitz.set_agent_model(M.prose_reviewer_id, models.free, true)
-	blitz.set_agent_model(M.orchistrator_id, models.free, true)
+	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
+	blitz.set_agent_model(blitz.AGENT_GENERAL, models.ds_new_flash, true)
+	blitz.set_agent_model(M.reviewer_id, models.ds_new_flash, true)
+	blitz.set_agent_model(M.researcher_id, models.ds_new_flash, true)
+	blitz.set_agent_model(M.prose_reviewer_id, models.ds_new_flash, true)
+	blitz.set_agent_model(M.orchistrator_id, models.ds_new_flash, true)
 end, "Big-X")
 
 ---------------------------------------------------------------------------------------------------
@@ -105,6 +106,7 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.ASK,
 	blitz.tools.WRITE,
 	blitz.tools.EDIT,
+	blitz.tools.SKILL,
 	tools.web_fetch,
 	tools.web_search,
 	todo.add,
@@ -233,6 +235,7 @@ on code quality. Not for finding bugs in written code; use code-reviewer.
 	effort = "medium",
 	model = default_model,
 	tools = {
+		blitz.tools.SKILL,
 		blitz.tools.BASH,
 		blitz.tools.READ,
 		tools.web_fetch,
@@ -252,6 +255,7 @@ Read-only; reports findings, never edits.
 	effort = "high",
 	model = default_model,
 	tools = {
+		blitz.tools.SKILL,
 		blitz.tools.READ,
 		blitz.tools.BASH,
 		tools.codemode,
@@ -285,6 +289,8 @@ M.orchistrator_id = blitz.add_agent({
 	model = models.glm_flash,
 	in_agent_tool = true,
 	tools = {
+		blitz.tools.SKILL,
+		blitz.tools.READ,
 		blitz.tools.READ,
 		blitz.tools.BASH,
 		agents.agent_tool,

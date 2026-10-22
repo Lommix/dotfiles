@@ -360,7 +360,7 @@ M.web_fetch = blitz.register_tool({
 		end
 
 		ctx:set_status("fetch " .. url)
-		local content, ok = blitz.shell({ cmd = "yomi read " .. url, force_local = true })
+		local content, ok = blitz.shell({ cmd = "yomi read " .. url , force_local = true })
 
 		if not ok or content == nil or content == "" then
 			error("on content")
