@@ -92,7 +92,7 @@ end, "Big-X")
 --- Usefull cli tools
 ---------------------------------------------------------------------------------------------------
 blitz.set_capabilities({
-	{ binary = "rg", rule = "Use rg for fast recursive grep searches. Prefer rg over grep." },
+	{ binary = "rg", rule = "Use rg for fast recursive grep searches. rg recurses by default: write `rg -n PATTERN PATH`. The flag `-r` means --replace, so `rg -rn PATTERN` silently prints PATTERN replaced by \"n\" and turns the evidence into garbage. Never pass -r or -R; grep flags do not carry over." },
 	{ binary = "fd", rule = "Use fd for fast file discovery. Prefer fd over find." },
 	{ binary = "jq", rule = "Use jq to parse and filter JSON data." },
 })

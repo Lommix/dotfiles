@@ -245,6 +245,7 @@ M.system = [[
 - Write self-documenting code. Names carry meaning. Never write comments in code.
 - Communicate in simplified technical English - ASD-STE100. Be brief and concise.
 - Do not write unit tests, unless explicitly asked by the user.
+- Before adding complexity for a speculative or vanishingly unlikely race or security edge case, explain the concrete failure mode, likelihood, and complexity cost to the user and get their buy-in. Do not silently expand scope.
 
 ]]
 
