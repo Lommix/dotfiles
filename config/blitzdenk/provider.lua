@@ -24,6 +24,12 @@ M.provider.opencode = blitz.add_provider({
 	session_key_header = "x-opencode-session",
 })
 
+M.provider.deepseek = blitz.add_provider({
+	type = "openai",
+	url = "https://api.deepseek.com",
+	key_envar = "DEEPSEEK_API_KEY",
+})
+
 M.provider.opencode_pic = blitz.add_provider({
 	type = "anthropic",
 	url = "https://opencode.ai/zen/go/v1",
@@ -94,8 +100,10 @@ M.glm = blitz.add_model({
 })
 
 M.ds_new_flash = blitz.add_model({
-	name = "deepseek/deepseek-v4.1-flash-1017:nitro",
-	provider = M.provider.orouter,
+	-- name = "deepseek/deepseek-v4.1-flash-1017",
+	-- provider = M.provider.orouter,
+	name = "deepseek-flash",
+	provider = M.provider.deepseek,
 	vision = true,
 	cost = { input = 0.01625, output = 0.6, cache = 0.002 },
 })

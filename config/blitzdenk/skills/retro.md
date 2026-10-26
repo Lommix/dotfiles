@@ -18,5 +18,10 @@ The user has asked for a **retrospective**. You are suggesting improvements to t
 - **Tool economy**: did the agent make expensive tool calls that could be streamlined? Is there any custom tooling (CLI's, MCP's) that is particularly token-inefficient? _Use when_ the agent made an expensive tool call.
 - **No-ops**: look for instructions in steering files that don't modify the agent's behavior. _Use when_ the steering files are large and unwieldy.
 - **Information access**: look for opportunities to increase the agent's access to information. Teeing dev server logs, readonly access to third-party services. _Use when_ a crucial piece of information was not available to the agent.
+- **Harness bugs**: Look for unexpected tool behavior and errors when using tools. Including context problems and sub agent behavior.
 
 3. Present these candidates to the user, in order of severity.
+
+## Session logs
+
+Blitzdenk stores sessions in `~/.cache/blitzdenk/<fnv1a_64(cwd) as 16 hex>/sessions/*.jsonl`. Take the newest file. One file holds the main agent and all subagents; split analysis by `agentID`.
