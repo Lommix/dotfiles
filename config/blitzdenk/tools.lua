@@ -322,7 +322,7 @@ for i, out in ipairs(r) do print(i, out:match("^%S+") or "0") end
 		},
 	},
 	snippet = "Batch many tool calls into one Lua script: parallel calls, loops, output filtered before it enters the chat",
-	-- guidelines = "Prefer codemode over single tool calls whenever a step needs more than two calls, a chain of dependent calls, or a tool with large output (search, build, test logs): run them in one script, keep only the lines you need, and return those. Use a plain tool call for one simple call.",
+	guidelines = "Codemode is active. Use it to batch calls/agents effectivly",
 	func = function(ctx, call)
 		local orange = "\27[38;5;208m"
 		local bold = "\27[1m"
@@ -360,7 +360,7 @@ M.web_fetch = blitz.register_tool({
 		end
 
 		ctx:set_status("fetch " .. url)
-		local content, ok = blitz.shell({ cmd = "yomi read " .. url , force_local = true })
+		local content, ok = blitz.shell({ cmd = "yomi read " .. url, force_local = true })
 
 		if not ok or content == nil or content == "" then
 			error("on content")

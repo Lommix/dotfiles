@@ -37,6 +37,7 @@ blitz.set_theme({
 ---------------------------------------------------------------------------------------------------
 --- defaults
 local default_model = models.glm_flash
+blitz.set_read_image_max(1024, 1024)
 blitz.set_compact_edge(300000)
 blitz.set_agent_model(blitz.AGENT_GENERAL, default_model)
 blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
@@ -162,6 +163,12 @@ blitz.status_bar_render = function()
 		ssh_status = " (SSH ON)"
 	end
 
+	local prompt_tokens = use.input + use.cache + use.cache_creation
+	local hit_percent = 0
+	if prompt_tokens > 0 then
+		hit_percent = use.cache / prompt_tokens * 100
+	end
+
 	local model = blitz.get_model_name(blitz.AGENT_GENERAL)
 	local effort = blitz.get_agent_effort(blitz.AGENT_GENERAL)
 	local main_id = blitz.get_main_agent()
@@ -191,6 +198,11 @@ blitz.status_bar_render = function()
 		.. ") Ctx:"
 		.. white
 		.. math.floor(blitz.context_percent())
+		.. "%"
+		.. reset
+		.. " Hit:"
+		.. green
+		.. string.format("%.1f", hit_percent)
 		.. "%"
 		.. reset
 		.. " Cost:"
@@ -291,8 +303,8 @@ M.orchistrator_id = blitz.add_agent({
 	tools = {
 		blitz.tools.SKILL,
 		blitz.tools.READ,
-		blitz.tools.READ,
 		blitz.tools.BASH,
+		blitz.tools.WRITE,
 		agents.agent_tool,
 		agents.cancel_tool,
 		agents.idle_tool,

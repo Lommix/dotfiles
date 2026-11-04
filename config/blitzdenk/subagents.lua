@@ -49,7 +49,8 @@ M.cancel_tool = blitz.register_tool({
 
 M.agent_tool = blitz.register_tool({
 	name = "agent",
-	description = [[Launch a new background agent to handle a task autonomously. The tool returns immediately. When the agent finishes, you receive a result file path. Subagents will wake you up]],
+	-- description = [[Launch a new background agent to handle a task autonomously. The tool returns immediately, the agent works in the background]],
+	description = [[Launch a new background agent to handle a task autonomously]],
 	args = {
 		description = { type = "string", description = "A short (3-5 word) description of the task", required = true },
 		prompt = { type = "string", description = "The task for the agent to perform", required = true },
@@ -58,6 +59,7 @@ M.agent_tool = blitz.register_tool({
 			description = "The type of specialized agent to use for this task. One name from the available agents catalogue",
 			required = true,
 		},
+		-- agent_id = { type = "string", description = "message an existing agent with a follow up" },
 		cwd = { type = "string", description = "The working directoy of the agent. Defaults to current" },
 		clean = {
 			type = "boolean",
@@ -126,6 +128,11 @@ M.agent_tool = blitz.register_tool({
 		local bold = "\27[1m"
 		local reset = "\27[0m"
 		ctx:set_status(info .. type_name .. reset .. text .. " -> " .. reset .. bold .. description .. reset)
+
+		-- local res = blitz.agent.result(id)
+		-- return {
+		-- 	msg = string.format("# Result for agent_id: %d\n\n %s", id, res),
+		-- }
 
 		return { msg = string.format("Agent started in background. agent_id: %d", id) }
 	end,
