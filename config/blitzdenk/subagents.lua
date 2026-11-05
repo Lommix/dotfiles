@@ -6,7 +6,7 @@ local M = {}
 
 M.idle_tool = blitz.register_tool({
 	name = "idle",
-	description = "Use when waiting for your sub agents to finish work",
+	description = "End your turn and wait until a subagent wakes you. Call it when only waiting for subagent results remains; do not poll, sleep, or re-check agents that have not reported yet.",
 	snippet = "Wait for your sub agents",
 	func = function(ctx, _)
 		ctx:set_status("Waiting for something to happen")
@@ -50,7 +50,8 @@ M.cancel_tool = blitz.register_tool({
 M.agent_tool = blitz.register_tool({
 	name = "agent",
 	-- description = [[Launch a new background agent to handle a task autonomously. The tool returns immediately, the agent works in the background]],
-	description = [[Launch a new background agent to handle a task autonomously]],
+	description = [[Launch a new background agent to handle a task autonomously. The tool returns immediately. When the agent finishes, its answer is injected into your context; oversized answers spill to a file. Subagents will wake you up.
+Start independent agents together in one message and keep working while they run. Split parallel write work into disjoint file scopes; agents editing shared files affect each other. When only waiting for results remains, end your turn with idle instead of polling. Review the final diff yourself before reporting the work done.]],
 	args = {
 		description = { type = "string", description = "A short (3-5 word) description of the task", required = true },
 		prompt = { type = "string", description = "The task for the agent to perform", required = true },

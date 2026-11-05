@@ -313,6 +313,8 @@ local r = ctx:batch({
 	{ name = "bash", args = { command = "rg -c TODO b.zig", description = "count TODOs" } },
 })
 for i, out in ipairs(r) do print(i, out:match("^%S+") or "0") end
+
+Tables use Lua syntax: `name = "bash"` and `command = "..."`, never JSON colons.
 ]],
 	args = {
 		code = {
@@ -332,7 +334,11 @@ for i, out in ipairs(r) do print(i, out:match("^%S+") or "0") end
 		local env = setmetatable({ ctx = ctx }, { __index = _G })
 		local fn, err = load(call.arguments.code, "codemode", "t", env)
 		if not fn then
-			error(err)
+			local message = tostring(err)
+			if message:find("expected near") or message:find("unexpected symbol") then
+				message = message .. "\ncodemode uses Lua table syntax: { name = \"bash\", args = { command = \"...\" } }; equals, not JSON colons"
+			end
+			error(message)
 		end
 
 		local ok, result = pcall(fn)
