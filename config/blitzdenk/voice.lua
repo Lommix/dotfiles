@@ -113,8 +113,8 @@ local prompter = blitz.add_agent({
 	name = "prompter",
 	description = "Internal. Rewrites the input box draft into a tight prompt. Has no tools.",
 	prompt = refine_prompt,
-	effort = "low",
-	model = models.ds_flash,
+	effort = "medium",
+	model = models.glm,
 	tools = {},
 	in_agent_tool = false,
 })
@@ -166,10 +166,8 @@ blitz.bind("<C-f>", function()
 		notify("input is empty")
 		return
 	end
-	local parent = blitz.get_main_agent()
 	local id = blitz.agent.spawn({
 		agent_type = prompter,
-		parent_id = parent,
 		prompt = text,
 		task = "refine input box",
 		background = true,

@@ -100,10 +100,10 @@ M.glm = blitz.add_model({
 })
 
 M.ds_new_flash = blitz.add_model({
-	-- name = "deepseek/deepseek-v4.1-flash-1017",
-	-- provider = M.provider.orouter,
-	name = "deepseek-flash",
-	provider = M.provider.deepseek,
+	name = "deepseek/deepseek-v4.1-flash-1017",
+	provider = M.provider.orouter,
+	-- name = "deepseek-flash",
+	-- provider = M.provider.deepseek,
 	vision = true,
 	cost = { input = 0.01625, output = 0.6, cache = 0.002 },
 })
