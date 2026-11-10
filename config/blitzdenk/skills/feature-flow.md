@@ -1,6 +1,6 @@
 ---
 name: feature
-description: "Run a new feature as a gated flow: grill, spec, build, review. One lead subagent owns the flow; the main agent spawns it and relays the report."
+description: "Run a new feature as a gated flow: grill, spec, tickets, build, review. One lead subagent owns the flow; the main agent spawns it and relays the report."
 disable-model-invocation: true
 ---
 
@@ -30,6 +30,7 @@ Read these files before phase 0. Use the `read` tool; they are user-invoked skil
 
 - `<skill dir>/grilling.md`
 - `<skill dir>/tospec.md`
+- `<skill dir>/toticket.md`
 - `<skill dir>/review.md`
 - `<skill dir>/orchistrate.md`
 
@@ -37,10 +38,11 @@ The skill directory is the parent of the skill file path in the spawn prompt.
 
 You write the brief, spec, build plan, findings, and report yourself. You do not write production code.
 
-Pick a kebab-case `<slug>` from the feature title. Use `/tmp/blitzdenk/feature-<slug>/` as the session directory. If it exists, add a numeric suffix. Create it. Write `state.md` with the five phases and update it after each phase. Put all artifacts in the session directory:
+Pick a kebab-case `<slug>` from the feature title. Use `/tmp/blitzdenk/feature-<slug>/` as the session directory. If it exists, add a numeric suffix. Create it. Write `state.md` with the six phases and update it after each phase. Put all artifacts in the session directory:
 
 - `brief.md`: the grill record.
 - `spec.draft.md` and `spec.md`: the draft and the approved spec.
+- `tickets/`: the cut tickets, one file per ticket.
 - `build-plan.md`: work items, write sets, verification.
 - `diff.patch`: the frozen diff.
 - `changed-files.txt`: tracked and untracked files.
@@ -70,27 +72,35 @@ Use `tospec.md`. You write the spec. You are the only agent with the grill conte
 4. Publish the spec to the repo at `./<slug>_spec.md`, or where the repo keeps specs if it has a convention.
 5. Exit: the user approves the seams and the spec. Mark `spec: frozen` in `state.md`. Do not edit the spec after this gate. If a decision changes, reopen the gate.
 
+### Phase 1.5: Tickets
+
+Use `toticket.md` on `spec.md`; you already hold the codebase context from the grill and spec phases, so draft the slices directly.
+
+Run its quiz through `ask`. Write one file per ticket under `<session>/tickets/`.
+
+Exit: the user approves the breakdown and every ticket file exists. Mark `tickets: cut` in `state.md`. Do not edit the tickets after this gate. If the breakdown changes, reopen the gate.
+
 ### Phase 2: Build
 
-Write `build-plan.md` before you spawn any builder. Create `reports/`. Each item has:
+Write `build-plan.md` before you spawn any builder. One item per ticket. Create `reports/`. Each item has:
 
 - id and one-line outcome
 - write set: exact files or globs
-- dependencies: item ids that must finish first
+- dependencies: the blocking edges of its ticket
 - verification: one exact command
-- done criterion
+- done criterion: the acceptance criteria of its ticket
 
 Rules:
 
 - Write sets are disjoint. One writer per file. If two items need the same file, sequence them.
-- The plan covers every spec decision. No item adds scope the spec does not name.
+- The plan covers every ticket. No item adds scope the spec does not name.
 - If the spec names tests, the write set includes the test files. Otherwise builders add no tests.
 
 Spawn one `builder` per ready item. Each brief contains:
 
 ```
 # Task: <item id>: <outcome>
-Read <spec path>. Read item <id> in <build-plan path>.
+Read <spec path>. Read ticket <id> in <tickets path>. Read item <id> in <build-plan path>.
 Write set: <files>. Touch no other file. Do not reformat or revert other builders' edits.
 Active builders: <id: write set>.
 Verification: <exact command>.
@@ -100,7 +110,7 @@ Return exactly: status, files changed, verification command, result, blockers, r
 
 Run independent items in parallel. Call `idle` when only builder results remain. Do not poll.
 
-When a builder returns, run the exact verification command, check `git status --short` and `git diff --stat` against the write set, and read the report. The published spec file is an artifact; ignore it in the write-set check. If a builder fails, message the same builder with the exact failure. Do not redo its work. If an item is blocked, sequence it or reopen the spec gate.
+When a builder returns, run the exact verification command, check `git status --short` and `git diff --stat` against the write set, and read the report. The published spec file is an artifact; ignore it in the write-set check. If a builder fails, message the same builder with the exact failure. Do not redo its work. If an item is blocked, sequence it or reopen the ticket gate.
 
 Exit: every item is green or explicitly deferred, the build verification passes, and the diff is frozen. Mark `build: green` in `state.md`.
 
@@ -158,5 +168,3 @@ verification command and result
 open findings
 blockers
 ```
-
-## Flow invariants
