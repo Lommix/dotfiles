@@ -22,6 +22,19 @@ The user has asked for a **retrospective**. You are suggesting improvements to t
 
 3. Present these candidates to the user, in order of severity.
 
-## Session logs
+## Transcript
 
-Blitzdenk stores sessions in `~/.cache/blitzdenk/<fnv1a_64(cwd) as 16 hex>/sessions/*.jsonl`. Take the newest file. One file holds the main agent and all subagents; split analysis by `agentID`.
+Export a session in codemode
+
+```lua
+local id = blitz.get_session_id() -- current session id
+if id then blitz.export_transcript(id, "/tmp/session.json") end
+```
+
+The file is one JSON document for `jq`: `.session` plus a flat `.agents[]`
+(tree through `parent_id`). Each agent's `.messages[]` holds the full
+history in order. `role` is `user`, `assistant`, `tool`, `system`, or a
+`compaction`/`reset` marker with `reason` and `history_len`; compaction and
+`history_replace` markers also carry the new `history`. `tool_call` parts
+carry `state` and spawned `children`; `time_ms` is null on old sessions.
+Image data is omitted.

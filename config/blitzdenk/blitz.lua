@@ -13,23 +13,24 @@ local models = require("provider")
 local agents = require("subagents")
 
 blitz.set_theme({
-	bg = "#1f2430",
-	overlay_dark = "#171b24",
-	overlay = "#242936",
-	muted = "#707a8c",
-	text = "#cbccc6",
-	text_hl = "#d9d7ce",
-	ok = "#aad94c",
-	info = "#73d0ff",
-	warn = "#ffb454",
-	err = "#f07178",
-	on_err = "#1f2430",
-	diff_surface = "#2d3647",
-	diff_add = "#aad94c",
-	diff_remove = "#f07178",
-	role_user = "#73d0ff",
-	role_agent = "#d2a6ff",
-	role_system = "#95e6cb",
+	bg = "#282c34",
+	overlay_dark = "#21252b",
+	overlay = "#2c313a",
+	border = "#3e4451",
+	muted = "#5c6370",
+	text = "#abb2bf",
+	text_hl = "#d7dae0",
+	ok = "#98c379",
+	info = "#61afef",
+	warn = "#e5c07b",
+	err = "#e06c75",
+	on_err = "#282c34",
+	diff_surface = "#333842",
+	diff_add = "#98c379",
+	diff_remove = "#e06c75",
+	role_user = "#61afef",
+	role_agent = "#c678dd",
+	role_system = "#56b6c2",
 })
 
 ---------------------------------------------------------------------------------------------------
@@ -47,6 +48,7 @@ blitz.bind("<C-l>", function()
 	blitz.push_notification("big D mode")
 	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.ds_flash, true)
+	blitz.set_agent_model(M.builder_id, models.ds_flash, true)
 	blitz.set_agent_model(M.reviewer_id, models.ds_flash, true)
 	blitz.set_agent_model(M.researcher_id, models.ds_flash, true)
 	blitz.set_agent_model(M.prose_reviewer_id, models.ds_flash, true)
@@ -57,6 +59,7 @@ blitz.bind("<C-o>", function()
 	blitz.push_notification("big Q mode")
 	blitz.set_agent_effort(blitz.AGENT_GENERAL, "high")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.qwen_38, true)
+	blitz.set_agent_model(M.builder_id, models.qwen_38, true)
 	blitz.set_agent_model(M.reviewer_id, models.qwen_38, true)
 	blitz.set_agent_model(M.researcher_id, models.qwen_38, true)
 	blitz.set_agent_model(M.prose_reviewer_id, models.qwen_38, true)
@@ -66,6 +69,7 @@ blitz.bind("<C-q>", function()
 	blitz.push_notification("big free mode")
 	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.step, true)
+	blitz.set_agent_model(M.builder_id, models.step, true)
 	blitz.set_agent_model(M.reviewer_id, models.step, true)
 	blitz.set_agent_model(M.researcher_id, models.step, true)
 end, "Big-Z")
@@ -74,6 +78,7 @@ blitz.bind("<C-e>", function()
 	blitz.push_notification("big Z mode")
 	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.glm, true)
+	blitz.set_agent_model(M.builder_id, models.glm, true)
 	blitz.set_agent_model(M.reviewer_id, models.glm, true)
 	blitz.set_agent_model(M.researcher_id, models.glm, true)
 	blitz.set_agent_model(M.prose_reviewer_id, models.glm, true)
@@ -83,6 +88,7 @@ blitz.bind("<C-g>", function()
 	blitz.push_notification("big M mode")
 	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.ds_new_flash, true)
+	blitz.set_agent_model(M.builder_id, models.ds_new_flash, true)
 	blitz.set_agent_model(M.reviewer_id, models.ds_new_flash, true)
 	blitz.set_agent_model(M.researcher_id, models.ds_new_flash, true)
 	blitz.set_agent_model(M.prose_reviewer_id, models.ds_new_flash, true)
@@ -282,6 +288,21 @@ Read-only; reports findings, never edits.
 	},
 })
 
+M.builder_id = blitz.add_agent({
+	name = "builder",
+	description = "Implements one approved slice of a spec inside a fixed write set. No user contact, no subagents.",
+	prompt = prompts.builder,
+	effort = "high",
+	model = default_model,
+	tools = {
+		blitz.tools.BASH,
+		blitz.tools.READ,
+		blitz.tools.WRITE,
+		blitz.tools.EDIT,
+		blitz.tools.SKILL,
+	},
+})
+
 M.prose_reviewer_id = blitz.add_agent({
 	name = "prose-reviewer",
 	description = [[
@@ -313,6 +334,12 @@ M.orchistrator_id = blitz.add_agent({
 		blitz.tools.READ,
 		blitz.tools.BASH,
 		blitz.tools.WRITE,
+		blitz.tools.EDIT,
+		blitz.tools.ASK,
+		todo.add,
+		todo.start,
+		todo.done,
+		todo.list,
 		agents.agent_tool,
 		agents.cancel_tool,
 		agents.idle_tool,
