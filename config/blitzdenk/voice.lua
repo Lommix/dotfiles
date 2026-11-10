@@ -109,6 +109,14 @@ Writing rules for the rewrite:
 - Say what to do, not how it feels. Name the mechanism, the file, the command.
 - No chatbot phrases, no hedging, no generic closing line.]]
 
+local function repo_agents_md()
+	local out, ok = blitz.shell({ cmd = "cat AGENTS.md 2>/dev/null", timeout = 10 })
+	if not ok or out == nil or out:match("^%s*$") then
+		return nil
+	end
+	return (out:gsub("%s+$", ""))
+end
+
 local prompter = blitz.add_agent({
 	name = "prompter",
 	description = "Internal. Rewrites the input box draft into a tight prompt. Has no tools.",
@@ -166,9 +174,19 @@ blitz.bind("<C-f>", function()
 		notify("input is empty")
 		return
 	end
+	local prompt = text
+	local agents_md = repo_agents_md()
+	if agents_md then
+		prompt = text
+			.. "\n\n<agents_md>\nReference, not part of the draft: this is the AGENTS.md of the current repository."
+			.. " Use it to match project names, paths, commands, and conventions."
+			.. " Do not copy it into the rewrite and do not add requirements from it.\n\n"
+			.. agents_md
+			.. "\n</agents_md>"
+	end
 	local id = blitz.agent.spawn({
 		agent_type = prompter,
-		prompt = text,
+		prompt = prompt,
 		task = "refine input box",
 		background = true,
 		clean = true,

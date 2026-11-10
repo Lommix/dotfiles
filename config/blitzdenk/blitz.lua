@@ -94,7 +94,10 @@ end, "Big-X")
 ---------------------------------------------------------------------------------------------------
 blitz.set_capabilities({
 	-- { binary = "rg", rule = "Use rg for fast recursive grep searches. rg recurses by default: write `rg -n PATTERN PATH`. The flag `-r` means --replace, so `rg -rn PATTERN` silently prints PATTERN replaced by \"n\" and turns the evidence into garbage. Never pass -r or -R; grep flags do not carry over." },
-	{ binary = "fd", rule = "Use fd for fast file discovery. Prefer fd over find. fd hides gitignored files: add -I for runtime data such as local databases." },
+	{
+		binary = "fd",
+		rule = "Use fd for fast file discovery. Prefer fd over find. fd hides gitignored files: add -I for runtime data such as local databases.",
+	},
 	{ binary = "jq", rule = "Use jq to parse and filter JSON data." },
 })
 
@@ -223,12 +226,17 @@ end, "show thinking")
 
 blitz.add_command("effort", function()
 	blitz.cmd.select({
-		header = "Effort",
-		question = "Set reasoning effort for the general agent?",
-		options = { "low", "medium", "high", "xhigh", "max" },
-	}, function(choice)
-		if choice then
-			blitz.set_agent_effort(blitz.AGENT_GENERAL, choice, true)
+		questions = {
+			{
+				header = "Effort",
+				question = "Set reasoning effort for the general agent?",
+				options = { "low", "medium", "high", "xhigh", "max" },
+				allow_message = false,
+			},
+		},
+	}, function(answers)
+		if answers then
+			blitz.set_agent_effort(blitz.AGENT_GENERAL, answers[1][1].text, true)
 		end
 	end)
 end, "set effort level")
