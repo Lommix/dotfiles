@@ -1,4 +1,4 @@
-hl.monitor({ output = "DP-1", mode = "2560x1440", position = "0x0", scale = 1 })
+hl.monitor({ output = "DP-4", mode = "2560x1440", position = "0x0", scale = 1 })
 hl.monitor({ output = "DP-3", mode = "3440x1440@99.98Hz", position = "2560x0", scale = 1 })
 hl.monitor({ output = "HDMI-A-1", mode = "1920x1080", position = "6000x0", scale = 1 })
 hl.monitor({ output = "eDP-1", mode = "2880x1800@120.00000Hz", position = "0x0", scale = 2 })
