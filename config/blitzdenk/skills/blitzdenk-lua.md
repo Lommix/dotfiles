@@ -1,6 +1,6 @@
 ---
 name: blitzdenk-lua
-description: "Blitzdenk Lua config (`blitz.lua`): providers/models, custom tools, agents, commands, keybinds, input, hooks, permissions, MCP, SSH, drawing."
+description: "Blitzdenk Lua config (`blitz.lua`): providers/models, custom tools, agents, commands, keybinds, input, hooks, permissions, MCP, drawing."
 metadata:
   blitzdenk.main-agent-only: "true"
 ---
@@ -84,10 +84,11 @@ read the live agent.
 
 ```lua
 local tools = require("tools")
+local web = { tools.web_search, tools.web_fetch }  -- custom toolset
 blitz.set_agent_tools(blitz.AGENT_GENERAL, {
-    blitz.tools.BASH, blitz.tools.READ, blitz.tools.EDIT,
-    blitz.tools.GLOB, blitz.tools.GREP, blitz.tools.SKILL,
-    tools.web_fetch,          -- custom tool from require("tools")
+    blitz.toolsets.BASH_BACKGROUND, -- bash + read_job + kill_job
+    blitz.tools.READ, blitz.tools.EDIT,
+    web,
 })
 blitz.set_read_image_max(4096, 4096)
 blitz.set_capabilities({
@@ -96,6 +97,15 @@ blitz.set_capabilities({
 ```
 
 - Tool names are nonempty UTF-8 strings.
+- A toolset is a plain list of tool names. `set_agent_tools`, `add_agent`
+  `tools`, and `add_tool` flatten nested lists. Tools sharing a name keep
+  the first entry; `add_tool` replaces it instead, so
+  `add_tool(t, blitz.toolsets.BASH_BACKGROUND)` upgrades a sync bash.
+  `add_tool` applies a toolset all or none.
+- `blitz.tools.BASH` is sync only. Background jobs need
+  `blitz.toolsets.BASH_BACKGROUND`.
+- `blitz.toolsets.READONLY` is `GREP` (rg), `FIND` (fd) and `LS`. `GREP`
+  and `FIND` need `rg` and `fd` on PATH.
 - The read tool returns scaled images as PNG and shrinks further to fit the
   byte limit. A format the decoder cannot read goes out unscaled with a note.
 - Capability rules form the `<env_capabilities>` catalogue, injected once
@@ -145,7 +155,7 @@ local researcher = blitz.add_agent({
     prompt = [[You are a fast read-only research agent. Answer the question. Stop.]],
     effort = "low",
     model = deepseek,
-    tools = { blitz.tools.READ, blitz.tools.GREP, blitz.tools.GLOB },
+    tools = { blitz.tools.READ },
     skills = { only = { "zig", "blitzdenk-lua" }, except = { "deploy" } },
 })
 
@@ -215,8 +225,9 @@ end)
 
 `skills` in `add_agent`, or `blitz.set_agent_skills(type, filter)` for an
 existing type (live agents pick it up next step). The filter covers the
-catalogue, the `skill` tool, and `/skill-<name>`; an agent with `read` or
-`bash` can still open the file. Skill names match case-insensitively.
+catalogue, skill loads via `read`, and `/skill-<name>`. The catalogue lists each
+skill's path; `read` on that path returns the body without frontmatter. A
+filtered-out skill reads as a plain file. Skill names match case-insensitively.
 
 A skill file narrows itself in `metadata`:
 
@@ -255,7 +266,7 @@ end, "toggle thinking output")
   send to the main agent, or a fresh general agent. `message_timeline` only
   displays; `blitz.agent.message` queues without echo.
 - Flag defaults: `show_thinking` false, other booleans true,
-  `approval_mode = "default"`.
+  `approval_mode = "default"` (auto-approves tool calls; `"strict"` asks).
 - A `blitz.bind` on a default key (`<Tab>`, `<C-n>`, `<C-p>`, `<C-y>`) wins;
   `blitz.cmp.*` reproduces the popup actions.
 - `blitz.input` edits the box before Enter; `blitz.hooks.prompt` rewrites the
@@ -320,8 +331,8 @@ blitz.hooks.inject({
 ## Permissions
 
 Flow: approve hook → park with a ticket + `permission_requested` → approval
-mode → TUI. Both Lua stages run in every mode and can deny what yolo would
-approve.
+mode → TUI. Both Lua stages run in every mode and can deny what default mode
+would approve.
 
 **Approve hook** (`blitz.hooks.approve`, main VM, last wins): return a
 `BlitzPermissionDecision` or nil for the normal flow.
@@ -387,20 +398,6 @@ client registration runs when offered, else set `client_id`. Tokens live in
 `~/.local/state/blitzdenk`), keyed by url, so a rename keeps the login.
 Tokens refresh on expiry; deleting a record logs out. A server answering 401
 at load is skipped with a notification naming the connect command.
-
-## SSH
-
-While routing is on, bash, read, write, edit, patch, search, and
-`blitz.shell` wrap in `ssh user@host`. Auto approval needs
-`approval_mode = "yolo"`.
-
-The TUI owns the connection: `/ssh user@host:~/dir`, `/ssh-<alias>`,
-`/ssh off`. Lua flips routing only (`blitz.ssh.enable/disable`).
-`get_state().active` implies a full target.
-
-`blitz.shell({ cmd = ..., force_local = true })` runs on this machine (local
-`git status`, `ssh-add`). Use `ctx.cwd` for tool files, `ctx.local_cwd` only
-with `force_local`.
 
 ## Session transcripts
 

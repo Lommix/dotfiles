@@ -44,6 +44,10 @@ blitz.set_agent_model(blitz.AGENT_GENERAL, default_model)
 blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
 blitz.set_prompt(blitz.AGENT_GENERAL, prompts.system)
 
+local flags = blitz.get_flags()
+flags.show_diffs = false
+blitz.set_flags(flags)
+
 blitz.bind("<C-l>", function()
 	blitz.push_notification("big D mode")
 	blitz.set_agent_effort(blitz.AGENT_GENERAL, "max")
@@ -56,6 +60,7 @@ blitz.bind("<C-l>", function()
 end, "Big-D")
 
 blitz.bind("<C-o>", function()
+	blitz.set_compact_edge(124000)
 	blitz.push_notification("big Q mode")
 	blitz.set_agent_effort(blitz.AGENT_GENERAL, "high")
 	blitz.set_agent_model(blitz.AGENT_GENERAL, models.qwen_38, true)
@@ -111,36 +116,23 @@ blitz.set_capabilities({
 --- Default Agent tool set overwrites
 ---------------------------------------------------------------------------------------------------
 blitz.set_agent_tools(blitz.AGENT_GENERAL, {
-	blitz.tools.BASH,
+	blitz.toolsets.BASH_BACKGROUND,
 	blitz.tools.READ,
 	blitz.tools.ASK,
 	blitz.tools.WRITE,
 	blitz.tools.EDIT,
-	blitz.tools.SKILL,
-	tools.web_fetch,
-	tools.web_search,
-	todo.add,
-	todo.start,
-	todo.done,
-	todo.list,
-	tools.codemode,
+	-- tools.web_fetch,
+	-- tools.web_search,
+	-- todo.add,
+	-- todo.start,
+	-- todo.done,
+	-- todo.list,
+	-- tools.codemode,
 	agents.idle_tool,
 	agents.message_tool,
 	agents.cancel_tool,
 	agents.agent_tool,
 })
-
----------------------------------------------------------------------------------------------------
---- SSH
----------------------------------------------------------------------------------------------------
-blitz.bind("<C-s>", function()
-	local state = blitz.ssh.get_state()
-	if state.active then
-		blitz.ssh.disable()
-	else
-		blitz.ssh.enable()
-	end
-end, "toggle ssh")
 
 ---------------------------------------------------------------------------------------------------
 --- Custom status bar render
@@ -159,7 +151,6 @@ local function fmt(n)
 end
 
 blitz.status_bar_render = function()
-	local ssh = blitz.ssh.get_state()
 	local use = blitz.token_usage()
 	local white = "\27[1;37m"
 	local green = "\27[32m"
@@ -168,9 +159,6 @@ blitz.status_bar_render = function()
 	local reset = "\27[0m"
 
 	local ssh_status = ""
-	if ssh.active then
-		ssh_status = " (SSH ON)"
-	end
 
 	local prompt_tokens = use.input + use.cache + use.cache_creation
 	local hit_percent = 0
@@ -255,13 +243,12 @@ M.researcher_id = blitz.add_agent({
 	description = [[
 Answers questions by reading code, files, docs, or the web. Locates
 definitions, symbols, paths, and patterns; reports facts, never opinions
-on code quality. Not for finding bugs in written code; use code-reviewer.
+on code quality. Can search the web. Not for finding bugs in written code; use code-reviewer.
 ]],
 	prompt = prompts.explore,
 	effort = "medium",
 	model = default_model,
 	tools = {
-		blitz.tools.SKILL,
 		blitz.tools.BASH,
 		blitz.tools.READ,
 		tools.web_fetch,
@@ -281,7 +268,6 @@ Read-only; reports findings, never edits.
 	effort = "high",
 	model = default_model,
 	tools = {
-		blitz.tools.SKILL,
 		blitz.tools.READ,
 		blitz.tools.BASH,
 		tools.codemode,
@@ -299,7 +285,6 @@ M.builder_id = blitz.add_agent({
 		blitz.tools.READ,
 		blitz.tools.WRITE,
 		blitz.tools.EDIT,
-		blitz.tools.SKILL,
 	},
 })
 
@@ -316,6 +301,7 @@ code review.
 	model = default_model,
 	clean = true,
 	skills = false,
+	in_agent_tool = false,
 	tools = {
 		blitz.tools.READ,
 		blitz.tools.BASH,
@@ -328,9 +314,8 @@ M.orchistrator_id = blitz.add_agent({
 	prompt = prompts.orchistrate,
 	effort = "max",
 	model = models.glm_flash,
-	in_agent_tool = true,
+	in_agent_tool = false,
 	tools = {
-		blitz.tools.SKILL,
 		blitz.tools.READ,
 		blitz.tools.BASH,
 		blitz.tools.WRITE,
