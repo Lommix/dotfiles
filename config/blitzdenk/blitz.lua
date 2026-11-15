@@ -1,5 +1,9 @@
 local M = {}
 
+blitz.plugin("blitz-core", { path = "/home/lommix/Projects/lua/blitz-core" })
+-- blitz.plugin("blitz-core", { url = "https://github.com/Lommix/blitz-core" })
+local core = require("blitz-core")
+
 require("draw")
 require("voice")
 require("permissions")
@@ -8,30 +12,28 @@ require("herdr")
 
 local prompts = require("prompts")
 local tools = require("tools")
-local todo = require("todo")
 local models = require("provider")
-local agents = require("subagents")
 
-blitz.set_theme({
-	bg = "#282c34",
-	overlay_dark = "#21252b",
-	overlay = "#2c313a",
-	border = "#3e4451",
-	muted = "#5c6370",
-	text = "#abb2bf",
-	text_hl = "#d7dae0",
-	ok = "#98c379",
-	info = "#61afef",
-	warn = "#e5c07b",
-	err = "#e06c75",
-	on_err = "#282c34",
-	diff_surface = "#333842",
-	diff_add = "#98c379",
-	diff_remove = "#e06c75",
-	role_user = "#61afef",
-	role_agent = "#c678dd",
-	role_system = "#56b6c2",
-})
+-- blitz.set_theme({
+-- 	bg = "#282c34",
+-- 	overlay_dark = "#21252b",
+-- 	overlay = "#2c313a",
+-- 	border = "#3e4451",
+-- 	muted = "#5c6370",
+-- 	text = "#abb2bf",
+-- 	text_hl = "#d7dae0",
+-- 	ok = "#98c379",
+-- 	info = "#61afef",
+-- 	warn = "#e5c07b",
+-- 	err = "#e06c75",
+-- 	on_err = "#282c34",
+-- 	diff_surface = "#333842",
+-- 	diff_add = "#98c379",
+-- 	diff_remove = "#e06c75",
+-- 	role_user = "#61afef",
+-- 	role_agent = "#c678dd",
+-- 	role_system = "#56b6c2",
+-- })
 
 ---------------------------------------------------------------------------------------------------
 --- Model configuration
@@ -117,21 +119,25 @@ blitz.set_capabilities({
 ---------------------------------------------------------------------------------------------------
 blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.toolsets.BASH_BACKGROUND,
+	-- blitz.tools.BASH,
 	blitz.tools.READ,
 	blitz.tools.ASK,
 	blitz.tools.WRITE,
 	blitz.tools.EDIT,
-	-- tools.web_fetch,
-	-- tools.web_search,
+	core.codemode,
+	core.subagents.toolset,
+	core.todo.toolset,
+	tools.web_fetch,
+	tools.web_search,
 	-- todo.add,
 	-- todo.start,
 	-- todo.done,
 	-- todo.list,
 	-- tools.codemode,
-	agents.idle_tool,
-	agents.message_tool,
-	agents.cancel_tool,
-	agents.agent_tool,
+	-- agents.idle_tool,
+	-- agents.message_tool,
+	-- agents.cancel_tool,
+	-- agents.agent_tool,
 })
 
 ---------------------------------------------------------------------------------------------------
@@ -253,7 +259,7 @@ on code quality. Can search the web. Not for finding bugs in written code; use c
 		blitz.tools.READ,
 		tools.web_fetch,
 		tools.web_search,
-		tools.codemode,
+		core.codemode,
 	},
 })
 
@@ -270,7 +276,7 @@ Read-only; reports findings, never edits.
 	tools = {
 		blitz.tools.READ,
 		blitz.tools.BASH,
-		tools.codemode,
+		core.codemode,
 	},
 })
 
@@ -321,14 +327,7 @@ M.orchistrator_id = blitz.add_agent({
 		blitz.tools.WRITE,
 		blitz.tools.EDIT,
 		blitz.tools.ASK,
-		todo.add,
-		todo.start,
-		todo.done,
-		todo.list,
-		agents.agent_tool,
-		agents.cancel_tool,
-		agents.idle_tool,
-		agents.message_tool,
+		core.subagents.toolset,
 	},
 })
 

@@ -1,7 +1,7 @@
 -- draw.lua: a simple panel showing the current todo state
 -- and the active subagents
 
-local todos = require("todo")
+local todos = require("blitz-core.todo")
 local herdr = require("herdr")
 
 local ICON_CIRCLE = "\u{f111}"

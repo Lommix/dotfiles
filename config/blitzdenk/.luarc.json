@@ -1,7 +1,8 @@
 {
   "workspace": {
     "library": [
-      "meta.lua"
+      "meta.lua",
+      "/home/lommix/Projects/lua/blitz-core/lua"
     ]
   }
 }

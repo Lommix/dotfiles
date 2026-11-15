@@ -21,4 +21,4 @@ Depending on the Task, these are the different perspectives:
 4. Security
 5. Edge cases
 
-Keep each sub-agent focused on the domain of the task. Add this scope line to every builder brief:
+Keep each sub-agent focused on the domain of the task.

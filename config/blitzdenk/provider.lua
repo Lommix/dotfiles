@@ -7,7 +7,7 @@ local M = {}
 M.provider = {}
 M.provider.llama = blitz.add_provider({
 	type = "openai",
-	url = "http://127.0.0.1:8118",
+	url = "http://127.0.0.1:8118/v1",
 	key_envar = "",
 })
 
@@ -117,31 +117,6 @@ M.ds_flash = blitz.add_model({
 	cost = { input = 0.15, output = 0.6, cache = 0.006 },
 })
 
-M.mimo = blitz.add_model({
-	name = "mimo-v2.6-pro",
-	provider = M.provider.opencode,
-	vision = true,
-})
-
-M.spark = blitz.add_model({
-	name = "muse-spark-1.3-contributor",
-	provider = M.provider.opencode_res,
-	vision = true,
-})
-
-M.free = blitz.add_model({
-	name = "cat-jam-free",
-	provider = M.provider.opencode,
-	vision = true,
-	replay_reasoning = false,
-})
-
-M.step = blitz.add_model({
-	name = "step-5-preview-free",
-	provider = M.provider.opencode,
-	vision = true,
-})
-
 M.qwen_38 = blitz.add_model({
 	name = "qwen3.8",
 	provider = M.provider.llama,
@@ -149,22 +124,11 @@ M.qwen_38 = blitz.add_model({
 })
 
 M.qwen_38_flash = blitz.add_model({
+	-- provider = M.provider.llama,
+	-- name = "qwen3.8-flash-next-ud-q2_k_xl",
 	name = "qwen3.8-flash",
 	provider = M.provider.opencode,
 	vision = true,
-})
-
-M.haiku = blitz.add_model({
-	name = "claude-haiku-5-5",
-	provider = M.provider.opencode_pic,
-	vision = true,
-})
-
-M.grok = blitz.add_model({
-	name = "grok-4.6",
-	provider = M.provider.xai,
-	vision = true,
-	cost = { input = 2, output = 6, cache = 0.5 },
 })
 
 return M
