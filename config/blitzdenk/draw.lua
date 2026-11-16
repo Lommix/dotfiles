@@ -2,7 +2,6 @@
 -- and the active subagents
 
 local todos = require("blitz-core.todo")
-local herdr = require("herdr")
 
 local ICON_CIRCLE = "\u{f111}"
 local ICON_CIRCLE_OPEN = "\u{f10c}"
@@ -102,7 +101,6 @@ panel = blitz.draw.panel({
 	height = 3,
 	place = "below",
 	render = function(w, h, buf, frame)
-		herdr.tick()
 		local agents = active_agents()
 		local inactive = #blitz.list_agents() - #agents
 		local wanted = wanted_height()

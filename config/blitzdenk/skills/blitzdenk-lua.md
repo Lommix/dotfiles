@@ -31,9 +31,9 @@ or spawned agent. Tool logic stays in tools.
 
 ## Runtime model
 
-- **Main VM**: config load, commands, keybinds, render callbacks, and the
-  prompt, inject, and approve hooks. Keep it free: it reaps state for every
-  agent.
+- **Main VM**: config load, commands, keybinds, render callbacks, tick
+  callbacks, and the prompt, inject, and approve hooks. Keep it free: it
+  reaps state for every agent.
 - **Sandbox VM**: one per tool call and one per emitted event. It replays
   the config; config mutation (`add_provider`, `register_tool`,
   `set_agent_model`, ...) is a no-op. Carry data with `blitz.state`.
@@ -308,6 +308,13 @@ background thread. The event loop never waits; an `await` delays only the
 listeners behind it. A reload clears every listener and re-runs the config.
 Spawning from `agent_created` or `agent_started` retriggers them: guard it.
 
+**Tick hooks** (`blitz.hooks.tick`): each call adds a callback. All tick
+callbacks run in registration order in the main VM on the main thread, once
+per TUI loop tick (about 60 Hz), also while the UI sits idle. Keep them
+short: input and rendering share the thread. Call `blitz.draw.redraw()` when
+the visuals change. A reload clears them; `blitz.hooks.clear()` removes them
+too.
+
 **Prompt hook** (`blitz.hooks.prompt`): the rewrite feeds the full pipeline,
 so it can produce a `/command` or skill call; echo, history, and model see
 the new text. `""` drops the input. Errors log and send the input unchanged.
@@ -326,7 +333,7 @@ blitz.hooks.inject({
 })
 ```
 
-`blitz.hooks.clear()` removes the prompt, inject, and approve hooks.
+`blitz.hooks.clear()` removes the prompt, inject, approve, and tick hooks.
 
 ## Permissions
 
@@ -491,6 +498,8 @@ local sb = blitz.draw.sidebar({
 - Coordinates are widget-relative, (0,0) top-left; out-of-rect writes clip.
 - Frames run up to 60fps while agents run or before the first prompt;
   afterwards only on input. Animations call `blitz.draw.redraw()`.
+- Tick hooks run on every loop tick even without a drawn frame; they request
+  their own frames with `blitz.draw.redraw()`.
 - Keep render pure drawing: no awaits, no long work, or frames drop.
 - `frame` resets on session reset.
 - A second sidebar on the same side kills the first handle.

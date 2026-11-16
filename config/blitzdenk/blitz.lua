@@ -4,11 +4,15 @@ blitz.plugin("blitz-core", { path = "/home/lommix/Projects/lua/blitz-core" })
 -- blitz.plugin("blitz-core", { url = "https://github.com/Lommix/blitz-core" })
 local core = require("blitz-core")
 
+blitz.plugin("blitz-herdr", { path = "/home/lommix/Projects/lua/blitz-herdr" })
+-- blitz.plugin("blitz-herdr", { url = "https://github.com/Lommix/blitz-herdr.git" })
+local herdr = require("blitz-herdr")
+herdr.setup()
+
 require("draw")
 require("voice")
 require("permissions")
 require("commands")
-require("herdr")
 
 local prompts = require("prompts")
 local tools = require("tools")
