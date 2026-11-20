@@ -1,6 +1,6 @@
 ---
 name: blitzdenk-lua
-description: "Blitzdenk Lua config (`blitz.lua`): providers/models, custom tools, agents, commands, keybinds, input, hooks, permissions, MCP, drawing, plugins."
+description: "Blitzdenk Lua config (`blitz.lua`): providers/models, custom tools, agents, commands, keybinds, input, hooks, permissions, MCP, UI, plugins."
 metadata:
   blitzdenk.main-agent-only: "true"
 ---
@@ -31,7 +31,7 @@ or spawned agent. Tool logic stays in tools.
 
 ## Runtime model
 
-- **Main VM**: config load, commands, keybinds, render callbacks, tick and
+- **Main VM**: config load, commands, keybinds, UI callbacks, tick and
   state callbacks, and the prompt, inject, and approve hooks. Keep it free: it
   reaps state for every agent.
 - **Sandbox VM**: one per tool call and one per emitted event. It replays
@@ -86,7 +86,7 @@ read the live agent.
 local tools = require("tools")
 local web = { tools.web_search, tools.web_fetch }  -- custom toolset
 blitz.set_agent_tools(blitz.AGENT_GENERAL, {
-    blitz.toolsets.BASH_BACKGROUND, -- bash + read_job + kill_job
+    blitz.toolsets.BASH_BACKGROUND, -- bash + read_job + write_job + kill_job
     blitz.tools.READ, blitz.tools.EDIT,
     web,
 })
@@ -145,6 +145,20 @@ local my_tool = blitz.register_tool({
 - `msg` goes out as tool result text. Images follow as user content: a
   `user` message on `openai`/`response`, an image block on `anthropic`.
   Strict endpoints (DeepSeek) reject images inside tool messages.
+- `tools = { ... }` (ids and toolsets) seals the tool: `ctx:call` and
+  `ctx:batch` run only those tools, by id or exposed name, even when the agent
+  does not hold them. They are resolved on every call, so reloads and MCP
+  tools apply. `ctx.tools` lists the resolved exposed names, `nil` without
+  `tools`. A tool with `tools` cannot be granted. Without `tools`,
+  `ctx:call` runs the agent's own tools and rejects the running tool.
+- `description` is at most 16384 bytes. Granted `tools` are not described
+  automatically: put their arguments into `description`.
+  `blitz.tool_info(tools)` returns `{ id, name, description, schema }` rows
+  for ids, exposed names or toolsets that exist while the config runs (MCP
+  tools do not yet). Unknown tools are skipped.
+- `ctx:call` returns `text, img` and `ctx:batch` returns `texts, imgs` (index
+  to image). `img` is `{ media_type, data }`, the shape of the `img` return
+  field, so a wrapper can forward an image read by a nested tool.
 
 ## Agents
 
@@ -477,7 +491,7 @@ history in order. `role` is `user`, `assistant`, `tool`, `system`, or a
 carry `state` and spawned `children`; `time_ms` is null on old sessions.
 Image data is omitted.
 
-## Status bar and drawing
+## Status bar and UI
 
 ```lua
 blitz.status_bar_render = function()   -- ANSI color tags render
@@ -485,23 +499,77 @@ blitz.status_bar_render = function()   -- ANSI color tags render
     return "In:" .. use.input .. " | Out:" .. use.output
         .. " | Ctx:" .. math.floor(blitz.context_percent()) .. "%"
 end
-
-local sb = blitz.draw.sidebar({
-    side = "left",
-    width = 24,
-    render = function(w, h, buf, frame)
-        buf.box(0, 0, w, h, "muted")
-        buf.set_color(1, 1, "sessions", "#A50000")
-        local spin = frame % 10 + 1
-        buf.set(1, 2, string.sub("⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏", spin, spin))
-    end,
-})
 ```
 
-- Coordinates are widget-relative, (0,0) top-left; out-of-rect writes clip.
-- Frames run up to 60fps while agents run or before the first prompt;
-  afterwards only on input. Animations call `blitz.draw.redraw()`.
-- Tick hooks run without a frame; they call `blitz.draw.redraw()` themselves.
-- Keep render pure drawing: no awaits, no long work, or frames drop.
-- `frame` resets on session reset.
-- A second sidebar on the same side kills the first handle.
+`blitz.ui` is a retained scene: build a tree of nodes once, mount it, then
+change it. Blitzdenk lays out and draws the tree every frame without calling
+Lua, so there is no render callback.
+
+```lua
+local ui = blitz.ui
+local count = 0
+local label = ui.text({ "0 clicks", fg = "muted" })
+
+ui.mount("between", ui.box({
+    dir = "row", gap = 1, padding = { x = 2 }, bg = "overlay_dark",
+    label,
+    ui.spacer(),
+    ui.button({ label = "Add", key = "<C-a>", on_click = function()
+        count = count + 1
+        label:set({ count .. " clicks" })
+    end }),
+}))
+
+ui.mount("left", ui.box({
+    width = 24, border = "muted", title = "Session",
+    ui.text({ { "ok", fg = "ok", bold = true }, " all good" }),
+    ui.text({ "long text wraps inside the box", wrap = true }),
+}))
+```
+
+- Compose with plain functions that return a node. Methods use `:` and
+  return the node.
+- `node:set(props)` merges: only the given keys change. An array part
+  replaces the children of a box or the content of a text; children left
+  out are removed. An empty array changes nothing: use `node:clear()`.
+- Update from `blitz.hooks.tick`, `state_changed`, binds, commands, and
+  `on_click`. Change a node only when its data changed; every change draws
+  a frame.
+- Sizing: unset is fit along the parent's `dir` and stretch across it.
+  `grow` shares the free space. A mounted sidebar needs a `width`.
+- Text content is strings and spans `{ "text", fg = "err", bold = true }`.
+  `\n` starts a new line. Unwrapped text is cut with `…`.
+- Colors are `#RRGGBB` or a theme name. `bg` and `fg` are inherited by
+  children.
+- `on_click` works on any box or text, not only buttons. `key` triggers it
+  while the node is on screen and wins over `blitz.bind`.
+- `node:remove()` unmounts and kills the subtree; calls on a dead handle do
+  nothing. An unknown prop or slot raises.
+- A reload clears the scene and re-runs the config. Tool and listener VMs
+  get dead handles, so config that builds UI at load is safe there.
+- `ui.root(box)` replaces the whole layout. The tree must hold
+  `ui.timeline()` and `ui.composer()`; both are single nodes, every call
+  returns the same one. Slots are yours to place with `ui.slot`:
+
+  ```lua
+  ui.root(ui.box({
+      ui.composer(),                               -- input on top
+      ui.slot({ name = "below" }),
+      ui.box({ dir = "row", grow = 1,
+          ui.timeline({ grow = 1 }),
+          ui.slot({ name = "right", dir = "row" }),
+      }),
+  }))
+  ```
+
+  Mounted nodes follow their slot name into the new root and are removed
+  when it has no such slot; `ui.mount` to a missing slot raises, so keep the
+  default names when plugins mount. `ui.root(nil)` restores the default,
+  which also returns when the timeline or composer leaves the tree. Without
+  `grow` the timeline fits its content and the next node floats under it.
+- `ui.canvas({ width = 10, draw = function(buf, frame) ... end })` is the
+  escape hatch for free drawing. It is the only node that runs Lua per
+  frame: coordinates are canvas-relative, `frame` drives animations, and an
+  idle animation calls `blitz.ui.redraw()` from a tick hook. Frames run up
+  to 60fps while agents run or before the first prompt, afterwards only on
+  input or a scene change. A draw callback that errors is removed.

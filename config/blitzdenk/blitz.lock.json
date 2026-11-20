@@ -1,10 +1,4 @@
 {
   "version": 1,
-  "plugins": {
-    "blitz-core": {
-      "source": "https://github.com/Lommix/blitz-core",
-      "ref": null,
-      "commit": "f9bf939c7e1927fbea0a027766f6c80019a675a0"
-    }
-  }
+  "plugins": {}
 }

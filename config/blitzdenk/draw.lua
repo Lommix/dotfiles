@@ -1,26 +1,25 @@
--- draw.lua: a simple panel showing the current todo state
+-- draw.lua: a panel under the input showing the current todo state
 -- and the active subagents
 
+local ui = blitz.ui
 local todos = require("blitz-core.todo")
 
 local ICON_CIRCLE = "\u{f111}"
 local ICON_CIRCLE_OPEN = "\u{f10c}"
 local ICON_BLANK = " "
+local AGENT_COLOR = "#ff00ff"
 
-local BLINK_FRAMES = 20
-
-local MARK_X = 1
-local MARK_WIDTH = 3
-local TEXT_X = MARK_X + MARK_WIDTH + 1
+local REFRESH_TICKS = 6
+local BLINK_TICKS = 20
 
 local STATE_DONE = "done"
 local STATE_PROGRESS = "in_progress"
 local STATE_PENDING = "pending"
 
 local GROUPS = {
-	{ state = STATE_DONE, key = "ok" },
-	{ state = STATE_PROGRESS, key = "warn" },
-	{ state = STATE_PENDING, key = "muted" },
+	{ state = STATE_DONE, color = "ok" },
+	{ state = STATE_PROGRESS, color = "warn" },
+	{ state = STATE_PENDING, color = "muted" },
 }
 
 local MAX_DONE = 3
@@ -50,10 +49,10 @@ local function main_todos()
 	return blitz.state.get("todo_" .. agent) or {}
 end
 
-local function group_key(state)
+local function group_color(state)
 	for _, g in ipairs(GROUPS) do
 		if g.state == state then
-			return g.key
+			return g.color
 		end
 	end
 	return "muted"
@@ -80,94 +79,106 @@ local function shown_todos()
 	return rows
 end
 
-local function cut(s, n)
-	if #s <= n then
-		return s
+local function todo_rows()
+	local rows = {}
+	for _, t in ipairs(shown_todos()) do
+		rows[#rows + 1] = {
+			{ todos.marks[t.state], fg = group_color(t.state) },
+			" #" .. t.id .. " " .. t.text,
+		}
 	end
-	s = s:sub(1, math.max(0, n - 1))
-	while #s > 0 and utf8.len(s) == nil do
-		s = s:sub(1, #s - 1)
-	end
-	return s .. "…"
+	return rows
 end
 
-local panel
-
-local function wanted_height()
-	return math.max(3, #shown_todos() + 2, #active_agents() + 2)
+local function agent_rows(agents, blink_on)
+	if #agents == 0 then
+		return { { { ICON_CIRCLE_OPEN, fg = "muted" }, " no active agents" } }
+	end
+	local icon = blink_on and ICON_CIRCLE or ICON_BLANK
+	local rows = {}
+	for _, a in ipairs(agents) do
+		local status = a.state .. " " .. math.floor(a.ctx or 0) .. "%"
+		if a.tps and a.tps > 0 then
+			status = status .. string.format(" %.1f tps", a.tps)
+		end
+		rows[#rows + 1] = {
+			{ icon, fg = AGENT_COLOR },
+			" " .. a.name .. " " .. status .. " ",
+			{ a.task or "", fg = "muted" },
+		}
+	end
+	return rows
 end
 
-panel = blitz.draw.panel({
-	height = 3,
-	place = "below",
-	render = function(w, h, buf, frame)
-		local agents = active_agents()
-		local inactive = #blitz.list_agents() - #agents
-		local wanted = wanted_height()
-		if wanted ~= h then
-			panel.set_size(wanted)
+local function signature(title, rows)
+	local parts = { title }
+	for _, spans in ipairs(rows) do
+		for _, span in ipairs(spans) do
+			parts[#parts + 1] = type(span) == "table" and span[1] or span
 		end
-		local blink_on = math.floor(frame / BLINK_FRAMES) % 2 == 0
-		buf.fill(0, 0, w, h, "bg")
-		buf.box(0, 0, w, h, "muted")
-		local theme = blitz.get_theme()
+		parts[#parts + 1] = "\n"
+	end
+	return table.concat(parts, "\0")
+end
 
-		local mid = math.floor(w / 2)
-		buf.box(0, 0, mid, h, "muted")
-		buf.box(mid, 0, w - mid, h, "muted")
-		buf.set_color(1, 0, " Todos ", "info")
-		buf.set_color(mid + 1, 0, " Active agents - inactive: " .. inactive .. " ", "info")
+local function section(title)
+	return {
+		box = ui.box({ title = title, border = "muted", grow = 1, padding = { x = 1 } }),
+		shown = nil,
+	}
+end
 
-		local todo_rows = {}
-		for _, t in ipairs(shown_todos()) do
-			todo_rows[#todo_rows + 1] = {
-				mark = todos.marks[t.state],
-				color = theme[group_key(t.state)] or "#8a8a8a",
-				text = cut("#" .. t.id .. " " .. t.text, mid - TEXT_X - 1),
-			}
-		end
+local function update(part, title, rows)
+	local wanted = signature(title, rows)
+	if wanted == part.shown then
+		return
+	end
+	part.shown = wanted
+	part.box:set({ title = title })
+	part.box:clear()
+	for _, spans in ipairs(rows) do
+		part.box:add(ui.text(spans))
+	end
+end
 
-		local bottom = h - 2
-		local y = 1
-		for _, r in ipairs(todo_rows) do
-			if y > bottom then
-				break
-			end
-			buf.set_color(MARK_X, y, r.mark, r.color)
-			buf.set(TEXT_X, y, r.text)
-			y = y + 1
-		end
+local todo_section = section("Todos")
+local agent_section = section("Active agents")
 
-		local ax = mid + 1
-		if #agents == 0 then
-			buf.set_color(ax, 1, ICON_CIRCLE_OPEN, "muted")
-			buf.set(ax + 2, 1, cut("no active agents", w - mid - 4))
-			return
-		end
-		y = 1
-		local budget = w - mid - 4
-		for _, a in ipairs(agents) do
-			if y > bottom then
-				break
-			end
-			local icon = ICON_CIRCLE
-			if not blink_on then
-				icon = ICON_BLANK
-			end
-			local status = a.state .. " " .. math.floor(a.ctx or 0) .. "%"
-			if a.tps and a.tps > 0 then
-				status = status .. string.format(" %.1f tps", a.tps)
-			end
-			local name = cut(a.name, budget - #status - 4)
-			buf.set_color(ax, y, icon, "#ff00ff")
-			local nx = ax + 2
-			buf.set(nx, y, name .. " ")
-			nx = nx + #name + 1
-			buf.set(nx, y, status .. " ")
-			nx = nx + #status + 1
-			buf.set_color(nx, y, cut(a.task or "", w - nx - 1), "muted")
-			y = y + 1
-		end
-		blitz.draw.redraw()
-	end,
-})
+ui.mount(
+	"below",
+	ui.box({
+		dir = "row",
+		bg = "bg",
+		min_height = 3,
+		todo_section.box,
+		agent_section.box,
+	})
+)
+
+-- ui.root(ui.box({
+--     ui.composer(),                               -- input on top
+--     ui.slot({ name = "below" }),
+--     ui.box({ dir = "row", grow = 1,
+--         ui.timeline({ grow = 1 }),
+--         ui.slot({ name = "right", dir = "row" }),
+--     }),
+-- }))
+
+local ticks = 0
+
+local function refresh()
+	local agents = active_agents()
+	local inactive = #blitz.list_agents() - #agents
+	local blink_on = math.floor(ticks / BLINK_TICKS) % 2 == 0
+	update(todo_section, "Todos", todo_rows())
+	update(agent_section, "Active agents - inactive: " .. inactive, agent_rows(agents, blink_on))
+end
+
+blitz.hooks.tick(function()
+	ticks = ticks + 1
+	if ticks % REFRESH_TICKS == 0 then
+		refresh()
+	end
+end)
+
+refresh()

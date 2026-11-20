@@ -88,8 +88,10 @@ M.provider.openai = blitz.add_provider({
 -- MODELS
 ------------------------------------------------------------------
 M.glm_flash = blitz.add_model({
-	name = "glm-5.3-flash",
-	provider = M.provider.zai,
+	-- name = "glm-5.3-flash",
+	-- provider = M.provider.zai,
+    name = "glm-5.3-flash",
+    provider = M.provider.opencode,
 	vision = true,
 })
 
@@ -120,6 +122,12 @@ M.ds_flash = blitz.add_model({
 M.qwen_38 = blitz.add_model({
 	name = "qwen3.8",
 	provider = M.provider.llama,
+	vision = true,
+})
+
+M.hy4 = blitz.add_model({
+	provider = M.provider.opencode,
+	name = "hy4",
 	vision = true,
 })
 
