@@ -1,8 +1,7 @@
 ---
 name: review
 description: "starting a coding review after a task is finished. This still must be loaded before doing any kind of code review"
-metadata:
-  blitzdenk.main-agent-only: "true"
+disable-model-invocation: true
 ---
 
 Start 3 code-reviewer agents on the current diff. Add a fourth only when the diff

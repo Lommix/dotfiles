@@ -127,11 +127,11 @@ blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.tools.ASK,
 	blitz.tools.WRITE,
 	blitz.tools.EDIT,
-	codemode_full,
-	core.subagents.toolset,
-	core.todo.toolset,
-	tools.web_fetch,
-	tools.web_search,
+	-- codemode_full,
+	-- core.subagents.toolset,
+	-- core.todo.toolset,
+	-- tools.web_fetch,
+	-- tools.web_search,
 })
 
 ---------------------------------------------------------------------------------------------------
