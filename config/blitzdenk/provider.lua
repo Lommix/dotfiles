@@ -89,15 +89,15 @@ M.provider.openai = blitz.add_provider({
 ------------------------------------------------------------------
 M.glm_flash = blitz.add_model({
 	name = "glm-5.3-flash",
-	provider = M.provider.zai,
-	-- provider = M.provider.opencode,
+	-- provider = M.provider.zai,
+	provider = M.provider.opencode,
 	vision = true,
 })
 
 M.glm = blitz.add_model({
-	name = "glm-5.3",
+	name = "glm-5.4",
 	provider = M.provider.zai,
-	vision = false,
+	vision = true,
 })
 
 M.ds_new_flash = blitz.add_model({
@@ -122,6 +122,12 @@ M.qwen_38 = blitz.add_model({
 	-- name = "qwen3.8",
 	name = "inkling-2-min",
 	provider = M.provider.llama,
+	vision = true,
+})
+
+M.kimi = blitz.add_model({
+	provider = M.provider.opencode,
+	name = "kimi-k3.1-pro",
 	vision = true,
 })
 

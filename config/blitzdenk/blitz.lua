@@ -91,12 +91,16 @@ end, "Big-X")
 --- Usefull cli tools
 ---------------------------------------------------------------------------------------------------
 blitz.set_capabilities({
-	-- { binary = "rg", rule = "Use rg for fast recursive grep searches. rg recurses by default: write `rg -n PATTERN PATH`. The flag `-r` means --replace, so `rg -rn PATTERN` silently prints PATTERN replaced by \"n\" and turns the evidence into garbage. Never pass -r or -R; grep flags do not carry over." },
+	{
+		binary = "rg",
+		rule = 'Use rg for fast recursive grep searches. rg recurses by default: write `rg -n PATTERN PATH`. The flag `-r` means --replace, so `rg -rn PATTERN` silently prints PATTERN replaced by "n" and turns the evidence into garbage. Never pass -r or -R; grep flags do not carry over.',
+	},
 	{
 		binary = "fd",
 		rule = "Use fd for fast file discovery. Prefer fd over find. fd hides gitignored files: add -I for runtime data such as local databases.",
 	},
 	{ binary = "jq", rule = "Use jq to parse and filter JSON data." },
+	{ binary = "python3", rule = "Use python to simplify complex querries and edits" },
 })
 
 ---------------------------------------------------------------------------------------------------
@@ -105,29 +109,21 @@ blitz.set_capabilities({
 local codemode_full = core.codemode.setup({
 	name = "codemode",
 	tools = {
-		-- blitz.tools.BASH,
-		-- blitz.tools.READ,
-		-- blitz.tools.WRITE,
-		-- blitz.tools.EDIT,
+		blitz.tools.BASH,
+		blitz.tools.READ,
+		blitz.tools.WRITE,
+		blitz.tools.EDIT,
 	},
-	description = "",
-	snippet = "",
-	guidelines = "",
 })
--- 	description = [[Callable tools, each takes one table:
--- - bash{ command, description, timeout? }: run a shell command
--- - read{ file_path, offset?, limit? }: read a text file or image
--- - write{ file_path, content }: write a new file
--- - edit{ file_path, old_string, new_string, replace_all? }: replace text in a file]],
--- })
 
 blitz.set_agent_tools(blitz.AGENT_GENERAL, {
 	blitz.toolsets.BASH_BACKGROUND,
+	blitz.toolsets.SUBAGENTS,
 	blitz.tools.READ,
 	blitz.tools.ASK,
-	blitz.tools.WRITE,
-	blitz.tools.EDIT,
-	-- codemode_full,
+	-- blitz.tools.WRITE,
+	-- blitz.tools.EDIT,
+	codemode_full,
 	-- core.subagents.toolset,
 	-- core.todo.toolset,
 	-- tools.web_fetch,
@@ -239,12 +235,12 @@ M.orchistrator_id = blitz.add_agent({
 	model = models.glm_flash,
 	in_agent_tool = false,
 	tools = {
+		blitz.toolsets.BASH_BACKGROUND,
+		blitz.toolsets.SUBAGENTS,
 		blitz.tools.READ,
-		blitz.tools.BASH,
 		blitz.tools.WRITE,
 		blitz.tools.EDIT,
 		blitz.tools.ASK,
-		core.subagents.toolset,
 	},
 })
 
